@@ -1,31 +1,6 @@
 /*
 ============================================================================================================================================
-																														SPACE INVADERS DU PAUVRE
-
-	Créé par Clément Bauchet en août 2015, en vacances en Espagne à côté de la piscine entre deux apéros.
-	Grandement inspiré du déja culte "Gregre" par Alexandre Pais Gomes, de Chicken Invaders, et de Mini-Wave sur feu Frutiparc.fr (RIP)
-	Vous remarquerez que je code+commente en anglais, en faisant mon jeu en français. Ça a probablement un sens quelque part dans l'Univers.
-
-	Commandes :
-		- Gauche/Droite : Mouvement
-		- Espace : Tir
-		- Maj : Tir spécial
-		- M : Muet
-		- P : Pause
-
-============================================================================================================================================
-	Petit changelog très tardif :
-		- 04/08/2015 : Création du jeu
-		- 05/08/2015 : Premier prototype fonctionnel (Oui, j'avais vraiment que ça à faire, j'étais en vacances pour rappel)
-		- Entre 05/08/2015 et 21/02/2016 : Plein de conneries non prises en note (j'aurais vraiment dû versionner cette merde, moi...)
-		- 22/02/2016 : Expérimentation des timers (sans grand succès) et équilibrage des tirs spéciaux
-		- 23/02/2016 : Bidouilles sur les textes et petits détails, en salle 44 à la fac au lieu de bosser + 1000ème ligne de code \o/
-		- 24/02/2016 : Toujours de la bidouille, cette fois en cours de Connaissances des entreprises.
-		- 04/03/2016 : Exposé de Machine Learning fini, on va pouvoir refaire des petites conneries !
-		- 06/03/2016 : Révision de la vitesse de tir en fonction de la puissance + cdr
-		- 07/03/2016 : Rééquilibrage des bonus et soucoupes bonus, ajout des bonus Kill 'em all & Clear , expérimentation d'un ennemi explosif
-		- 08/03/2016 : Quelques autres powerups + Niveau bonus en travaux !!! + Les ennemis explosifs marchent \o/
-	
+														SPACE INVADERS DU PAUVRE
 ============================================================================================================================================
 */
 
@@ -100,7 +75,7 @@ var levels = [[[0,0,1,1,1,1,1,1,0,0], //Level 1
 			 [0,0,5,5,5,5,5,5,0,0]],
 
 			[[3,3,3,3,3,3,3,3,3,3], //Level 6
-			 [2,2,2,2,2,2,2,2,2,2], //Stand behind me
+			 [1,1,1,1,1,1,1,1,1,1], //Stand behind me
 			 [1,1,1,1,1,1,1,1,1,1], //Reste derrière moi
 			 [5,5,5,5,5,5,5,5,5,5]],
 
@@ -166,21 +141,21 @@ var levels = [[[0,0,1,1,1,1,1,1,0,0], //Level 1
 
 //Level names
 var level_names_en = ["Orange is the new ghost", "Cross the line", "Death from above", "Still not bullet hell", "Encapsulated",
-											"Stand behind me", "Banzai", "Target almost locked", "Well Played", "Rainbow",
-											"Eleven","Deadly checkers", "To the top with you", "Not based on opinion", "Thanks for the gold", "", 
-											];
+					"Stand behind me", "Banzai", "Target almost locked", "Well Played", "Rainbow",
+					"Eleven","Deadly checkers", "To the top with you", "Not based on opinion", "Thanks for the gold", "", 
+					];
 
 var level_names_fr = ["Alerte orange", "La ligne rouge", "La mort vient d'en haut", "Ceci n'est pas un bullet hell", "Capsule",
-											"Reste derrière moi", "Banzai", "Cible presque verrouillée", "Bien joué", "Arc-en-ciel",
-											"Onze","Échiquier fatal", "Au top", "Pas basé sur l'opinion", "Merci pour l'or", "", 
-											];
+					"Reste derrière moi", "Banzai", "Cible presque verrouillée", "Bien joué", "Arc-en-ciel",
+					"Onze","Échiquier fatal", "Au top", "Pas basé sur l'opinion", "Merci pour l'or", "", 
+					];
 
 //Speed values for each level : Start speed, speedup each time an enemy is killed, acceleration of the speedup
 var speed_values = [[20,4,0.25], [20,5,0.25], [20,4,0.25], [20,5,0.5], [10,5,0.5], //5
-										[20,4,0.3],  [20,6,0.5],  [20,4,0.4],  [15,5,0.3], [20,4,0.5], //10
-										[20,5,0.25], [25,4,0.5],  [20,10,0.5], [20,10,0.5], [15,4,0.4] //15
+					[20,4,0.3],  [20,6,0.5],  [20,4,0.4],  [15,5,0.3], [20,4,0.5], //10
+					[20,5,0.25], [25,4,0.5],  [20,10,0.5], [20,10,0.5], [15,4,0.4] //15
 
-										];
+					];
 
 //Special levels for testing
 var bonus = [[00,00,01,10,01,01,01,10,00,00],
@@ -191,55 +166,55 @@ var bonus = [[00,00,01,10,01,01,01,10,00,00],
 var lineof4s = [[4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]];
 
 var only2s = [[0,0,2,2,2,2,2,2,0,0],
-							[0,2,2,2,2,2,2,2,2,0],
-							[2,2,2,2,2,2,2,2,2,2],
-							[2,2,2,2,2,2,2,2,2,2]];
+			[0,2,2,2,2,2,2,2,2,0],
+			[2,2,2,2,2,2,2,2,2,2],
+			[2,2,2,2,2,2,2,2,2,2]];
 
 var only3s = [[0,0,3,3,3,3,3,3,0,0],
-							[0,3,3,3,3,3,3,3,3,0],
-							[3,3,3,3,3,3,3,3,3,3],
-							[3,3,3,3,3,3,3,3,3,3]];
+			[0,3,3,3,3,3,3,3,3,0],
+			[3,3,3,3,3,3,3,3,3,3],
+			[3,3,3,3,3,3,3,3,3,3]];
 
 var only4s = [[0,0,4,4,4,4,4,4,0,0],
-							[0,4,4,4,4,4,4,4,4,0],
-							[4,4,4,4,4,4,4,4,4,4],
-							[4,4,4,4,4,4,4,4,4,4]];
+			[0,4,4,4,4,4,4,4,4,0],
+			[4,4,4,4,4,4,4,4,4,4],
+			[4,4,4,4,4,4,4,4,4,4]];
 
 var only5s = [[0,0,5,5,5,5,5,5,0,0],
-							[0,5,5,5,5,5,5,5,5,0],
-							[5,5,5,5,5,5,5,5,5,5],
-							[5,5,5,5,5,5,5,5,5,5]];
+			[0,5,5,5,5,5,5,5,5,0],
+			[5,5,5,5,5,5,5,5,5,5],
+			[5,5,5,5,5,5,5,5,5,5]];
 
 var only6s = [[0,0,6,6,6,6,6,6,0,0],
-							[0,6,6,6,6,6,6,6,6,0],
-							[6,6,6,6,6,6,6,6,6,6],
-							[6,6,6,6,6,6,6,6,6,6]];
+			[0,6,6,6,6,6,6,6,6,0],
+			[6,6,6,6,6,6,6,6,6,6],
+			[6,6,6,6,6,6,6,6,6,6]];
 
 var only7s = [[0,0,7,7,7,7,7,7,0,0],
-							[0,7,7,7,7,7,7,7,7,0],
-							[7,7,7,7,7,7,7,7,7,7],
-							[7,7,7,7,7,7,7,7,7,7]];
+			[0,7,7,7,7,7,7,7,7,0],
+			[7,7,7,7,7,7,7,7,7,7],
+			[7,7,7,7,7,7,7,7,7,7]];
 
 var only8s = [[0,0,8,8,8,8,8,8,0,0],
-							[0,8,8,8,8,8,8,8,8,0],
-							[8,8,8,8,8,8,8,8,8,8],
-							[8,8,8,8,8,8,8,8,8,8]];
+			[0,8,8,8,8,8,8,8,8,0],
+			[8,8,8,8,8,8,8,8,8,8],
+			[8,8,8,8,8,8,8,8,8,8]];
 
 var only9s = [[0,0,9,9,9,9,9,9,0,0],
-							[0,9,9,9,9,9,9,9,9,0],
-							[9,9,9,9,9,9,9,9,9,9],
-							[9,9,9,9,9,9,9,9,9,9]];
+			[0,9,9,9,9,9,9,9,9,0],
+			[9,9,9,9,9,9,9,9,9,9],
+			[9,9,9,9,9,9,9,9,9,9]];
 
 var only10s = [[00,00,10,10,10,10,10,10,00,00],
-							 [00,10,10,10,10,10,10,10,10,00],
-							 [10,10,10,10,10,10,10,10,10,10],
-							 [10,10,10,10,10,10,10,10,10,10]];
+			 [00,10,10,10,10,10,10,10,10,00],
+			 [10,10,10,10,10,10,10,10,10,10],
+			 [10,10,10,10,10,10,10,10,10,10]];
 
 var fuckyou = [[3,3,3,3,3,2,3,3,3,2,3,3,3,2,2,2,2,3,3,3,3,3,3],
-							 [3,3,3,3,3,3,2,3,2,3,3,3,3,2,3,3,3,2,3,3,3,3,3],
-							 [3,3,3,3,3,3,3,2,3,3,3,3,3,2,3,3,3,2,3,3,3,3,3],
-							 [3,3,3,3,3,3,2,3,2,3,3,3,3,2,3,3,3,2,3,3,3,3,3],
-							 [3,3,3,3,3,2,3,3,3,2,3,3,3,2,2,2,2,3,3,3,3,3,3]];
+			 [3,3,3,3,3,3,2,3,2,3,3,3,3,2,3,3,3,2,3,3,3,3,3],
+			 [3,3,3,3,3,3,3,2,3,3,3,3,3,2,3,3,3,2,3,3,3,3,3],
+			 [3,3,3,3,3,3,2,3,2,3,3,3,3,2,3,3,3,2,3,3,3,3,3],
+			 [3,3,3,3,3,2,3,3,3,2,3,3,3,2,2,2,2,3,3,3,3,3,3]];
 
 function preload() {
 		//Images
@@ -1108,24 +1083,6 @@ function createShot(x, y, velx, vely) {
 
 		shots.add(shot);
 }
-
-/*
-function createSpecialShot(x, y, velx, vely) {
-		var spe = game.add.sprite(x, y, 'specialshot');
-		game.physics.arcade.enable(spe);
-		//spe.body.immovable = true;
-		spe.anchor.setTo(0.5, 0.5);
-		spe.body.velocity.x = velx;
-		spe.body.velocity.y = vely;
-		if (!mute) {
-				firespecial_sd.play();
-		}
-		special_cooldown = DEFAULT_FIRE_COOLDOWN;
-		spe.health = 5;
-
-		special_shots.add(spe);
-}
-*/
 
 function createSpecialShot(x, y, velx, vely) { //V2.0
 		for (var i=0; i < 9+power; i++) {
