@@ -9,7 +9,7 @@ Play it <a href=http://tagpower.github.io/spaceinvaders/>here</a> !
 	Grandement inspiré du déja culte "Gregre" par Alexandre Pais Gomes, de Chicken Invaders, et de Mini-Wave sur feu Frutiparc.fr (RIP)
 
 	Commandes :
-		- Gauche / Droite : Mouvement
+		- Gauche / Droite / Haut / Bas : Mouvement
 		- Espace : Tir
 		- Maj : Tir spécial
 		- M : Muet
@@ -31,7 +31,7 @@ Play it <a href=http://tagpower.github.io/spaceinvaders/>here</a> !
 		- 08/03/2016 : - Quelques autres powerups
 					   - Niveau bonus en travaux !!! 
 					   - Les ennemis explosifs marchent \o/
-					   
+
 		- 15/03/2016 : - Mouvement haut/bas ajouté
 					   - Le joueur explose en mourant (le sprite hein, pas vous)
 					   - Petit nerf des tirs ennemis
