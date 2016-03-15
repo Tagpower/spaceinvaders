@@ -37,6 +37,7 @@ var lostAlife = false;
 var mute_wait = 0;
 var speed, speedup, accel;
 var current_level = 0;
+var current_bonus_level = 0;
 var in_bonus_level = false;
 var score = 0;
 var lives = 3;
@@ -131,10 +132,12 @@ var levels = [[[0,0,1,1,1,1,1,1,0,0], //Level 1
 			[[0,0,6,6,6],     //Level 15
 			 [0,6,6,6,6,6],   //Thanks for the gold
 			 [6,6,6,0,6,6,6], //Merci pour l'or
-			 [6,6,0,0,0,6,6], 
+			 [6,6,0,10,0,6,6], 
 			 [6,6,6,0,6,6,6],
 			 [0,6,6,6,6,6],
-			 [0,0,6,6,6]]
+			 [0,0,6,6,6]],
+
+
 			 
 
 			 ];
@@ -157,12 +160,20 @@ var speed_values = [[20,4,0.25], [20,5,0.25], [20,4,0.25], [20,5,0.5], [10,5,0.5
 
 					];
 
-//Special levels for testing
-var bonus = [[00,00,01,10,01,01,01,10,00,00],
-			 [00,01,01,01,01,01,01,01,01,00],
-			 [10,01,01,01,01,01,10,01,10,01],
-			 [01,10,01,01,01,10,01,01,01,01]];
+//Bonus levels
+var bonus_levels = [[[00,00,01,10,01,01,01,10,00,00],
+					 [00,01,01,01,01,01,01,01,01,00],
+					 [10,01,01,01,01,01,10,01,10,01],
+					 [01,10,01,01,01,10,01,01,01,01]],
 
+					 [[1,7,1,1,7,1,1,7,1,1,7,1],
+					  [1,10,1,1,10,1,1,10,1,1,10,1],
+					  [1,5,1,1,5,1,1,5,1,1,5,1]]
+
+
+					 ];
+
+//Special levels for testing
 var lineof4s = [[4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]];
 
 var fuckyou = [[3,3,3,3,3,2,3,3,3,2,3,3,3,2,2,2,2,3,3,3,3,3,3],
@@ -507,6 +518,7 @@ function update() {
 			//timer.start();
 			//console.log(timer.seconds);
 			if (in_bonus_level) {
+				current_bonus_level++;
 				in_bonus_level = false;
 				music_bonus.stop();
 				music.play();
@@ -657,7 +669,7 @@ function collectItem(player, item) {
 				enemies.removeAll();
 				enemy_shots.removeAll();
 				shots.removeAll();
-				loadBonusLevel();
+				loadBonusLevel(current_bonus_level);
 				score += 3000;
 				text_ship.text = "";
 			break;
@@ -917,7 +929,7 @@ function loadLevel(lvl) {
 
 //BONUS LEVEL
 //ENORME TODO
-function loadBonusLevel() {
+function loadBonusLevel(lvl) {
 	in_bonus_level = true;
 	music.stop();
 	music_bonus.play();
@@ -945,7 +957,7 @@ function loadBonusLevel() {
 		game.add.tween(text_level) .to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
 		//createEnemies(levels[lvl]);   
 	}, 3000);
-	createEnemies(bonus);
+	createEnemies(bonus_levels[lvl]);
 }
 
 //Create an array of enemies at the default location
@@ -1220,4 +1232,5 @@ function restart(level) {
 	player.kill();
 	createPlayer();
 	current_level = level-1;
+	current_bonus_level = 0;
 }

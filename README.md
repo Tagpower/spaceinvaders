@@ -24,7 +24,17 @@ Play it <a href=http://tagpower.github.io/spaceinvaders/>here</a> !
 		- 23/02/2016 : Bidouilles sur les textes et petits détails, en salle 44 à la fac au lieu de bosser + 1000ème ligne de code \o/
 		- 24/02/2016 : Toujours de la bidouille, cette fois en cours de Connaissances des entreprises.
 		- 06/03/2016 : Révision de la vitesse de tir en fonction de la puissance + cdr
-		- 07/03/2016 : Rééquilibrage des bonus et soucoupes bonus, ajout des bonus Kill 'em all & Clear , expérimentation d'un ennemi explosif
-		- 08/03/2016 : Quelques autres powerups + Niveau bonus en travaux !!! + Les ennemis explosifs marchent \o/
+		- 07/03/2016 : - Rééquilibrage des bonus et soucoupes bonus
+					   - Ajout des bonus Kill 'em all & Clear 
+					   - Expérimentation d'un ennemi explosif
+
+		- 08/03/2016 : - Quelques autres powerups
+					   - Niveau bonus en travaux !!! 
+					   - Les ennemis explosifs marchent \o/
+					   
+		- 15/03/2016 : - Mouvement haut/bas ajouté
+					   - Le joueur explose en mourant (le sprite hein, pas vous)
+					   - Petit nerf des tirs ennemis
+					   - Nouveaux niveaux bonus
 	
 ==============================================================================================================================
