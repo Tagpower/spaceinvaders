@@ -1,0 +1,10 @@
+TODO LIST :
+
+- Trouver un sprite pour le bonus ship
+- Boss
+- Plus d'armes ?
+- Trouver une musique originale
+- Finir le bouclier
+- Powerup warp
+
+- NIVEAUX DE DIFFICULTÉ

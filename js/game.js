@@ -7,7 +7,7 @@
 //Here we go
 var game = new Phaser.Game(600, 600, Phaser.AUTO, 'contentor', { preload: preload, create: create, update: update });
 
-var player, enemies, items, shots, special_shots, enemy_shots, bonusships, explosions; //Groups
+var player, enemies, items, shots, special_shots, enemy_shots, bonusships, explosions, shield; //Groups
 
 var cursors, fire_btn, special_btn, mute_btn, pause_btn, restart_btn; //Inputs
 
@@ -260,6 +260,8 @@ function create() {
 		bonusships.enableBody = true;
 		items = game.add.group();
 
+		shield = game.add.sprite(0, 0, 'shield');
+
 		//Create the player's ship
 		createPlayer();
 		game.camera.follow(player);
@@ -330,7 +332,7 @@ function update() {
 		game.physics.arcade.collide(explosions, enemies, hitEnemy, null, this);
 		game.physics.arcade.collide(shots, bonusships, hitBonusShip, null, this);
 		//game.physics.arcade.collide(player, enemies, levelFailed, null, this);
-		game.physics.arcade.collide(player, enemies, playerHit, function(){return !lostAlife;}, this);
+		game.physics.arcade.collide(player, enemies, playerHit, function(){return (!lostAlife && shield_time == 0);}, this);
 		game.physics.arcade.collide(player, enemy_shots, playerHit, null, this);
 		game.physics.arcade.collide(player, items, collectItem, null, this);
 
@@ -429,6 +431,7 @@ function update() {
 			} else {
 				shield_time = 0;
 			}
+			shield.alpha = Math.min(shield_time/60.0, 0.75);
 
 
 			if (shots_cooldown > 0) {
@@ -553,6 +556,10 @@ function update() {
 			}
 		});
 
+		/*if (shield_time == 0) {
+			shield.alpha = 0;
+		}*/
+
 }
 
 function collectItem(player, item) {
@@ -588,7 +595,7 @@ function collectItem(player, item) {
 			break;
 
 			case 'powerup_shield': //TODO
-				var shield = game.add.sprite(player.x, player.y, 'shield')
+				//shield = game.add.sprite(0, 0, 'shield');
 				player.addChild(shield);
 				console.log(shield);
 				shield.anchor.setTo(0.5, 0.5);
@@ -604,7 +611,7 @@ function collectItem(player, item) {
 
 			case 'powerup_kill':
 				enemies.forEachAlive(function(enemy) {
-						createShot(player.body.center.x, player.body.center.y,  enemy.x-player.x+enemy.body.velocity.x, -300+(enemy.y - player.y));
+						createShot(player.body.center.x, player.body.center.y,  (enemy.x-player.x+enemy.body.velocity.x)*2, (enemy.y-player.y)*2);
 				});
 				score += 750;
 				text_ship.text = "KILL 'EM ALL !";
@@ -646,6 +653,15 @@ function collectItem(player, item) {
 			break;
 
 			case 'powerup_freeze': //TODO
+				var wave = game.add.sprite(player.body.center.x, player.body.center.y, 'clear_wave');
+				wave.tint = 0x007fff;
+				wave.anchor.setTo(0.5, 0.5);
+				wave.smoothed = false;
+				game.add.tween(wave).to( { alpha: 0}, 1500, Phaser.Easing.Quintic.Out, true);
+				game.add.tween(wave.scale).to( {x: 30, y: 30 }, 1500, Phaser.Easing.Quintic.Out, true);
+				if (!mute) {
+						wave_sd.play();
+				}
 				speed = 0;
 				score += 400;
 				text_ship.text = "Stop !";
@@ -691,7 +707,7 @@ function collectItem(player, item) {
 //When the player is hit by enemy fire
 function playerHit(player, shot) {
 	shot.kill();
-	if (!lostAlife && !player.touched) {   
+	if (!lostAlife && !player.touched && !shield_time) {   
 		playerhit_sd.play();
 		lostAlife = true;
 		player.touched = true;
@@ -720,6 +736,10 @@ function playerHit(player, shot) {
 					game.add.tween(player.body).to( { x: 300 }, 500, Phaser.Easing.Quadratic.In, true);
 					lostAlife = false;
 					player.alpha = 0.5;
+					shield_time = 180;
+					player.addChild(shield);
+					shield.anchor.setTo(0.5, 0.5);
+					shield.smoothed = false;
 				}, 1500);
 				window.setTimeout(function(){
 					player.touched = false;
@@ -787,6 +807,7 @@ function levelFailed() {
 			window.setTimeout(function(){
 				player.touched = false;
 				player.alpha = 1;
+				shield_time = 240;
 			}, 4000);
 		} else { //GAME OVER
 			text_middle.alpha = 1;
