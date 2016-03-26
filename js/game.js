@@ -144,7 +144,6 @@ var levels = [[[0,0,1,1,1,1,1,1,0,0], //Level 1
 			 
 
 			 ];
-}
 
 //Level names
 var level_names_en = ["Orange is the new ghost", "Cross the line", "Death from above", "Still not bullet hell", "Encapsulated",
