@@ -8,3 +8,14 @@ TODO LIST :
 - Powerup warp
 
 - NIVEAUX DE DIFFICULTÉ
+	- Facile : moins de tirs, puissance 2 minimum
+	- Normal : par défaut
+	- Dur : moins de bonus, plus de tirs, plus rapide
+	- OH GOD : 	- TOUS LES ORANGES DEVIENNENT VERTS (?)
+				- DÉPLACEMENT LATÉRAL SEULEMENT
+				- ENCORE MOINS DE BONUS
+				- ENCORE PLUS DE TIRS
+				- MOUHAHAHAHAHAHA
+
+
+- FAIRE UN MENU

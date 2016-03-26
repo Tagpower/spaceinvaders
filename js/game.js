@@ -21,14 +21,17 @@ var gameoversound = false;
 var introduction_sound = true;
 var music, pickup_sd, playerhit_sd, hitenemy_sd, killenemy_sd, abahe_sd, hellyeah_sd, fire_sd, firespecial_sd, enemyfire_sd, wave_sd, intro_sd, win_sd, over_sd;
 
+var difficulty = 1; //0 = EASY, 1 = NORMAL, 2 = HARD, 3 = OH GOD
+console.log('Difficulty = ' + difficulty);
+
 //Constants
 var START_SPEED = 20;
 var SPEEDUP_INIT = 5;
 var SPEEDUP_ACCEL = 0.5;
 var PLAYER_SPEED = 150;
 var DEFAULT_FIRE_COOLDOWN = 30;
-var ENEMY_DEFAULT_FIRE_PROBA = 0.004;
-var POWERUP_CHANCE = 0.05;
+var ENEMY_DEFAULT_FIRE_PROBA = 0.004 + (difficulty-1)*0.001;
+var POWERUP_CHANCE = 0.05 + (difficulty-1)*0.01;
 var MAX_POWER = 7;
 var MAX_CDR = 30;
 
@@ -41,7 +44,7 @@ var current_bonus_level = 0;
 var in_bonus_level = false;
 var score = 0;
 var lives = 3;
-var power = 1;
+var power = (difficulty == 0 ? 2 : 1);
 var shield_time = 0;
 var shots_cooldown = 0;
 var special_cooldown = 0;
@@ -189,7 +192,7 @@ function preload() {
 		game.load.image('clear_wave', 'assets/clear.png');
 		game.load.image('shield', 'assets/shield_WIP.png');
 		game.load.image('space', 'assets/bg.png');
-		game.load.image('extralife', 'assets/powerup_life.png')
+		game.load.image('extralife', 'assets/powerup_life.png');
 
 		//Spritesheets
 		game.load.spritesheet('enemyshots', 'assets/enemyshots.png', 4, 8);
@@ -206,7 +209,6 @@ function preload() {
 		game.load.spritesheet('powerup_warp', 'assets/powerup_warp.png', 16, 16);
 		game.load.spritesheet('powerup_shield', 'assets/powerup_shield.png', 16, 16);
 		game.load.spritesheet('bonus_level', 'assets/bonus_level.png', 16, 16);
-		//game.load.spritesheet('extralife', 'assets/ship.png', 16, 16);
 
 		//Music
 		game.load.audio('ambient', ['assets/audio/e1m1.mp3']);
@@ -237,10 +239,6 @@ function create() {
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 
 		timer_to_next_level = new Phaser.Timer(this, false);
-		//timer.start();
-	//var background = game.add.sprite(0, 0, 'sky');
-		//background.scale.setTo(4, 3);
-	//background.fixedToCamera = true;
 
 	//Create the background
 		background = game.add.tileSprite(0, 0, game.width, game.height, 'space');
@@ -314,8 +312,6 @@ function create() {
 		text_ship.anchor.setTo(0.5, 0.5);
 		text_ship.alpha = 0;
 
-
-		//createEnemies(levels[current_level]);
 		speed = START_SPEED;
 		speedup = SPEEDUP_INIT;
 		accel = SPEEDUP_ACCEL;
@@ -358,11 +354,11 @@ function update() {
 				//if (!player.touched) {
 						//player.body.velocity.y = 0; 
 				//};
-			if (cursors.up.isDown) {
+			if (cursors.up.isDown && difficulty < 3) {
 				player.body.velocity.y = -PLAYER_SPEED;
 				player.body.velocity.x = 0; 
 				//player.animations.play('left');
-			} else if (cursors.down.isDown) {
+			} else if (cursors.down.isDown  && difficulty < 3) {
 				player.body.velocity.y = PLAYER_SPEED;
 				player.body.velocity.x = 0; 
 				//player.animations.play('right');
@@ -431,7 +427,7 @@ function update() {
 			} else {
 				shield_time = 0;
 			}
-			shield.alpha = Math.min(shield_time/60.0, 0.75);
+			shield.alpha = Math.min(shield_time/60.0, 0.75); //Fade the shield sprite with time
 
 
 			if (shots_cooldown > 0) {
@@ -503,6 +499,9 @@ function update() {
 					case 9:
 						enemyFire(enemy, Math.random()*200-100, Math.random()*200+50);
 						break;
+					case 11: //OH GOD
+						enemyFire(enemy, 0, 600);
+						break; 
 				}
 			}
 		});
@@ -556,10 +555,6 @@ function update() {
 			}
 		});
 
-		/*if (shield_time == 0) {
-			shield.alpha = 0;
-		}*/
-
 }
 
 function collectItem(player, item) {
@@ -568,11 +563,11 @@ function collectItem(player, item) {
 			case 'powerup_power':
 				if (power < MAX_POWER) {
 					power++;
-					if (power == MAX_POWER) {
-						text_ship.text = "PUISSANCE MAX!";
-					} else {
-						text_ship.text = "Puissance +!";
-					}
+				}			
+				if (power == MAX_POWER) {
+					text_ship.text = "PUISSANCE MAX!";
+				} else {
+					text_ship.text = "Puissance +!";
 				}
 				score += 300;
 			break;
@@ -595,15 +590,14 @@ function collectItem(player, item) {
 			break;
 
 			case 'powerup_shield': //TODO
-				//shield = game.add.sprite(0, 0, 'shield');
 				player.addChild(shield);
 				console.log(shield);
 				shield.anchor.setTo(0.5, 0.5);
 				shield.smoothed = false;
-				shield.alpha = 0.5
-				shield_time = 600;
+				//shield.alpha = 0.5
+				shield_time = 360;
 				if (!mute) {
-						//shield.play();
+					//shield.play();
 				}
 				score += 500;
 				text_ship.text = "Bouclier !";
@@ -611,7 +605,7 @@ function collectItem(player, item) {
 
 			case 'powerup_kill':
 				enemies.forEachAlive(function(enemy) {
-						createShot(player.body.center.x, player.body.center.y,  (enemy.x-player.x+enemy.body.velocity.x)*2, (enemy.y-player.y)*2);
+					createShot(player.body.center.x, player.body.center.y,  (enemy.x-player.x+enemy.body.velocity.x)*2, (enemy.y-player.y)*2);
 				});
 				score += 750;
 				text_ship.text = "KILL 'EM ALL !";
@@ -624,7 +618,7 @@ function collectItem(player, item) {
 				game.add.tween(wave).to( { alpha: 0}, 1500, Phaser.Easing.Quintic.Out, true);
 				game.add.tween(wave.scale).to( {x: 30, y: 30 }, 1500, Phaser.Easing.Quintic.Out, true);
 				if (!mute) {
-						wave_sd.play();
+					wave_sd.play();
 				}
 				enemy_shots.removeAll();
 				score += 500;
@@ -660,7 +654,7 @@ function collectItem(player, item) {
 				game.add.tween(wave).to( { alpha: 0}, 1500, Phaser.Easing.Quintic.Out, true);
 				game.add.tween(wave.scale).to( {x: 30, y: 30 }, 1500, Phaser.Easing.Quintic.Out, true);
 				if (!mute) {
-						wave_sd.play();
+					wave_sd.play();
 				}
 				speed = 0;
 				score += 400;
@@ -698,7 +692,7 @@ function collectItem(player, item) {
 		console.log(item.key + ' collected');
 
 		if (!mute) {
-				pickup_sd.play();
+			pickup_sd.play();
 		}
 		item.kill();
 	};
@@ -717,9 +711,16 @@ function playerHit(player, shot) {
 		//var tween_death = game.add.tween(player.body).to( { y: game.world.height+10 }, 1000, Phaser.Easing.Linear.None, true);
 		
 		if (!in_bonus_level) {
-			if (power > 1) {
-				power /= 2;
-				power = Math.floor(power);
+			if (difficulty == 0) {
+				if (power > 2) {
+					power /= 2;
+					power = Math.ceil(power);
+				}
+			} else {
+				if (power > 1) {
+					power /= 2;
+					power = Math.floor(power);
+				}
 			}
 			if (cooldown_reduction > 0) {
 				cooldown_reduction /= 2;
@@ -784,9 +785,16 @@ function levelFailed() {
 		//var tween_death = game.add.tween(player.body).to( { y: game.world.height+10 }, 1000, Phaser.Easing.Linear.None, true);
 
 		lives--;
-		if (power > 1) {
-			power /= 2;
-			power = Math.floor(power);
+		if (difficulty == 0) {
+			if (power > 2) {
+				power /= 2;
+				power = Math.ceil(power);
+			}
+		} else {
+			if (power > 1) {
+				power /= 2;
+				power = Math.floor(power);
+			}
 		}
 		if (cooldown_reduction > 0) {
 			cooldown_reduction /= 2;
@@ -848,23 +856,26 @@ function hitEnemy(shot, enemy) {
 			if (random <= POWERUP_CHANCE) {
 				//Bonus roulette
 				roulette = Math.random()*100;
-				if (roulette <= 25) {
+				if (roulette <= 20) {
 					createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_power');
 				}
-				if (roulette > 25 && roulette <= 50) {
+				if (roulette > 20 && roulette <= 40) {
 					createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_cooldown');
 				}
-				if (roulette > 50 && roulette <= 75) {
+				if (roulette > 40 && roulette <= 60) {
 					createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_special');
 				}
-				if (roulette > 75 && roulette <= 80) {
-					createItem(enemy.body.center.x, enemy.body.center.y, 'extralife');
+				if (roulette > 60 && roulette <= 75) {
+					createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_clear');
 				}
-				if (roulette > 80 && roulette <= 85) {
+				if (roulette > 75 && roulette <= 90) {
+					createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_shield');
+				}
+				if (roulette > 90 && roulette <= 95) {
 					createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_kill');
 				}
-				if (roulette > 85 && roulette <= 100) {
-					createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_clear');
+				if (roulette > 95 && roulette <= 100) {
+					createItem(enemy.body.center.x, enemy.body.center.y, 'extralife');
 				}
 			}
 
@@ -887,8 +898,6 @@ function createPlayer(){
 	player.body.immovable = false;
 	lostAlife = false;
 	touched = false;
-
-
 
 	player.anchor.setTo(0.5,0.5);
 
@@ -924,9 +933,6 @@ function loadLevel(lvl) {
 			speedup = speed_values[lvl][1];
 			accel = speed_values[lvl][2];
 		} else {
-			/*speed = speed_values[0][0];
-			speedup = speed_values[0][1];
-			accel = speed_values[0][2];*/
 			speed = START_SPEED;
 			speedup = SPEEDUP_INIT;
 			accel = SPEEDUP_ACCEL;
@@ -936,7 +942,6 @@ function loadLevel(lvl) {
 		timer.start(2000);
 		*/
 		window.setTimeout(function(){
-			//console.log("MARCHE CONNARD");
 			game.add.tween(text_middle).to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
 			game.add.tween(text_level) .to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
 			//createEnemies(levels[lvl]);   
@@ -973,7 +978,6 @@ function loadBonusLevel(lvl) {
 	timer.start(2000);
 	*/
 	window.setTimeout(function(){
-		//console.log("MARCHE CONNARD");
 		game.add.tween(text_middle).to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
 		game.add.tween(text_level) .to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
 		//createEnemies(levels[lvl]);   
@@ -995,7 +999,14 @@ function createEnemiesAbs(array, x, y) {
 				game.physics.arcade.enable(enemy);
 				enemy.anchor.setTo(0.5);
 				enemy.body.immovable = true;
-				enemy.type = array[i][j];
+				enemy.type = array[i][j];	
+				if (difficulty == 3) {
+					if (array[i][j] == 1) {
+						enemy.type = 3;
+					} else if (array[i][j] == 3) {
+						enemy.type = 11;
+					}
+				}
 				enemy.animations.add('move', [2*(enemy.type-1), 2*(enemy.type-1)+1], 6, true);
 				enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA;
 				enemy.health = 1;
@@ -1040,6 +1051,9 @@ function createEnemiesAbs(array, x, y) {
 						enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*0.75;
 						enemy.value = 100;
 						break;
+					case 11: //DARK GREEN : Fires REALLY FAST shots
+						enemy.value = 400;
+						break;
 				}
 				enemies.add(enemy);
 			}
@@ -1060,6 +1074,7 @@ function createItem(x, y, key) {
 		case 'powerup_clear':
 		case 'powerup_orange':
 		case 'powerup_freeze':
+		case 'powerup_shield':
 		case 'powerup_warp':
 				item.animations.add('idle', [0,1,2,3], 18, true);
 				break;
@@ -1090,7 +1105,7 @@ function createShot(x, y, velx, vely) {
 
 function createSpecialShot(x, y, velx, vely) { //V2.0
 	for (var i=0; i < 9+power; i++) {
-			createShot(x, y, velx, vely-i*20);
+		createShot(x, y, velx, vely-i*20);
 	}
 	if (!mute) {
 		firespecial_sd.play();
