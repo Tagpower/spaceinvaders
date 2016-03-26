@@ -144,6 +144,7 @@ var levels = [[[0,0,1,1,1,1,1,1,0,0], //Level 1
 			 
 
 			 ];
+}
 
 //Level names
 var level_names_en = ["Orange is the new ghost", "Cross the line", "Death from above", "Still not bullet hell", "Encapsulated",
@@ -164,10 +165,10 @@ var speed_values = [[20,4,0.25], [20,5,0.25], [20,4,0.25], [20,5,0.5], [10,5,0.5
 					];
 
 //Bonus levels
-var bonus_levels = [[[00,00,01,10,01,01,01,10,00,00],
-					 [00,01,01,01,01,01,01,01,01,00],
-					 [10,01,01,01,01,01,10,01,10,01],
-					 [01,10,01,01,01,10,01,01,01,01]],
+var bonus_levels = [[[00,00,01,01,01,01,01,01,00,00],
+					 [00,01,10,01,10,01,10,01,10,00],
+					 [01,01,01,01,01,01,01,01,01,01],
+					 [01,10,01,10,01,10,01,10,01,01]],
 
 					 [[1,7,1,1,7,1,1,7,1,1,7,1],
 					  [1,10,1,1,10,1,1,10,1,1,10,1],
@@ -448,6 +449,11 @@ function update() {
 				player.body.velocity.x = 0;
 				player.animations.play('dead');
 				//enemies.setAll('body.velocity.x', 0);
+				if (lives == 0) {
+					if (restart_btn.isDown) {
+						restart(0);
+					}
+				}
 		};
 
 		if (mute_wait > 0) {
@@ -574,14 +580,14 @@ function collectItem(player, item) {
 			case 'powerup_cooldown':
 				if (cooldown_reduction < MAX_CDR) {
 					cooldown_reduction += 3;
-					if (cooldown_reduction >= MAX_CDR) {
-						cooldown_reduction = MAX_CDR;
-						text_ship.text = "VITESSE MAX!";
-					} else {
-						text_ship.text = "Vitesse tir +!";
-					}
 				}
-				score += 400;
+				if (cooldown_reduction >= MAX_CDR) {
+					cooldown_reduction = MAX_CDR;
+					text_ship.text = "VITESSE MAX!";
+				} else {
+					text_ship.text = "Vitesse tir +!";
+				}
+				score += 300;
 			break;            
 			case 'powerup_special':
 				special_available++;
@@ -595,7 +601,7 @@ function collectItem(player, item) {
 				shield.anchor.setTo(0.5, 0.5);
 				shield.smoothed = false;
 				//shield.alpha = 0.5
-				shield_time = 360;
+				shield_time += 300;
 				if (!mute) {
 					//shield.play();
 				}
@@ -621,7 +627,7 @@ function collectItem(player, item) {
 					wave_sd.play();
 				}
 				enemy_shots.removeAll();
-				score += 500;
+				score += 300;
 				text_ship.text = "Neutralisation !";
 			break;
 
@@ -679,7 +685,11 @@ function collectItem(player, item) {
 				enemies.removeAll();
 				enemy_shots.removeAll();
 				shots.removeAll();
-				loadBonusLevel(current_bonus_level);
+				if(!in_bonus_level) {
+					loadBonusLevel(current_bonus_level);
+				} else {
+					loadBonusLevel(++current_bonus_level);
+				}
 				score += 3000;
 				text_ship.text = "";
 			break;
@@ -749,6 +759,8 @@ function playerHit(player, shot) {
 			} else { //GAME OVER
 				text_middle.alpha = 1;
 				text_middle.text = 'GAME OVER';
+				text_level.alpha = 1;
+				text_level.text = 'Presser R pour recommencer';
 			}
 		} else {
 			//If you die in a bonus level, no penalty
@@ -868,8 +880,11 @@ function hitEnemy(shot, enemy) {
 				if (roulette > 60 && roulette <= 75) {
 					createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_clear');
 				}
-				if (roulette > 75 && roulette <= 90) {
+				if (roulette > 75 && roulette <= 85) {
 					createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_shield');
+				}
+				if (roulette > 85 && roulette <= 90) {
+					createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_freeze');
 				}
 				if (roulette > 90 && roulette <= 95) {
 					createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_kill');
@@ -958,7 +973,9 @@ function loadLevel(lvl) {
 function loadBonusLevel(lvl) {
 	in_bonus_level = true;
 	music.stop();
-	music_bonus.play();
+	if(!mute) {
+		music_bonus.play();	
+	}
 
 	text_middle.text = "Niveau bonus !";
 	text_level.text = "YAY ! (il est en travaux btw)";
@@ -1216,9 +1233,14 @@ function muteGame() {
 	if (!mute) {
 		mute = true;
 		music.pause()
+		music_bonus.pause();
 	} else {
 		mute = false;
-		music.resume();
+		if (in_bonus_level) {
+			music_bonus.resume();
+		} else {
+			music.resume();
+		}
 	}
 
 	console.log('mute is ' + mute);
