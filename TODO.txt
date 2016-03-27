@@ -1,10 +1,9 @@
 TODO LIST :
 
-- Trouver un sprite pour le bonus ship
 - Boss
 - Plus d'armes ?
 - Trouver une musique originale
-- Finir le bouclier
+- Trouver une autre musique por le mode OH GOD
 - Powerup warp
 
 - NIVEAUX DE DIFFICULTÉ

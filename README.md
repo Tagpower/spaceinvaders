@@ -43,5 +43,9 @@ Play it <a href=http://tagpower.github.io/spaceinvaders/>here</a> !
 		- 26/03/2016 : - Update bouclier
 					   - Début des travaux sur les niveaux de difficulté
 					   - Bouton restart
+
+		- 27/03/2016 : - Difficulté
+					   - Niveau 16
+					   - Nouveau sprite pour le bonus ship
 	
 ==============================================================================================================================

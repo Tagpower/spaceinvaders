@@ -214,7 +214,7 @@ function preload() {
 		//Spritesheets
 		game.load.spritesheet('enemyshots', 'assets/enemyshots.png', 4, 8);
 		game.load.spritesheet('enemy', 'assets/enemy.png', 16, 16);
-		game.load.spritesheet('bonusship', 'assets/bonusship.png', 32, 16);
+		game.load.spritesheet('bonusship', 'assets/bonus_ship.png', 32, 16);
 		game.load.spritesheet('ship', 'assets/ship24.png', 24, 28);
 		game.load.spritesheet('powerup_power', 'assets/powerup.png', 16, 16);
 		game.load.spritesheet('powerup_cooldown', 'assets/powerup_cooldown.png', 16, 16);
@@ -1191,6 +1191,8 @@ function enemyFire(enemy, velx, vely) {
 function bonusShip(delay) {
 	window.setTimeout(function(){
 		var bship = game.add.sprite(-32, 15, 'bonusship', 0);
+
+		bship.animations.add('move', [0,1,2,3], 12, true);
 		game.physics.arcade.enable(bship);
 		if (Math.random() < 0.5) {
 			bship.body.velocity.x = 90; 
@@ -1199,6 +1201,7 @@ function bonusShip(delay) {
 			bship.body.velocity.x = -90;
 		}				   
 		bonusships.add(bship); 
+		bship.animations.play('move');
 		bship.value = 1000;   
 	}, delay);
 }
