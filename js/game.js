@@ -21,17 +21,23 @@ var gameoversound = false;
 var introduction_sound = true;
 var music, pickup_sd, playerhit_sd, hitenemy_sd, killenemy_sd, abahe_sd, hellyeah_sd, fire_sd, firespecial_sd, enemyfire_sd, wave_sd, intro_sd, win_sd, over_sd;
 
-var difficulty = 1; //0 = EASY, 1 = NORMAL, 2 = HARD, 3 = OH GOD
+var difficulty = 0; //-1 = EASY, 0 = NORMAL, 1 = HARD, 2 = OH GOD
 console.log('Difficulty = ' + difficulty);
 
 //Constants
+var EASY = -1;
+var NORMAL = 0;
+var HARD = 1;
+var OHGOD = 2;
+
 var START_SPEED = 20;
 var SPEEDUP_INIT = 5;
 var SPEEDUP_ACCEL = 0.5;
 var PLAYER_SPEED = 150;
+var DEFAULTS = [START_SPEED, SPEEDUP_INIT, SPEEDUP_ACCEL];
 var DEFAULT_FIRE_COOLDOWN = 30;
-var ENEMY_DEFAULT_FIRE_PROBA = 0.004 + (difficulty-1)*0.001;
-var POWERUP_CHANCE = 0.05 + (difficulty-1)*0.01;
+var ENEMY_DEFAULT_FIRE_PROBA = 0.004 + difficulty*0.001;
+var POWERUP_CHANCE = 0.05 + difficulty*0.01;
 var MAX_POWER = 7;
 var MAX_CDR = 30;
 
@@ -44,7 +50,7 @@ var current_bonus_level = 0;
 var in_bonus_level = false;
 var score = 0;
 var lives = 3;
-var power = (difficulty == 0 ? 2 : 1);
+var power = (difficulty == -1 ? 2 : 1);
 var shield_time = 0;
 var shots_cooldown = 0;
 var special_cooldown = 0;
@@ -140,6 +146,15 @@ var levels = [[[0,0,1,1,1,1,1,1,0,0], //Level 1
 			 [0,6,6,6,6,6],
 			 [0,0,6,6,6]],
 
+			[[0,0,0,1,1], //Level 16
+			 [0,0,1,1,1,1],
+			 [0,1,1,5,5,1,1],
+			 [1,1,5,8,8,5,1,1],
+			 [1,1,5,8,8,5,1,1],
+			 [0,1,1,5,5,1,1],
+			 [0,0,1,1,1,1],
+			 [0,0,0,1,1]]
+
 
 			 
 
@@ -148,19 +163,21 @@ var levels = [[[0,0,1,1,1,1,1,1,0,0], //Level 1
 //Level names
 var level_names_en = ["Orange is the new ghost", "Cross the line", "Death from above", "Still not bullet hell", "Encapsulated",
 					"Stand behind me", "Banzai", "Target almost locked", "Well Played", "Rainbow",
-					"Eleven","Deadly checkers", "To the top with you", "Not based on opinion", "Thanks for the gold", "", 
+					"Eleven","Deadly checkers", "To the top with you", "Not based on opinion", "Thanks for the gold",
+					"Hard core", 
 					];
 
 var level_names_fr = ["Alerte orange", "La ligne rouge", "La mort vient d'en haut", "Ceci n'est pas un bullet hell", "Capsule",
 					"Reste derrière moi", "Banzai", "Cible presque verrouillée", "Bien joué", "Arc-en-ciel",
-					"Onze","Échiquier fatal", "Au top", "Pas basé sur l'opinion", "Merci pour l'or", "", 
+					"Onze","Échiquier fatal", "Au top", "Pas basé sur l'opinion", "Merci pour l'or",
+					"Noyau dur", 
 					];
 
 //Speed values for each level : Start speed, speedup each time an enemy is killed, acceleration of the speedup
 var speed_values = [[20,4,0.25], [20,5,0.25], [20,4,0.25], [20,5,0.5], [10,5,0.5], //5
 					[20,4,0.3],  [20,6,0.5],  [20,4,0.4],  [15,5,0.3], [20,4,0.5], //10
-					[20,5,0.25], [25,4,0.5],  [20,15,0.5], [20,15,0.5], [15,4,0.4] //15
-
+					[20,5,0.25], [25,4,0.5],  [20,15,0.5], [20,15,0.5], [15,4,0.4], //15
+					[15,4,0.3]
 					];
 
 //Bonus levels
@@ -233,339 +250,342 @@ function preload() {
 
 function create() {
 		
-		game.renderer.clearBeforeRender = false;
-		game.renderer.roundPixels = true;
+	game.renderer.clearBeforeRender = false;
+	game.renderer.roundPixels = true;
 
-		game.physics.startSystem(Phaser.Physics.ARCADE);
+	game.physics.startSystem(Phaser.Physics.ARCADE);
 
-		timer_to_next_level = new Phaser.Timer(this, false);
+	timer_to_next_level = new Phaser.Timer(this, false);
 
 	//Create the background
-		background = game.add.tileSprite(0, 0, game.width, game.height, 'space');
+	background = game.add.tileSprite(0, 0, game.width, game.height, 'space');
+	if (difficulty == OHGOD) {
+		background.tint = 0xff0000;
+	} else {	
 		background.tint = 0x3355ee;
+	}
+	shots = game.add.group();
+	shots.enableBody = true;
+	special_shots = game.add.group();
+	special_shots.enableBody = true;
+	enemy_shots = game.add.group();
+	enemy_shots.enableBody = true;
+	explosions = game.add.group();
+	explosions.enableBody = true;
+	enemies = game.add.group();
+	enemies.enableBody = true;
+	bonusships = game.add.group();
+	bonusships.enableBody = true;
+	items = game.add.group();
 
-		shots = game.add.group();
-		shots.enableBody = true;
-		special_shots = game.add.group();
-		special_shots.enableBody = true;
-		enemy_shots = game.add.group();
-		enemy_shots.enableBody = true;
-		explosions = game.add.group();
-		explosions.enableBody = true;
-		enemies = game.add.group();
-		enemies.enableBody = true;
-		bonusships = game.add.group();
-		bonusships.enableBody = true;
-		items = game.add.group();
+	shield = game.add.sprite(0, 0, 'shield');
 
-		shield = game.add.sprite(0, 0, 'shield');
+	//Create the player's ship
+	createPlayer();
+	game.camera.follow(player);
+	
+	//All inputs
+	cursors = game.input.keyboard.createCursorKeys();
+	fire_btn = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+	special_btn = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
+	mute_btn = game.input.keyboard.addKey(Phaser.Keyboard.M);
+	pause_btn = game.input.keyboard.addKey(Phaser.Keyboard.P);
+	restart_btn = game.input.keyboard.addKey(Phaser.Keyboard.R);
 
-		//Create the player's ship
-		createPlayer();
-		game.camera.follow(player);
-		
-		//All inputs
-		cursors = game.input.keyboard.createCursorKeys();
-		fire_btn = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-		special_btn = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
-		mute_btn = game.input.keyboard.addKey(Phaser.Keyboard.M);
-		pause_btn = game.input.keyboard.addKey(Phaser.Keyboard.P);
-		restart_btn = game.input.keyboard.addKey(Phaser.Keyboard.R);
+	//mute_btn.onUp.add(muteGame, this);
+	pause_btn.onDown.add(pauseGame, this);
 
-		//mute_btn.onUp.add(muteGame, this);
-		pause_btn.onDown.add(pauseGame, this);
+	//Ingame Text
+	text_middle = game.add.text(200, game.world.height/2, '', {font: '32px Minecraftia', fill: '#ffffff'});
+	text_middle.fixedToCamera = true;
+	text_pause = game.add.text(200, game.world.height/1.5, 'PAUSE', {font: '32px Minecraftia', fill: '#ffffff'});
+	text_pause.fixedToCamera = true;
+	text_pause.alpha = 0;
+	text_score = game.add.text(16, 5, '', {font: '16px Minecraftia', fill: '#00aaff'});
+	text_score.fixedToCamera = true;
+	text_level = game.add.text(200, game.world.height/2 + 40, '', {font: '16px Minecraftia', fill: '#00aaff'});
+	text_level.fixedToCamera = true;
 
-		//Ingame Text
-		text_middle = game.add.text(200, game.world.height/2, '', {font: '32px Minecraftia', fill: '#ffffff'});
-		text_middle.fixedToCamera = true;
-		text_pause = game.add.text(200, game.world.height/1.5, 'PAUSE', {font: '32px Minecraftia', fill: '#ffffff'});
-		text_pause.fixedToCamera = true;
-		text_pause.alpha = 0;
-		text_score = game.add.text(16, 5, '', {font: '16px Minecraftia', fill: '#00aaff'});
-		text_score.fixedToCamera = true;
-		text_level = game.add.text(200, game.world.height/2 + 40, '', {font: '16px Minecraftia', fill: '#00aaff'});
-		text_level.fixedToCamera = true;
+	music = game.add.audio('ambient');
+	music.loop = true;
+	music_bonus = game.add.audio('bonus_loop');
+	music_bonus.loop = true;
+	if (!mute) {
+		music.play();
+	}
 
-		music = game.add.audio('ambient');
-		music.loop = true;
-		music_bonus = game.add.audio('bonus_loop');
-		music_bonus.loop = true;
-		if (!mute) {
-				music.play();
-		}
+	//Create all sounds
+	pickup_sd = game.add.audio('pickup');
+	hellyeah_sd = game.add.audio('hellyeah');
+	playerhit_sd = game.add.audio('explode');
+	hitenemy_sd = game.add.audio('hitenemy');
+	killenemy_sd = game.add.audio('killenemy');
+	fire_sd = game.add.audio('fire');
+	firespecial_sd = game.add.audio('firespecial');
+	enemyfire_sd = game.add.audio('enemyfire');
+	wave_sd = game.add.audio('wave');
+	intro_sd = game.add.audio('intro');
+	win_sd = game.add.audio('win');
+	over_sd = game.add.audio('over');
 
-		//Create all sounds
-		pickup_sd = game.add.audio('pickup');
-		hellyeah_sd = game.add.audio('hellyeah');
-		playerhit_sd = game.add.audio('explode');
-		hitenemy_sd = game.add.audio('hitenemy');
-		killenemy_sd = game.add.audio('killenemy');
-		fire_sd = game.add.audio('fire');
-		firespecial_sd = game.add.audio('firespecial');
-		enemyfire_sd = game.add.audio('enemyfire');
-		wave_sd = game.add.audio('wave');
-		intro_sd = game.add.audio('intro');
-		win_sd = game.add.audio('win');
-		over_sd = game.add.audio('over');
+	text_ship = game.add.text(player.body.x - 20, player.body.y-20, '', {font: '16px Minecraftia', fill: '#44ff44'});
+	text_ship.anchor.setTo(0.5, 0.5);
+	text_ship.alpha = 0;
 
-		text_ship = game.add.text(player.body.x - 20, player.body.y-20, '', {font: '16px Minecraftia', fill: '#44ff44'});
-		text_ship.anchor.setTo(0.5, 0.5);
-		text_ship.alpha = 0;
-
-		speed = START_SPEED;
-		speedup = SPEEDUP_INIT;
-		accel = SPEEDUP_ACCEL;
-		loadLevel(0);
-		enemies.setAll('body.velocity.x', speed);
+	speed = START_SPEED;
+	speedup = SPEEDUP_INIT;
+	accel = SPEEDUP_ACCEL;
+	loadLevel(0);
+	enemies.setAll('body.velocity.x', speed);
 
 }
 
 
 function update() {
-		//Check collisions for everything
-		game.physics.arcade.collide(shots, enemies, hitEnemy, null, this);
-		game.physics.arcade.collide(special_shots, enemies, hitEnemy, false, this); 
-		game.physics.arcade.collide(explosions, enemies, hitEnemy, null, this);
-		game.physics.arcade.collide(shots, bonusships, hitBonusShip, null, this);
-		//game.physics.arcade.collide(player, enemies, levelFailed, null, this);
-		game.physics.arcade.collide(player, enemies, playerHit, function(){return (!lostAlife && shield_time == 0);}, this);
-		game.physics.arcade.collide(player, enemy_shots, playerHit, null, this);
-		game.physics.arcade.collide(player, items, collectItem, null, this);
+	//Check collisions for everything
+	game.physics.arcade.collide(shots, enemies, hitEnemy, null, this);
+	game.physics.arcade.collide(special_shots, enemies, hitEnemy, false, this); 
+	game.physics.arcade.collide(explosions, enemies, hitEnemy, null, this);
+	game.physics.arcade.collide(shots, bonusships, hitBonusShip, null, this);
+	//game.physics.arcade.collide(player, enemies, levelFailed, null, this);
+	game.physics.arcade.collide(player, enemies, playerHit, function(){return (!lostAlife && shield_time == 0);}, this);
+	game.physics.arcade.collide(player, enemy_shots, playerHit, null, this);
+	game.physics.arcade.collide(player, items, collectItem, null, this);
 
 
 
-		text_score.text = 'Niveau ' + (current_level+1) + '    Score: ' + score + '   Vies: ' + lives
-										+ '\nPuissance: ' + power + ' Vitesse de tir: '+ cooldown_reduction +'    Tir spécial: '+special_available;
-		//background.tilePosition.y += current_level/5 + 1;
-		background.tilePosition.y += 1 + (14*in_bonus_level); //FIXME
+	text_score.text = 'Niveau ' + (current_level+1) + '    Score: ' + score + '   Vies: ' + lives
+									+ '\nPuissance: ' + power + ' Vitesse de tir: '+ cooldown_reduction +'    Tir spécial: '+special_available;
+	//background.tilePosition.y += current_level/5 + 1;
+	background.tilePosition.y += 1 + (14*in_bonus_level); //FIXME
 
-		//All controls are disabled when the player dies
-		if (!lostAlife) {
-			//Mute button
-			if (mute_btn.isDown) {
-				if (mute_wait == 0) {
-					muteGame();
-				}
-			};
-
-			//Control the player
-				player.body.velocity.x = 0;
-				player.body.velocity.y = 0;
-				//if (!player.touched) {
-						//player.body.velocity.y = 0; 
-				//};
-			if (cursors.up.isDown && difficulty < 3) {
-				player.body.velocity.y = -PLAYER_SPEED;
-				player.body.velocity.x = 0; 
-				//player.animations.play('left');
-			} else if (cursors.down.isDown  && difficulty < 3) {
-				player.body.velocity.y = PLAYER_SPEED;
-				player.body.velocity.x = 0; 
-				//player.animations.play('right');
-			} else if (!lostAlife) {
-					player.animations.play('idle');
+	//All controls are disabled when the player dies
+	if (!lostAlife) {
+		//Mute button
+		if (mute_btn.isDown) {
+			if (mute_wait == 0) {
+				muteGame();
 			}
-
-			if (cursors.left.isDown) {
-				player.body.velocity.x = -PLAYER_SPEED;
-				//player.body.velocity.y = 0; 
-				player.animations.play('left');
-			} else if (cursors.right.isDown) {
-				player.body.velocity.x = PLAYER_SPEED;
-				//player.body.velocity.y = 0; 
-				player.animations.play('right');
-			} else if (!lostAlife) {
-					player.animations.play('idle');
-			}
-
-			 //Fire shots
-			if (fire_btn.isDown) {
-				if (shots_cooldown == 0) {
-					switch (power) { //Number of shots depends on the ship's power
-						case 7:
-							createShot(player.body.center.x-17, player.body.y, -30, -270);
-							createShot(player.body.center.x+13, player.body.y, 30, -270);
-						case 5:
-							createShot(player.body.center.x-12, player.body.y, -20, -280);
-							createShot(player.body.center.x+8, player.body.y, 20, -280);
-						case 3:
-							createShot(player.body.center.x-7, player.body.y, -10, -290);
-							createShot(player.body.center.x+3, player.body.y, 10, -290);                        
-						case 1:
-						default:
-							createShot(player.body.center.x-2, player.body.y, 0, -300);
-							break;
-						case 6:
-							createShot(player.body.center.x-16, player.body.y, -16, -280);
-							createShot(player.body.center.x+12, player.body.y, 16, -280);                        
-						case 4:
-							createShot(player.body.center.x-11, player.body.y, -8, -290);
-							createShot(player.body.center.x+7, player.body.y, 8, -290);
-						case 2:
-							createShot(player.body.center.x-6, player.body.y, 0, -300);
-							createShot(player.body.center.x+2, player.body.y, 0, -300);
-							break;
-					}
-				}
-			}
-
-			//Fire super special shots 
-			if (special_btn.isDown) {
-				if (special_available > 0 && special_cooldown == 0) {
-					if (power == MAX_POWER) {
-						createSpecialShot(player.body.center.x-2, player.body.y, -10, -300);
-						createSpecialShot(player.body.center.x-2, player.body.y, 10, -300)
-					} else {
-						createSpecialShot(player.body.center.x-2, player.body.y, 0, -300);
-					}
-					special_available--;
-				}
-			}		
-
-			if (shield_time > 0) {
-				shield_time--;
-			} else {
-				shield_time = 0;
-			}
-			shield.alpha = Math.min(shield_time/60.0, 0.75); //Fade the shield sprite with time
-
-
-			if (shots_cooldown > 0) {
-				shots_cooldown--;
-			} else {
-				shots_cooldown = 0;
-			}
-
-			if (special_cooldown > 0) {
-					special_cooldown--;
-			} else {
-					special_cooldown = 0;
-			}
-
-
-		} else {
-		//When the player dies
-				player.body.velocity.x = 0;
-				player.animations.play('dead');
-				//enemies.setAll('body.velocity.x', 0);
-				if (lives == 0) {
-					if (restart_btn.isDown) {
-						restart(0);
-					}
-				}
 		};
 
-		if (mute_wait > 0) {
-				mute_wait--;
-		} else {
-				mute_wait = 0;
+		//Control the player
+			player.body.velocity.x = 0;
+			player.body.velocity.y = 0;
+			//if (!player.touched) {
+					//player.body.velocity.y = 0; 
+			//};
+		if (cursors.up.isDown && difficulty < OHGOD) {
+			player.body.velocity.y = -PLAYER_SPEED;
+			player.body.velocity.x = 0; 
+			//player.animations.play('left');
+		} else if (cursors.down.isDown  && difficulty < OHGOD) {
+			player.body.velocity.y = PLAYER_SPEED;
+			player.body.velocity.x = 0; 
+			//player.animations.play('right');
 		}
 
-		//Move the enemies
-		enemies.forEachAlive(function(enemy){
-			enemy.animations.play('move');
-			if (left) {
-				enemies.setAll('body.velocity.x', -speed);   
-			} else {
-				enemies.setAll('body.velocity.x', speed);               
-			}
-			if (enemy.body.position.x < 10) {
-				left = false;
-				enemies.addAll('body.position.x', 10);        
-				enemies.addAll('body.position.y', enemy.body.height);      
-			} else if (enemy.body.position.x >= game.world.width - 25) {
-				left = true;
-				enemies.addAll('body.position.x', -10);
-				enemies.addAll('body.position.y', enemy.body.height);
-			}
-			if (enemy.position.y > game.world.height) {
-				levelFailed();
-			}
+		if (cursors.left.isDown) {
+			player.body.velocity.x = -PLAYER_SPEED;
+			//player.body.velocity.y = 0; 
+			player.animations.play('left');
+		} else if (cursors.right.isDown) {
+			player.body.velocity.x = PLAYER_SPEED;
+			//player.body.velocity.y = 0; 
+			player.animations.play('right');
+		} else if (!lostAlife) {
+				player.animations.play('idle');
+		}
 
-			//Make the enemies fire
-			random = Math.random();
-			if (random < enemy.fireProba) {
-				switch (enemy.type) {
-					default:
-					case 1:
-						enemyFire(enemy, 0, 100);
-						break;
-					case 2:
-						enemyFire(enemy, -25, 100);
-						enemyFire(enemy, 0, 100);
-						enemyFire(enemy, 25, 100);
-						break;
-					case 3:
-						enemyFire(enemy, 0, 300);
-						break; 
+		 //Fire shots
+		if (fire_btn.isDown) {
+			if (shots_cooldown == 0) {
+				switch (power) { //Number of shots depends on the ship's power
 					case 7:
-						enemyFire(enemy, 0, 1);
+						createShot(player.body.center.x-17, player.body.y, -30, -270);
+						createShot(player.body.center.x+13, player.body.y, 30, -270);
+					case 5:
+						createShot(player.body.center.x-12, player.body.y, -20, -280);
+						createShot(player.body.center.x+8, player.body.y, 20, -280);
+					case 3:
+						createShot(player.body.center.x-7, player.body.y, -10, -290);
+						createShot(player.body.center.x+3, player.body.y, 10, -290);                        
+					case 1:
+					default:
+						createShot(player.body.center.x-2, player.body.y, 0, -300);
+						//createShot(player.body.center.x-2, player.body.y, Math.random()*60-30, -300); //Another weapon ?
 						break;
-					case 9:
-						enemyFire(enemy, Math.random()*200-100, Math.random()*200+50);
+					case 6:
+						createShot(player.body.center.x-16, player.body.y, -16, -280);
+						createShot(player.body.center.x+12, player.body.y, 16, -280);                        
+					case 4:
+						createShot(player.body.center.x-11, player.body.y, -8, -290);
+						createShot(player.body.center.x+7, player.body.y, 8, -290);
+					case 2:
+						createShot(player.body.center.x-6, player.body.y, 0, -300);
+						createShot(player.body.center.x+2, player.body.y, 0, -300);
 						break;
-					case 11: //OH GOD
-						enemyFire(enemy, 0, 600);
-						break; 
 				}
+				shots_cooldown = (DEFAULT_FIRE_COOLDOWN + 10*power) * (1-cooldown_reduction/(MAX_CDR*2.0));
 			}
-		});
-		
-		//When the level is beaten
-		if (enemies.countLiving() == 0 && enemy_shots.countLiving() == 0 && current_level < levels.length) {
-			bonusships.forEachAlive(function(bship) {
-				if (bship.body.velocity.x == 0) {
-					bship.kill();
-					console.log("bonus ship en attente killé");
-				}
-			});
-			console.log('level ' + (current_level+1) + ' beaten');
-			shots.removeAll();
-			
-			//timer.start();
-			//console.log(timer.seconds);
-			if (in_bonus_level) {
-				current_bonus_level++;
-				in_bonus_level = false;
-				music_bonus.stop();
-				music.play();
-			}
-			loadLevel(++current_level);
-
 		}
 
-		//Kill shots and items when touching bounds
-		shots.forEachAlive(function(proj) {
-			if (proj.body.y < -10 || proj.body.x < -4 || proj.body.x > game.world.width + 4) {
-					proj.kill();
+		//Fire super special shots 
+		if (special_btn.isDown) {
+			if (special_available > 0 && special_cooldown == 0) {
+				if (power == MAX_POWER) {
+					createSpecialShot(player.body.center.x-2, player.body.y, -10, -300);
+					createSpecialShot(player.body.center.x-2, player.body.y, 10, -300)
+				} else {
+					createSpecialShot(player.body.center.x-2, player.body.y, 0, -300);
+				}
+				special_available--;
 			}
-		});
+		}		
 
-		enemy_shots.forEachAlive(function(proj) {
-			if (proj.body.y > game.world.height+8 || proj.body.x < -4 || proj.body.x > game.world.width + 4) {
-					proj.kill();
+		if (shield_time > 0) {
+			shield_time--;
+		} else {
+			shield_time = 0;
+		}
+		shield.alpha = Math.min(shield_time/60.0, 0.75); //Fade the shield sprite with time
+
+
+		if (shots_cooldown > 0) {
+			shots_cooldown--;
+		} else {
+			shots_cooldown = 0;
+		}
+
+		if (special_cooldown > 0) {
+				special_cooldown--;
+		} else {
+				special_cooldown = 0;
+		}
+
+
+	} else {
+	//When the player dies
+			player.body.velocity.x = 0;
+			player.animations.play('dead');
+			//enemies.setAll('body.velocity.x', 0);
+			if (lives == 0) {
+				if (restart_btn.isDown) {
+					restart(0);
+				}
 			}
-		});
+	};
 
-		explosions.forEachAlive(function(expl) {
-			//game.debug.body(expl);
-			if (expl.alpha < 0.1) {
-				expl.kill();
+	if (mute_wait > 0) {
+			mute_wait--;
+	} else {
+			mute_wait = 0;
+	}
+
+	//Move the enemies
+	enemies.forEachAlive(function(enemy){
+		enemy.animations.play('move');
+		if (left) {
+			enemies.setAll('body.velocity.x', -speed);   
+		} else {
+			enemies.setAll('body.velocity.x', speed);               
+		}
+		if (enemy.body.position.x < 10) {
+			left = false;
+			enemies.addAll('body.position.x', 10);        
+			enemies.addAll('body.position.y', enemy.body.height);      
+		} else if (enemy.body.position.x >= game.world.width - 25) {
+			left = true;
+			enemies.addAll('body.position.x', -10);
+			enemies.addAll('body.position.y', enemy.body.height);
+		}
+		if (enemy.position.y > game.world.height) {
+			levelFailed();
+		}
+
+		//Make the enemies fire
+		random = Math.random();
+		if (random < enemy.fireProba) {
+			switch (enemy.type) {
+				default:
+				case 1:
+					enemyFire(enemy, 0, 100);
+					break;
+				case 2:
+					enemyFire(enemy, -25, 100);
+					enemyFire(enemy, 0, 100);
+					enemyFire(enemy, 25, 100);
+					break;
+				case 3:
+					enemyFire(enemy, 0, 300);
+					break; 
+				case 7:
+					enemyFire(enemy, 0, 1);
+					break;
+				case 9:
+					enemyFire(enemy, Math.random()*200-100, Math.random()*200+50);
+					break;
+				case 11: //OH GOD
+					enemyFire(enemy, 0, 600);
+					break; 
 			}
-		});
-
+		}
+	});
+	
+	//When the level is beaten
+	if (enemies.countLiving() == 0 && enemy_shots.countLiving() == 0 && current_level < levels.length) {
 		bonusships.forEachAlive(function(bship) {
-			if (bship.x > game.world.height + bship.body.width*2 || bship.x < -bship.body.width*2) {
-					bship.kill();
+			if (bship.body.velocity.x == 0) {
+				bship.kill();
+				console.log("bonus ship en attente killé"); //FIXME
 			}
 		});
+		console.log('level ' + (current_level+1) + ' beaten');
+		shots.removeAll();
+		
+		//timer.start();
+		//console.log(timer.seconds);
+		if (in_bonus_level) {
+			current_bonus_level++;
+			in_bonus_level = false;
+			music_bonus.stop();
+			music.play();
+		}
+		loadLevel(++current_level);
+
+	}
+
+	//Kill shots and items when touching bounds
+	shots.forEachAlive(function(proj) {
+		if (proj.body.y < -10 || proj.body.x < -4 || proj.body.x > game.world.width + 4) {
+				proj.kill();
+		}
+	});
+
+	enemy_shots.forEachAlive(function(proj) {
+		if (proj.body.y > game.world.height+8 || proj.body.x < -4 || proj.body.x > game.world.width + 4) {
+				proj.kill();
+		}
+	});
+
+	explosions.forEachAlive(function(expl) {
+		//game.debug.body(expl);
+		if (expl.alpha < 0.1) {
+			expl.kill();
+		}
+	});
+
+	bonusships.forEachAlive(function(bship) {
+		if (bship.x > game.world.height + bship.body.width*2 || bship.x < -bship.body.width*2) {
+				bship.kill();
+		}
+	});
 
 }
 
 function collectItem(player, item) {
 	if (!lostAlife) {         
 		switch (item.key) {
-			case 'powerup_power':
+			case 'powerup_power': //Raises the player's firepower
 				if (power < MAX_POWER) {
 					power++;
 				}			
@@ -576,7 +596,7 @@ function collectItem(player, item) {
 				}
 				score += 300;
 			break;
-			case 'powerup_cooldown':
+			case 'powerup_cooldown': //Raises the player's rate of fire
 				if (cooldown_reduction < MAX_CDR) {
 					cooldown_reduction += 3;
 				}
@@ -588,18 +608,16 @@ function collectItem(player, item) {
 				}
 				score += 300;
 			break;            
-			case 'powerup_special':
+			case 'powerup_special': //Gives a special shot charge
 				special_available++;
 				score += 500;
 				text_ship.text = "Tir special +1!";
 			break;
 
-			case 'powerup_shield': //TODO
+			case 'powerup_shield': //Gives a temporary shield
 				player.addChild(shield);
-				console.log(shield);
 				shield.anchor.setTo(0.5, 0.5);
 				shield.smoothed = false;
-				//shield.alpha = 0.5
 				shield_time += 300;
 				if (!mute) {
 					//shield.play();
@@ -608,7 +626,7 @@ function collectItem(player, item) {
 				text_ship.text = "Bouclier !";
 			break;
 
-			case 'powerup_kill':
+			case 'powerup_kill': //Tries to shoot all the enemies at once
 				enemies.forEachAlive(function(enemy) {
 					createShot(player.body.center.x, player.body.center.y,  (enemy.x-player.x+enemy.body.velocity.x)*2, (enemy.y-player.y)*2);
 				});
@@ -616,7 +634,7 @@ function collectItem(player, item) {
 				text_ship.text = "KILL 'EM ALL !";
 			break;
 
-			case 'powerup_clear':
+			case 'powerup_clear': //Clears the screen of enemy fire
 				var wave = game.add.sprite(player.body.center.x, player.body.center.y, 'clear_wave');
 				wave.anchor.setTo(0.5, 0.5);
 				wave.smoothed = false;
@@ -630,7 +648,7 @@ function collectItem(player, item) {
 				text_ship.text = "Neutralisation !";
 			break;
 
-			case 'powerup_orange':
+			case 'powerup_orange': //Turn all enemies to default, orange ones
 				var wave = game.add.sprite(player.body.center.x, player.body.center.y, 'clear_wave');
 				wave.tint = 0xff7f00;
 				wave.anchor.setTo(0.5, 0.5);
@@ -638,9 +656,9 @@ function collectItem(player, item) {
 				game.add.tween(wave).to( { alpha: 0}, 1500, Phaser.Easing.Quintic.Out, true);
 				game.add.tween(wave.scale).to( {x: 30, y: 30 }, 1500, Phaser.Easing.Quintic.Out, true);
 				if (!mute) {
-						wave_sd.play();
+					wave_sd.play();
 				}
-				enemies.forEachAlive(function(e){
+				enemies.forEachAlive(function(e){ //Orangify all the enemies
 					e.type = 1;
 					e.animations.add('move', [0, 1], 6, true);
 					e.health = 1;
@@ -651,7 +669,7 @@ function collectItem(player, item) {
 				text_ship.text = "Tous oranges !";
 			break;
 
-			case 'powerup_freeze': //TODO
+			case 'powerup_freeze': //Stops the enemies on a dime
 				var wave = game.add.sprite(player.body.center.x, player.body.center.y, 'clear_wave');
 				wave.tint = 0x007fff;
 				wave.anchor.setTo(0.5, 0.5);
@@ -666,7 +684,7 @@ function collectItem(player, item) {
 				text_ship.text = "Stop !";
 			break;
 
-			case 'powerup_warp': //TODO
+			case 'powerup_warp': //TODO : Warps the enemies back to the top of the screen
 				enemies.forEachAlive(function(e) {
 					//game.add.tween(e).to( {y: e.x - 300}, 1000, Phaser.Easing.Quadratic.Out, true);
 				});
@@ -674,13 +692,13 @@ function collectItem(player, item) {
 				text_ship.text = "Retour en haut !";
 			break;
 
-			case 'extralife':
+			case 'extralife': //Gives an extra life
 				lives++;
 				score += 900;
 				text_ship.text = "+1 vie !";
 			break;
 
-			case 'bonus_level': //TODO
+			case 'bonus_level': //Skips current level and warps the player to a bonus level
 				enemies.removeAll();
 				enemy_shots.removeAll();
 				shots.removeAll();
@@ -720,7 +738,7 @@ function playerHit(player, shot) {
 		//var tween_death = game.add.tween(player.body).to( { y: game.world.height+10 }, 1000, Phaser.Easing.Linear.None, true);
 		
 		if (!in_bonus_level) {
-			if (difficulty == 0) {
+			if (difficulty == EASY) {
 				if (power > 2) {
 					power /= 2;
 					power = Math.ceil(power);
@@ -736,10 +754,9 @@ function playerHit(player, shot) {
 				cooldown_reduction = Math.floor(cooldown_reduction);
 			}
 			special_available = 1;
-			console.log(player.y);
 			lives--;
 			if (lives > 0) {
-				window.setTimeout(function(){
+				setTimeout(function(){
 					player.body.collideWorldBounds = true;
 					//player.y = 550;
 					game.add.tween(player.body).to( { y: 550 }, 500, Phaser.Easing.Quadratic.In, true);
@@ -796,7 +813,7 @@ function levelFailed() {
 		//var tween_death = game.add.tween(player.body).to( { y: game.world.height+10 }, 1000, Phaser.Easing.Linear.None, true);
 
 		lives--;
-		if (difficulty == 0) {
+		if (difficulty == EASY) {
 			if (power > 2) {
 				power /= 2;
 				power = Math.ceil(power);
@@ -943,9 +960,9 @@ function loadLevel(lvl) {
 
 
 		if(speed_values[lvl]) {
-			speed = speed_values[lvl][0];
-			speedup = speed_values[lvl][1];
-			accel = speed_values[lvl][2];
+			speed = speed_values[lvl][0]*(1+difficulty*0.15);
+			speedup = speed_values[lvl][1]*(1+difficulty*0.15);
+			accel = speed_values[lvl][2]/**(1+difficulty*0.2)*/;
 		} else {
 			speed = START_SPEED;
 			speedup = SPEEDUP_INIT;
@@ -970,11 +987,11 @@ function loadLevel(lvl) {
 //BONUS LEVEL
 //ENORME TODO
 function loadBonusLevel(lvl) {
-	in_bonus_level = true;
 	music.stop();
-	if(!mute) {
+	if(!mute && !in_bonus_level) {
 		music_bonus.play();	
 	}
+	in_bonus_level = true;
 
 	text_middle.text = "Niveau bonus !";
 	text_level.text = "YAY ! (il est en travaux btw)";
@@ -1016,7 +1033,7 @@ function createEnemiesAbs(array, x, y) {
 				enemy.anchor.setTo(0.5);
 				enemy.body.immovable = true;
 				enemy.type = array[i][j];	
-				if (difficulty == 3) {
+				if (difficulty == OHGOD) {
 					if (array[i][j] == 1) {
 						enemy.type = 3;
 					} else if (array[i][j] == 3) {
@@ -1114,8 +1131,7 @@ function createShot(x, y, velx, vely) {
 			fire_sd.play();
 	}
 	//shots_cooldown = DEFAULT_FIRE_COOLDOWN - cooldown_reduction + 10*power;
-	shots_cooldown = (DEFAULT_FIRE_COOLDOWN + 10*power) * (1-cooldown_reduction/(MAX_CDR*2.0));
-
+	
 	shots.add(shot);
 }
 
@@ -1274,7 +1290,7 @@ function only(n) {
 function restart(level) {
 	score = 0;
 	lives = 3;
-	power = 1;
+	power = (difficulty == -1 ? 2 : 1);
 	shield_time = 0;
 	shots_cooldown = 0;
 	special_cooldown = 0;
