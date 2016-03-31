@@ -1,9 +1,9 @@
-TODO LIST :
+﻿TODO LIST :
 
 - Boss
 - Plus d'armes ?
 - Trouver une musique originale
-- Trouver une autre musique por le mode OH GOD
+- Trouver une autre musique pour le mode OH GOD
 - Powerup warp
 
 - NIVEAUX DE DIFFICULTÉ

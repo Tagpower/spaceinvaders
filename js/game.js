@@ -19,7 +19,7 @@ var timer;
 var mute = false;
 var gameoversound = false;
 var introduction_sound = true;
-var music, pickup_sd, playerhit_sd, hitenemy_sd, killenemy_sd, abahe_sd, hellyeah_sd, fire_sd, firespecial_sd, enemyfire_sd, wave_sd, intro_sd, win_sd, over_sd;
+var music, music_bonus, music_ohgod, pickup_sd, playerhit_sd, hitenemy_sd, killenemy_sd, abahe_sd, hellyeah_sd, fire_sd, firespecial_sd, enemyfire_sd, wave_sd, intro_sd, win_sd, over_sd;
 
 var difficulty = 0; //-1 = EASY, 0 = NORMAL, 1 = HARD, 2 = OH GOD
 console.log('Difficulty = ' + difficulty);
@@ -153,9 +153,13 @@ var levels = [[[0,0,1,1,1,1,1,1,0,0], //Level 1
 			 [1,1,5,8,8,5,1,1],
 			 [0,1,1,5,5,1,1],
 			 [0,0,1,1,1,1],
-			 [0,0,0,1,1]]
+			 [0,0,0,1,1]],
 
-
+			[[1,1,1,1,1,1,1,1], //Level 17
+			 [1,6,6,6,6,6,6,1],
+			 [1,6,10,10,10,10,6,1],
+			 [1,6,6,6,6,6,6,1],
+			 [1,1,1,1,1,1,1,1]]
 			 
 
 			 ];
@@ -164,20 +168,20 @@ var levels = [[[0,0,1,1,1,1,1,1,0,0], //Level 1
 var level_names_en = ["Orange is the new ghost", "Cross the line", "Death from above", "Still not bullet hell", "Encapsulated",
 					"Stand behind me", "Banzai", "Target almost locked", "Well Played", "Rainbow",
 					"Eleven","Deadly checkers", "To the top with you", "Not based on opinion", "Thanks for the gold",
-					"Hard core", 
+					"Hard core", "Caution : unstable"
 					];
 
 var level_names_fr = ["Alerte orange", "La ligne rouge", "La mort vient d'en haut", "Ceci n'est pas un bullet hell", "Capsule",
 					"Reste derrière moi", "Banzai", "Cible presque verrouillée", "Bien joué", "Arc-en-ciel",
 					"Onze","Échiquier fatal", "Au top", "Pas basé sur l'opinion", "Merci pour l'or",
-					"Noyau dur", 
+					"Noyau dur", "Danger : instable"
 					];
 
 //Speed values for each level : Start speed, speedup each time an enemy is killed, acceleration of the speedup
 var speed_values = [[20,4,0.25], [20,5,0.25], [20,4,0.25], [20,5,0.5], [10,5,0.5], //5
 					[20,4,0.3],  [20,6,0.5],  [20,4,0.4],  [15,5,0.3], [20,4,0.5], //10
 					[20,5,0.25], [25,4,0.5],  [20,15,0.5], [20,15,0.5], [15,4,0.4], //15
-					[15,4,0.3]
+					[15,4,0.3],  [25,5,0.4]
 					];
 
 //Bonus levels
@@ -196,11 +200,11 @@ var bonus_levels = [[[00,00,01,01,01,01,01,01,00,00],
 //Special levels for testing
 var lineof4s = [[4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]];
 
-var fuckyou = [[3,3,3,3,3,2,3,3,3,2,3,3,3,2,2,2,2,3,3,3,3,3,3],
-			 [3,3,3,3,3,3,2,3,2,3,3,3,3,2,3,3,3,2,3,3,3,3,3],
-			 [3,3,3,3,3,3,3,2,3,3,3,3,3,2,3,3,3,2,3,3,3,3,3],
-			 [3,3,3,3,3,3,2,3,2,3,3,3,3,2,3,3,3,2,3,3,3,3,3],
-			 [3,3,3,3,3,2,3,3,3,2,3,3,3,2,2,2,2,3,3,3,3,3,3]];
+var fuckyou = [[11,11,11,11,11,3,11,11,11,3,11,11,11,3,3,3,3,11,11,11,11,11,11],
+			 [11,11,11,11,11,11,3,11,3,11,11,11,11,3,11,11,11,3,11,11,11,11,11],
+			 [11,11,11,11,11,11,11,3,11,11,11,11,11,3,11,11,11,3,11,11,11,11,11],
+			 [11,11,11,11,11,11,3,11,3,11,11,11,11,3,11,11,11,3,11,11,11,11,11],
+			 [11,11,11,11,11,3,11,11,11,3,11,11,11,3,3,3,3,11,11,11,11,11,11]];
 
 function preload() {
 		//Images
@@ -229,6 +233,7 @@ function preload() {
 
 		//Music
 		game.load.audio('ambient', ['assets/audio/e1m1.mp3']);
+		//game.load.audio('ohgod', ['assets/audio/e1m1.mp3']); TODO
 		game.load.audio('bonus_loop', ['assets/audio/mindlesslittleloop.mp3']);
 
 		//Sounds
@@ -658,7 +663,11 @@ function collectItem(player, item) {
 				if (!mute) {
 					wave_sd.play();
 				}
+				var already_all_orange = true;
 				enemies.forEachAlive(function(e){ //Orangify all the enemies
+					if (e.type != 1) {
+						already_all_orange = false;
+					}
 					e.type = 1;
 					e.animations.add('move', [0, 1], 6, true);
 					e.health = 1;
@@ -666,7 +675,12 @@ function collectItem(player, item) {
 					e.value = 100
 				});
 				score += 500;
-				text_ship.text = "Tous oranges !";
+				if (!already_all_orange) {
+					text_ship.text = "Tous oranges !";
+				} else {
+					text_ship.text = "Très utile !";
+				}	
+				
 			break;
 
 			case 'powerup_freeze': //Stops the enemies on a dime
