@@ -1,4 +1,6 @@
-﻿TODO LIST :
+﻿/!\ Arrete de faire de changements sur la branche principale !!! quand tu t'ennuis rebascule ce que tu as fais pour le moment sur ma branche pour qu'on merge vite et qu'on parte ensuite sur une orga propre des branches et du code ! /!\
+
+TODO LIST :
 
 - Boss
 - Plus d'armes ?
