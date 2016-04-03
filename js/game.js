@@ -358,8 +358,7 @@ function update() {
 		if (currentDifficulty == EASY && power < 2)
 			power = 2;
 		else if (currentDifficulty == OHGOD) {
-			enemies.removeAll();
-			loadLevel(current_level);
+			restart(current_level);
 		}
 	}
 	//Check collisions for everything
@@ -1058,7 +1057,10 @@ function createEnemiesAbs(array, x, y) {
 		for (var j = 0; j < array[i].length; j++) {
 			if (array[i][j] > 0) {
 				var enemy = game.add.sprite(x+j*25, y+i*25, 'enemy');
-				enemy.type = array[i][j];
+				game.physics.arcade.enable(enemy);
+ 				enemy.anchor.setTo(0.5);		
+ 				enemy.body.immovable = true;		
+ 				enemy.type = array[i][j];
 				if (difficulty == OHGOD) {
 					if (array[i][j] == 1) {
 						enemy.type = 3;
@@ -1066,9 +1068,6 @@ function createEnemiesAbs(array, x, y) {
 						enemy.type = 11;
 					}
 				}
-				game.physics.arcade.enable(enemy);
-				enemy.anchor.setTo(0.5);
-				enemy.body.immovable = true;
 				enemy.animations.add('move', [2*(enemy.type-1), 2*(enemy.type-1)+1], 6, true);
 				enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA;
 				enemy.health = 1;
@@ -1338,6 +1337,4 @@ function restart(level) {
 	createPlayer();
 	current_level = level-1;
 	current_bonus_level = 0;
-	difficulty = 0;
-	currentDifficulty = 0;
 }
