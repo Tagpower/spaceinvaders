@@ -1,4 +1,4 @@
-/*
+ ;/*
 ============================================================================================================================================
 														SPACE INVADERS DU PAUVRE
 ============================================================================================================================================
@@ -29,6 +29,7 @@ var EASY = -1;
 var NORMAL = 0;
 var HARD = 1;
 var OHGOD = 2;
+var currentDifficulty = 0;
 
 var START_SPEED = 20;
 var SPEEDUP_INIT = 5;
@@ -347,6 +348,11 @@ function create() {
 
 
 function update() {
+	if (currentDifficulty != difficulty) {
+		currentDifficulty = difficulty;
+		enemies.forEachAlive(function(enemy) { enemy.kill(); });
+		loadLevel(current_level);
+	}
 	//Check collisions for everything
 	game.physics.arcade.collide(shots, enemies, hitEnemy, null, this);
 	game.physics.arcade.collide(special_shots, enemies, hitEnemy, false, this); 
@@ -1043,10 +1049,7 @@ function createEnemiesAbs(array, x, y) {
 		for (var j = 0; j < array[i].length; j++) {
 			if (array[i][j] > 0) {
 				var enemy = game.add.sprite(x+j*25, y+i*25, 'enemy');
-				game.physics.arcade.enable(enemy);
-				enemy.anchor.setTo(0.5);
-				enemy.body.immovable = true;
-				enemy.type = array[i][j];	
+				enemy.type = array[i][j];
 				if (difficulty == OHGOD) {
 					if (array[i][j] == 1) {
 						enemy.type = 3;
@@ -1054,6 +1057,9 @@ function createEnemiesAbs(array, x, y) {
 						enemy.type = 11;
 					}
 				}
+				game.physics.arcade.enable(enemy);
+				enemy.anchor.setTo(0.5);
+				enemy.body.immovable = true;
 				enemy.animations.add('move', [2*(enemy.type-1), 2*(enemy.type-1)+1], 6, true);
 				enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA;
 				enemy.health = 1;
@@ -1323,4 +1329,6 @@ function restart(level) {
 	createPlayer();
 	current_level = level-1;
 	current_bonus_level = 0;
+	difficulty = 0;
+	currentDifficulty = 0;
 }
