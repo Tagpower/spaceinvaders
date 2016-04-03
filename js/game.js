@@ -354,12 +354,7 @@ function create() {
 function update() {
 	if (currentDifficulty != difficulty) {
 		currentDifficulty = difficulty;
-		power = 1;
-		if (currentDifficulty == EASY && power < 2)
-			power = 2;
-		else if (currentDifficulty == OHGOD) {
-			restart(current_level);
-		}
+		restart(current_level);
 	}
 	//Check collisions for everything
 	game.physics.arcade.collide(shots, enemies, hitEnemy, null, this);
