@@ -1212,7 +1212,8 @@ function enemyFire(enemy, velx, vely) {
 }
 
 function bonusShip(delay) {
-	window.setTimeout(function(){
+   timer = game.time.create(true);
+	timer.add(delay, function(){
 		var bship = game.add.sprite(-32, 15, 'bonusship', 0);
 
 		bship.animations.add('move', [0,1,2,3], 12, true);
@@ -1226,7 +1227,8 @@ function bonusShip(delay) {
 		bonusships.add(bship); 
 		bship.animations.play('move');
 		bship.value = 1000;   
-	}, delay);
+	}, this);
+   timer.start();
 }
 
 function hitBonusShip(shot, bship) {
