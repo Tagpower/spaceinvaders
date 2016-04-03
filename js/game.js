@@ -1,4 +1,4 @@
-/*
+ ;/*
 ============================================================================================================================================
 														SPACE INVADERS DU PAUVRE
 ============================================================================================================================================
@@ -29,6 +29,7 @@ var EASY = -1;
 var NORMAL = 0;
 var HARD = 1;
 var OHGOD = 2;
+var currentDifficulty = 0;
 
 var START_SPEED = 20;
 var SPEEDUP_INIT = 5;
@@ -340,6 +341,10 @@ function create() {
 	speed = START_SPEED;
 	speedup = SPEEDUP_INIT;
 	accel = SPEEDUP_ACCEL;
+
+	if (currentDifficulty == -1)
+		power = 2;
+
 	loadLevel(0);
 	enemies.setAll('body.velocity.x', speed);
 
@@ -347,6 +352,10 @@ function create() {
 
 
 function update() {
+	if (currentDifficulty != difficulty) {
+		currentDifficulty = difficulty;
+		restart(current_level);
+	}
 	//Check collisions for everything
 	game.physics.arcade.collide(shots, enemies, hitEnemy, null, this);
 	game.physics.arcade.collide(special_shots, enemies, hitEnemy, false, this); 
@@ -1044,9 +1053,9 @@ function createEnemiesAbs(array, x, y) {
 			if (array[i][j] > 0) {
 				var enemy = game.add.sprite(x+j*25, y+i*25, 'enemy');
 				game.physics.arcade.enable(enemy);
-				enemy.anchor.setTo(0.5);
-				enemy.body.immovable = true;
-				enemy.type = array[i][j];	
+ 				enemy.anchor.setTo(0.5);		
+ 				enemy.body.immovable = true;		
+ 				enemy.type = array[i][j];
 				if (difficulty == OHGOD) {
 					if (array[i][j] == 1) {
 						enemy.type = 3;
