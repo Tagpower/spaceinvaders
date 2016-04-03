@@ -341,6 +341,10 @@ function create() {
 	speed = START_SPEED;
 	speedup = SPEEDUP_INIT;
 	accel = SPEEDUP_ACCEL;
+
+	if (currentDifficulty == -1)
+		power = 2;
+
 	loadLevel(0);
 	enemies.setAll('body.velocity.x', speed);
 
@@ -350,8 +354,12 @@ function create() {
 function update() {
 	if (currentDifficulty != difficulty) {
 		currentDifficulty = difficulty;
-		enemies.forEachAlive(function(enemy) { enemy.kill(); });
-		loadLevel(current_level);
+		power = 1;
+		if (currentDifficulty == EASY && power < 2)
+			power = 2;
+		else if (currentDifficulty == OHGOD) {
+			loadLevel(current_level);
+		}
 	}
 	//Check collisions for everything
 	game.physics.arcade.collide(shots, enemies, hitEnemy, null, this);
