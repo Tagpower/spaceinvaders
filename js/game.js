@@ -358,6 +358,7 @@ function update() {
 		if (currentDifficulty == EASY && power < 2)
 			power = 2;
 		else if (currentDifficulty == OHGOD) {
+			enemies.removeAll();
 			loadLevel(current_level);
 		}
 	}
