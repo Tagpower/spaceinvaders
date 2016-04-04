@@ -38,7 +38,7 @@ var PLAYER_SPEED = 150;
 var DEFAULTS = [START_SPEED, SPEEDUP_INIT, SPEEDUP_ACCEL];
 var DEFAULT_FIRE_COOLDOWN = 30;
 var ENEMY_DEFAULT_FIRE_PROBA = 0.004 + difficulty*0.001;
-var POWERUP_CHANCE = 0.05 + difficulty*0.01;
+var POWERUP_CHANCE = 0.05 - difficulty*0.01;
 var MAX_POWER = 7;
 var MAX_CDR = 30;
 
@@ -51,7 +51,7 @@ var current_bonus_level = 0;
 var in_bonus_level = false;
 var score = 0;
 var lives = 3;
-var power = (difficulty == -1 ? 2 : 1);
+var power = (difficulty == EASY ? 2 : 1);
 var shield_time = 0;
 var shots_cooldown = 0;
 var special_cooldown = 0;
@@ -180,10 +180,10 @@ var level_names_fr = ["Alerte orange", "La ligne rouge", "La mort vient d'en hau
 
 //Speed values for each level : Start speed, speedup each time an enemy is killed, acceleration of the speedup
 var speed_values = [[20,4,0.25], [20,5,0.25], [20,4,0.25], [20,5,0.5], [10,5,0.5], //5
-					[20,4,0.3],  [20,6,0.5],  [20,4,0.4],  [15,5,0.3], [20,4,0.5], //10
-					[20,5,0.25], [25,4,0.5],  [20,15,0.5], [20,15,0.5], [15,4,0.4], //15
-					[15,4,0.3],  [25,5,0.4]
-					];
+					    [20,4,0.3],  [20,6,0.5],  [20,4,0.4],  [15,5,0.3], [20,4,0.5], //10
+					    [20,5,0.25], [25,4,0.5],  [20,15,0.5], [20,15,0.5], [15,4,0.4], //15
+					    [15,4,0.3],  [25,5,0.4]
+					 ];
 
 //Bonus levels
 var bonus_levels = [[[00,00,01,01,01,01,01,01,00,00],
@@ -1212,21 +1212,26 @@ function enemyFire(enemy, velx, vely) {
 }
 
 function bonusShip(delay) {
-	window.setTimeout(function(){
-		var bship = game.add.sprite(-32, 15, 'bonusship', 0);
 
-		bship.animations.add('move', [0,1,2,3], 12, true);
-		game.physics.arcade.enable(bship);
-		if (Math.random() < 0.5) {
-			bship.body.velocity.x = 90; 
-		} else {
-			bship.x = game.world.width + 10;
-			bship.body.velocity.x = -90;
-		}				   
-		bonusships.add(bship); 
-		bship.animations.play('move');
-		bship.value = 1000;   
-	}, delay);
+   console.log('bonus ship dans ' + delay/1000 + 's');
+   timer = game.time.create(true);
+   timer.add(delay, function(){
+      var bship = game.add.sprite(-32, 15, 'bonusship', 0); 
+ 
+      bship.animations.add('move', [0,1,2,3], 12, true);
+      bonusships.add(bship); 
+      bship.animations.play('move');
+      bship.value = 1000;  
+
+      game.physics.arcade.enable(bship);
+      if (Math.random() < 0.5) {
+      	bship.body.velocity.x = 90; 
+      } else {
+      	bship.x = game.world.width + 10;
+      	bship.body.velocity.x = -90;
+      }
+   }, this);
+   timer.start();
 }
 
 function hitBonusShip(shot, bship) {
@@ -1316,7 +1321,7 @@ function only(n) {
 function restart(level) {
 	score = 0;
 	lives = 3;
-	power = (difficulty == -1 ? 2 : 1);
+	power = (difficulty == EASY ? 2 : 1);
 	shield_time = 0;
 	shots_cooldown = 0;
 	special_cooldown = 0;
