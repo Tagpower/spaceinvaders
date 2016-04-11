@@ -13,8 +13,6 @@ var cursors, fire_btn, special_btn, mute_btn, pause_btn, restart_btn; //Inputs
 
 var text_score, text_middle, text_level, text_ship, text_pause; //Texts
 
-var timer;
-
 //Audio
 var mute = false;
 var gameoversound = false;
@@ -779,7 +777,8 @@ function playerHit(player, shot) {
 			special_available = 1;
 			lives--;
 			if (lives > 0) {
-				setTimeout(function(){
+				var timer = game.time.create(true);
+            timer.add(1500, function(){
 					player.body.collideWorldBounds = true;
 					//player.y = 550;
 					game.add.tween(player.body).to( { y: 550 }, 500, Phaser.Easing.Quadratic.In, true);
@@ -790,11 +789,13 @@ function playerHit(player, shot) {
 					player.addChild(shield);
 					shield.anchor.setTo(0.5, 0.5);
 					shield.smoothed = false;
-				}, 1500);
-				window.setTimeout(function(){
+				}, this);
+
+				timer.add(3000, function(){
 					player.touched = false;
 					player.alpha = 1;
-				}, 3000);
+				}, this);
+            timer.start();
 			} else { //GAME OVER
 				text_middle.alpha = 1;
 				text_middle.text = 'GAME OVER';
@@ -803,7 +804,8 @@ function playerHit(player, shot) {
 			}
 		} else {
 			//If you die in a bonus level, no penalty
-			window.setTimeout(function(){
+			var timer = game.time.create(true);
+         timer.add(1500, function() {
 				player.body.collideWorldBounds = true;
 				//player.y = 550;
 				game.add.tween(player.body).to( { y: 550 }, 500, Phaser.Easing.Quadratic.In, true);
@@ -813,14 +815,13 @@ function playerHit(player, shot) {
 				enemies.removeAll();
 				enemy_shots.removeAll();
 				shots.removeAll();
-			}, 1500);
-			window.setTimeout(function(){
+			}, this);
+			timer.add(3000, function(){
 				player.touched = false;
 				player.alpha = 1;
-			}, 3000);
+			}, this);
+         timer.start();
 		}
-
-
 	}
 }
 
@@ -855,19 +856,21 @@ function levelFailed() {
 		current_level--;
 
 		if (lives > 0) {
-			window.setTimeout(function(){
+         var timer = game.time.create(true);
+			timer.add(3000, function(){
 				player.body.collideWorldBounds = true;
 				//player.body.velocity.y = -100;
 				//player.body.position.y = 300; 
 				enemies.removeAll();
 				lostAlife = false;
 				player.alpha = 0.5;
-			}, 3000);
-			window.setTimeout(function(){
+			}, this);
+			timer.add(4000, function(){
 				player.touched = false;
 				player.alpha = 1;
 				shield_time = 240;
-			}, 4000);
+			}, this);
+         timer.start();
 		} else { //GAME OVER
 			text_middle.alpha = 1;
 			text_middle.text = 'GAME OVER';
@@ -995,11 +998,13 @@ function loadLevel(lvl) {
 		timer.add(Phaser.Timer.SECOND*2, createEnemies(levels[lvl]), this);
 		timer.start(2000);
 		*/
-		window.setTimeout(function(){
+      var timer = game.time.create(true);
+		timer.add(3000, function(){
 			game.add.tween(text_middle).to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
 			game.add.tween(text_level) .to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
 			//createEnemies(levels[lvl]);   
-		}, 3000);
+		}, this);
+      timer.start();
 		//Set a delay for the bonus ship to come (20 to 40 secs)
 		createEnemies(levels[lvl]); 
 		var delayForBonus = Math.random()*20*1000 + 20000;
@@ -1033,11 +1038,13 @@ function loadBonusLevel(lvl) {
 	timer.add(Phaser.Timer.SECOND*2, createEnemies(levels[lvl]), this);
 	timer.start(2000);
 	*/
-	window.setTimeout(function(){
+   var timer = game.time.create(true);
+	timer.add(3000, function(){
 		game.add.tween(text_middle).to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
 		game.add.tween(text_level) .to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
 		//createEnemies(levels[lvl]);   
-	}, 3000);
+	}, this);
+   timer.start();
 	createEnemies(bonus_levels[lvl]);
 }
 
@@ -1214,7 +1221,7 @@ function enemyFire(enemy, velx, vely) {
 function bonusShip(delay) {
 
    console.log('bonus ship dans ' + delay/1000 + 's');
-   timer = game.time.create(true);
+   var timer = game.time.create(true);
    timer.add(delay, function(){
       var bship = game.add.sprite(-32, 15, 'bonusship', 0); 
  
