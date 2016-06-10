@@ -49,6 +49,8 @@ var speed, speedup, accel;
 var current_level = 0;
 var current_bonus_level = 0;
 var in_bonus_level = false;
+var in_boss_level = false;
+var wait_next_level = true;
 var score = 0;
 var lives = 3;
 var power = (difficulty == EASY ? 2 : 1);
@@ -234,7 +236,7 @@ function preload() {
 
 		//Music
 		game.load.audio('ambient', ['assets/audio/e1m1.mp3']);
-		//game.load.audio('ohgod', ['assets/audio/e1m1.mp3']); TODO
+		//game.load.audio('ambient_ohgod', ['assets/audio/e1m1.mp3']); TODO
 		game.load.audio('bonus_loop', ['assets/audio/mindlesslittleloop.mp3']);
 
 		//Sounds
@@ -546,7 +548,7 @@ function update() {
 	});
 	
 	//When the level is beaten
-	if (enemies.countLiving() == 0 && enemy_shots.countLiving() == 0 && current_level < levels.length) {
+	if (enemies.countLiving() == 0 && enemy_shots.countLiving() == 0 && current_level < levels.length && !wait_next_level) {
 		bonusships.forEachAlive(function(bship) {
 			if (bship.body.velocity.x == 0) {
 				bship.kill();
@@ -813,6 +815,7 @@ function playerHit(player, shot) {
 				enemies.removeAll();
 				enemy_shots.removeAll();
 				shots.removeAll();
+            current_bonus_level--;
 			}, 1500);
 			window.setTimeout(function(){
 				player.touched = false;
@@ -991,17 +994,19 @@ function loadLevel(lvl) {
 			speedup = SPEEDUP_INIT;
 			accel = SPEEDUP_ACCEL;
 		}
-		/*timer = new Phaser.Timer(game, false);
-		timer.add(Phaser.Timer.SECOND*2, createEnemies(levels[lvl]), this);
-		timer.start(2000);
-		*/
-		window.setTimeout(function(){
-			game.add.tween(text_middle).to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
-			game.add.tween(text_level) .to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
-			//createEnemies(levels[lvl]);   
-		}, 3000);
+
+      wait_next_level = true;
+         timer = game.time.create(true);
+         timer.add(3000, function(){
+            game.add.tween(text_middle).to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
+         game.add.tween(text_level) .to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
+         createEnemies(levels[lvl]); 
+         wait_next_level = false;
+      }, this);
+      timer.start();
+
 		//Set a delay for the bonus ship to come (20 to 40 secs)
-		createEnemies(levels[lvl]); 
+		//createEnemies(levels[lvl]); 
 		var delayForBonus = Math.random()*20*1000 + 20000;
 		bonusShip(delayForBonus);
 	}
@@ -1153,7 +1158,6 @@ function createShot(x, y, velx, vely) {
 	if (!mute) {
 			fire_sd.play();
 	}
-	//shots_cooldown = DEFAULT_FIRE_COOLDOWN - cooldown_reduction + 10*power;
 	
 	shots.add(shot);
 }
@@ -1166,7 +1170,6 @@ function createSpecialShot(x, y, velx, vely) { //V2.0
 		firespecial_sd.play();
 	}
 	special_cooldown = DEFAULT_FIRE_COOLDOWN;
-	//special_available--;
 }
 
 function createExplosion(x, y) {
@@ -1186,7 +1189,6 @@ function createExplosion(x, y) {
 	});
 	game.add.tween(expl).to( { alpha: 0}, 2000, Phaser.Easing.Quintic.Out, true);
 	game.add.tween(expl.scale).to( {x: 2, y: 2 }, 1500, Phaser.Easing.Quintic.Out, true);
-	//var tween_expl2 = game.add.tween(expl.body.size).to( {x: 10, y: 10 }, 5000, Phaser.Easing.Quintic.Out, true);
 
 }
 
@@ -1270,8 +1272,8 @@ function hitBonusShip(shot, bship) {
 			createItem(bship.body.center.x, bship.body.center.y, 'powerup_orange');
 		}				
 		if (random > 90 && random <= 100) {
-			createItem(bship.body.center.x, bship.body.center.y, 'bonus_level');
-		}
+         createItem(bship.body.center.x, bship.body.center.y, 'bonus_level');
+      }
 	}
 }
 
