@@ -9,6 +9,6 @@ gameTitle.prototype = {
    create: function() {
       console.log("-*- Launch the game -*-");
       //parameters: difficulty, level, power, firerate, isBonus
-      this.game.state.start("Game", true, false, EASY, 1, 2, DEFAULT_FIRE_COOLDOWN, false);
+      this.game.state.start("Game", true, false, EASY, 0, 2, DEFAULT_FIRE_COOLDOWN, false);
    }
 }

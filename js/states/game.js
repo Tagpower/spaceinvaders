@@ -199,8 +199,8 @@ invaders.prototype = {
    },
    update: function() {
       var self = this;
-      if (this.currentDifficulty != this.difficulty) {
-         this.currentDifficulty = this.difficulty;
+      if (currentDifficulty != difficulty) {
+         currentDifficulty = difficulty;
          this.restart(this.current_level);
       }
       //Check collisions for everything
@@ -234,11 +234,11 @@ invaders.prototype = {
             //if (!player.touched) {
                   //player.body.velocity.y = 0; 
             //};
-         if (this.cursors.up.isDown && this.difficulty < OHGOD) {
+         if (this.cursors.up.isDown && difficulty < OHGOD) {
             this.player.body.velocity.y = -PLAYER_SPEED;
             this.player.body.velocity.x = 0; 
             //player.animations.play('left');
-         } else if (this.cursors.down.isDown  && this.difficulty < OHGOD) {
+         } else if (this.cursors.down.isDown  && difficulty < OHGOD) {
             this.player.body.velocity.y = PLAYER_SPEED;
             this.player.body.velocity.x = 0; 
             //player.animations.play('right');
@@ -477,8 +477,8 @@ invaders.prototype = {
 
 
          if(speed_values[lvl]) {
-            this.speed = speed_values[lvl][0]*(1+this.difficulty*0.15);
-            this.speedup = speed_values[lvl][1]*(1+this.difficulty*0.15);
+            this.speed = speed_values[lvl][0]*(1+difficulty*0.15);
+            this.speedup = speed_values[lvl][1]*(1+difficulty*0.15);
             this.accel = speed_values[lvl][2]/**(1+difficulty*0.2)*/;
          } else {
             this.speed = START_SPEED;
@@ -555,7 +555,7 @@ invaders.prototype = {
                enemy.anchor.setTo(0.5);		
                enemy.body.immovable = true;		
                enemy.type = array[i][j];
-               if (this.difficulty == OHGOD) {
+               if (difficulty == OHGOD) {
                   if (array[i][j] == 1) {
                      enemy.type = 3;
                   } else if (array[i][j] == 3) {
@@ -616,6 +616,24 @@ invaders.prototype = {
       }   
    },
    enemyFire: function(enemy,velx,vely) {
-
+      // TODO sprite optimization
+      var enemyshot = this.game.add.sprite(enemy.body.center.x, enemy.body.center.y, 'enemyshots', enemy.type-1);
+      this.game.physics.arcade.enable(enemyshot);
+      enemyshot.body.velocity.x = velx;
+      enemyshot.body.velocity.y = vely;
+      enemyshot.body.mass = 0;
+      enemyshot.type = enemy.type;
+      if (!this.mute) {
+         this.enemyfire_sd.play();
+      }
+      if (enemy.type == 7) {
+         enemyshot.body.gravity.y = 250;
+         if (enemy.body.x <= this.player.body.x) {
+            enemyshot.body.gravity.x = 10-(enemy.body.x - this.player.body.x)/10;
+         } else {
+            enemyshot.body.gravity.x = -10-(enemy.body.x - this.player.body.x)/10;
+         }
+      }
+      this.enemy_shots.add(enemyshot);
    }
 }
