@@ -2,6 +2,7 @@ var invaders = function(game) {
 }
 
 invaders.prototype = {
+   // {{{ INIT
    init: function(difficulty, level, power, firerate, isBonus) {
       console.log("Running the game...");
       this.isBonus = isBonus;
@@ -79,6 +80,8 @@ invaders.prototype = {
       this.cooldown_reduction = 0;
       this.random = 1; 
    },
+   // }}}
+   // {{{ CREATE
    create: function() {
       //Create the background
       this.background = game.add.tileSprite(0, 0, game.width, game.height, 'space');
@@ -197,6 +200,8 @@ invaders.prototype = {
       }
       this.enemies.setAll('body.velocity.x', this.speed); 
    },
+   // }}}
+   // {{{ UPDATE
    update: function() {
       var self = this;
       if (currentDifficulty != difficulty) {
@@ -229,11 +234,11 @@ invaders.prototype = {
          };
 
          //Control the player
-            this.player.body.velocity.x = 0;
-            this.player.body.velocity.y = 0;
-            //if (!player.touched) {
-                  //player.body.velocity.y = 0; 
-            //};
+         this.player.body.velocity.x = 0;
+         this.player.body.velocity.y = 0;
+         //if (!player.touched) {
+         //player.body.velocity.y = 0; 
+         //};
          if (this.cursors.up.isDown && difficulty < OHGOD) {
             this.player.body.velocity.y = -PLAYER_SPEED;
             this.player.body.velocity.x = 0; 
@@ -253,10 +258,10 @@ invaders.prototype = {
             //player.body.velocity.y = 0; 
             this.player.animations.play('right');
          } else if (!this.lostAlife) {
-               this.player.animations.play('idle');
+            this.player.animations.play('idle');
          }
 
-          //Fire shots
+         //Fire shots
          if (this.fire_btn.isDown) {
             if (this.shots_cooldown == 0) {
                switch (this.power) { //Number of shots depends on the ship's power
@@ -317,28 +322,28 @@ invaders.prototype = {
          }
 
          if (this.special_cooldown > 0) {
-               this.special_cooldown--;
+            this.special_cooldown--;
          } else {
-               this.special_cooldown = 0;
+            this.special_cooldown = 0;
          }
 
 
       } else {
-      //When the player dies
-            this.player.body.velocity.x = 0;
-            this.player.animations.play('dead');
-            //enemies.setAll('body.velocity.x', 0);
-            if (this.lives == 0) {
-               if (this.restart_btn.isDown) {
-                  this.restart(0);
-               }
+         //When the player dies
+         this.player.body.velocity.x = 0;
+         this.player.animations.play('dead');
+         //enemies.setAll('body.velocity.x', 0);
+         if (this.lives == 0) {
+            if (this.restart_btn.isDown) {
+               this.restart(0);
             }
+         }
       };
 
       if (this.mute_wait > 0) {
-            this.mute_wait--;
+         this.mute_wait--;
       } else {
-            this.mute_wait = 0;
+         this.mute_wait = 0;
       }
 
       //Move the enemies
@@ -390,7 +395,7 @@ invaders.prototype = {
             }
          }
       });
-      
+
       //When the level is beaten
       if (this.enemies.countLiving() == 0 && this.enemy_shots.countLiving() == 0 && this.current_level < levels.length && !this.wait_next_level) {
          this.bonusships.forEachAlive(function(bship) {
@@ -401,7 +406,7 @@ invaders.prototype = {
          });
          console.log('level ' + (current_level+1) + ' beaten');
          this.shots.removeAll();
-         
+
          //timer.start();
          //console.log(timer.seconds);
          if (this.in_bonus_level) {
@@ -418,13 +423,13 @@ invaders.prototype = {
       //Kill shots and items when touching bounds
       this.shots.forEachAlive(function(proj) {
          if (proj.body.y < -10 || proj.body.x < -4 || proj.body.x > self.game.world.width + 4) {
-               proj.kill();
+            proj.kill();
          }
       });
 
       this.enemy_shots.forEachAlive(function(proj) {
          if (proj.body.y > self.game.world.height+8 || proj.body.x < -4 || proj.body.x > self.game.world.width + 4) {
-               proj.kill();
+            proj.kill();
          }
       });
 
@@ -437,10 +442,12 @@ invaders.prototype = {
 
       this.bonusships.forEachAlive(function(bship) {
          if (bship.x > self.game.world.height + bship.body.width*2 || bship.x < -bship.body.width*2) {
-               bship.kill();
+            bship.kill();
          }
       });
    },
+   // }}}
+   // {{{ CREATEPLAYER
    createPlayer: function() {
       this.player = this.game.add.sprite(300,550,'ship');
       this.game.physics.arcade.enable(this.player);
@@ -449,7 +456,7 @@ invaders.prototype = {
       this.player.body.immovable = false;
       this.lostAlife = false;
       this.touched = false;
-      
+
       this.player.anchor.setTo(0.5,0.5);
 
       this.player.animations.add('idle', [0,1],6,true);
@@ -457,6 +464,8 @@ invaders.prototype = {
       this.player.animations.add('right', [4,5],6,true);
       this.player.animations.add('dead', [6],6,true);
    },
+   // }}}
+   // {{{ LOADLEVEL
    loadLevel: function(lvl) {
       if(lvl >= levels.length) {
          this.win_sd.play();
@@ -505,6 +514,8 @@ invaders.prototype = {
       }
 
    },
+   // }}}
+   // {{{ PAUSEGAME
    pauseGame: function() {
       if (this.lives > 0) {
          if (!this.game.paused) {
@@ -522,12 +533,14 @@ invaders.prototype = {
          }
       }   
    },
+   // }}}
+   // {{{ BONUSSHIP
    bonusShip: function(delay) {
       console.log('\tbonus ship dans %.2f s',delay/1000);
       this.timer = this.game.time.create(true);
       this.timer.add(delay, function(){
          var bship = this.game.add.sprite(-32, 15, 'bonusship', 0); 
-    
+
          bship.animations.add('move', [0,1,2,3], 12, true);
          this.bonusships.add(bship); 
          bship.animations.play('move');
@@ -543,9 +556,13 @@ invaders.prototype = {
       }, this);
       this.timer.start();
    },
+   // }}}
+   // {{{ CREATEENEMIES
    createEnemies: function(array) {
       this.createEnemiesAbs(array, 10, 30);
    },
+   // }}}
+   // {{{ CREATEENEMIESABS
    createEnemiesAbs: function(array, x, y) {
       for (var i = 0; i < array.length; i++) {
          for (var j = 0; j < array[i].length; j++) {
@@ -573,31 +590,31 @@ invaders.prototype = {
                   case 2: //RED : fires multiple shots
                      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*0.8;
                      enemy.value = 200
-                     break;
+                        break;
                   case 3: //GREEN : fires fast shots
                      enemy.value = 200
-                     break;
+                        break;
                   case 4: //PURPLE : fires twice as often
                      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*2;
                      enemy.value = 150
-                     break;
+                        break;
                   case 5: //GRAY : takes 2 hits
                      enemy.health = 2;
                      enemy.value = 250
-                     break;
+                        break;
                   case 6: //YELLOW : Fires 5 shots when killed
                      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*0.5;
                      enemy.value = 100
-                     break;
+                        break;
                   case 7: //CYAN : fires gravity-affected shots
                      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*1.2;
                      enemy.value = 200
-                     break;
+                        break;
                   case 8: //PINK : takes 3 hits, fires more often
                      enemy.health = 3;
                      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*1.5;
                      enemy.value = 400
-                     break;
+                        break;
                   case 9: //BLUE : fires in random directions
                      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*1.5;
                      enemy.value = 150;
@@ -615,6 +632,8 @@ invaders.prototype = {
          }
       }   
    },
+   // }}}
+   // {{{ ENEMYFIRE
    enemyFire: function(enemy,velx,vely) {
       // TODO sprite optimization
       var enemyshot = this.game.add.sprite(enemy.body.center.x, enemy.body.center.y, 'enemyshots', enemy.type-1);
@@ -635,5 +654,211 @@ invaders.prototype = {
          }
       }
       this.enemy_shots.add(enemyshot);
-   }
+   },
+   // }}}
+   // {{{ CREATESHOT
+   createShot: function(x,y,velx,vely) {
+      var shot = this.game.add.sprite(x, y, 'shot');
+      this.game.physics.arcade.enable(shot);
+      shot.body.velocity.x = velx;
+      shot.body.velocity.y = vely;
+      if (!this.mute) {
+         this.fire_sd.play();
+      }
+
+      this.shots.add(shot);
+   },
+   // }}}
+   // {{{ HITENEMY
+   hitEnemy: function(shot, enemy) {
+      if (shot.key != 'explosion')  {
+         shot.kill();
+      }
+      if (!enemy.touched) {
+         if (enemy.health == 1) {
+            enemy.touched = true;
+            enemy.animations.stop();
+            enemy.body.enable = false;
+            this.score += enemy.value;
+            if (!this.mute) {
+               this.killenemy_sd.play();
+            }
+            enemy.kill();
+            this.speed += this.speedup;
+            this.speedup += this.accel;
+            if (enemy.type == 6) { //If the enemy is type 6 (yellow), kamikaze attack !
+               this.enemyFire(enemy, -80, 250);
+               this.enemyFire(enemy, -40, 250);
+               this.enemyFire(enemy, 0, 250);
+               this.enemyFire(enemy, 40, 250);
+               this.enemyFire(enemy, 80, 250);
+            } else if (enemy.type == 10) {
+               this.createExplosion(enemy.body.center.x, enemy.body.center.y);
+            }
+
+            //randomly create a bonus
+            var random = Math.random();
+            if (this.random <= POWERUP_CHANCE) {
+               //Bonus roulette
+               var roulette = Math.random()*100;
+               if (roulette <= 20) {
+                  this.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_power');
+               }
+               if (roulette > 20 && roulette <= 40) {
+                  this.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_cooldown');
+               }
+               if (roulette > 40 && roulette <= 60) {
+                  this.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_special');
+               }
+               if (roulette > 60 && roulette <= 75) {
+                  this.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_clear');
+               }
+               if (roulette > 75 && roulette <= 85) {
+                  this.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_shield');
+               }
+               if (roulette > 85 && roulette <= 90) {
+                  this.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_freeze');
+               }
+               if (roulette > 90 && roulette <= 95) {
+                  this.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_kill');
+               }
+               if (roulette > 95 && roulette <= 100) {
+                  this.createItem(enemy.body.center.x, enemy.body.center.y, 'extralife');
+               }
+            }
+            //*/
+         } else {
+            enemy.health--;
+            if (!this.mute) {
+               this.hitenemy_sd.play();
+            }
+         }
+      }
+   },
+   // }}}
+   // {{{ CREATEITEM
+   createItem: function(x, y, key) {
+      var item = this.game.add.sprite(x, y, key);
+      this.game.physics.arcade.enable(item);
+      switch (key) {
+         case 'powerup_power':
+         case 'powerup_cooldown':
+         case 'powerup_special':
+         case 'powerup_kill':
+         case 'powerup_clear':
+         case 'powerup_orange':
+         case 'powerup_freeze':
+         case 'powerup_shield':
+         case 'powerup_warp':
+               item.animations.add('idle', [0,1,2,3], 18, true);
+               break;
+         case 'bonus_level':
+               item.animations.add('idle', [0,1,2,3,4,5,6,7,8,9,10,11,12,13], 18, true);
+               break;
+         case 'extralife':
+               break;
+      }
+      item.animations.play('idle');
+      item.body.gravity.y = 100;
+      this.items.add(item);
+   },
+   // }}}
+   // {{{ CREATEEXPLOSION
+   createExplosion: function(x,y) {
+      var expl = this.game.add.sprite(x, y, 'explosion');
+      this.game.physics.arcade.enable(expl);
+      expl.anchor.setTo(0.5);
+      expl.smoothed = false;
+      expl.body.immovable = true;
+      if (!this.mute) {
+            this.playerhit_sd.play();
+      }
+      this.explosions.add(expl);
+      var self = this;
+      this.enemies.forEachAlive( function(e) {
+         if (self.game.physics.arcade.distanceBetween(expl, e) < 40) {
+            self.hitEnemy(expl, e);
+         }
+      });
+      this.game.add.tween(expl).to( { alpha: 0}, 2000, Phaser.Easing.Quintic.Out, true);
+      this.game.add.tween(expl.scale).to( {x: 2, y: 2 }, 1500, Phaser.Easing.Quintic.Out, true);
+   },
+   // }}}
+   // {{{ PLAYERHIT
+   playerHit: function(player, shot) {
+      shot.kill();
+      if (!this.lostAlife && !this.player.touched && !this.shield_time) {   
+         this.playerhit_sd.play();
+         this.lostAlife = true;
+         this.player.touched = true;
+         this.player.body.collideWorldBounds = false;
+         this.player.body.velocity.y = 125;
+         this.createExplosion(this.player.body.center.x, this.player.body.center.y);
+         //var tween_death = game.add.tween(player.body).to( { y: game.world.height+10 }, 1000, Phaser.Easing.Linear.None, true);
+         
+         if (!this.in_bonus_level) {
+            if (difficulty == EASY) {
+               if (this.power > 2) {
+                  this.power /= 2;
+                  this.power = Math.ceil(this.power);
+               }
+            } else {
+               if (this.power > 1) {
+                  this.power /= 2;
+                  this.power = Math.floor(this.power);
+               }
+            }
+            if (this.cooldown_reduction > 0) {
+               this.cooldown_reduction /= 2;
+               this.cooldown_reduction = Math.floor(this.cooldown_reduction);
+            }
+            this.special_available = 1;
+            this.lives--;
+            if (this.lives > 0) {
+               setTimeout(function(){
+                  player.body.collideWorldBounds = true;
+                  //player.y = 550;
+                  game.add.tween(player.body).to( { y: 550 }, 500, Phaser.Easing.Quadratic.In, true);
+                  game.add.tween(player.body).to( { x: 300 }, 500, Phaser.Easing.Quadratic.In, true);
+                  lostAlife = false;
+                  player.alpha = 0.5;
+                  shield_time = 180;
+                  player.addChild(shield);
+                  shield.anchor.setTo(0.5, 0.5);
+                  shield.smoothed = false;
+               }, 1500);
+               window.setTimeout(function(){
+                  player.touched = false;
+                  player.alpha = 1;
+               }, 3000);
+            } else { //GAME OVER
+               text_middle.alpha = 1;
+               text_middle.text = 'GAME OVER';
+               text_level.alpha = 1;
+               text_level.text = 'Presser R pour recommencer';
+            }
+         } else {
+            //If you die in a bonus level, no penalty
+            window.setTimeout(function(){
+               player.body.collideWorldBounds = true;
+               //player.y = 550;
+               game.add.tween(player.body).to( { y: 550 }, 500, Phaser.Easing.Quadratic.In, true);
+               game.add.tween(player.body).to( { x: 300 }, 500, Phaser.Easing.Quadratic.In, true);
+               lostAlife = false;
+               player.alpha = 0.5;
+               enemies.removeAll();
+               enemy_shots.removeAll();
+               shots.removeAll();
+               current_bonus_level--;
+            }, 1500);
+            window.setTimeout(function(){
+               player.touched = false;
+               player.alpha = 1;
+            }, 3000);
+         }
+
+
+      }
+   },
+   // }}}
 }
