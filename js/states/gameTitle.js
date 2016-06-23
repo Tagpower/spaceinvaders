@@ -9,6 +9,19 @@ gameTitle.prototype = {
    create: function() {
       console.log("-*- Launch the game -*-");
       //parameters: difficulty, level, power, firerate, isBonus
-      this.game.state.start("Game", true, false, EASY, 0, 2, DEFAULT_FIRE_COOLDOWN, false);
+      var difficulty = EASY;
+      var config = {
+         is_boss: false,
+         is_bonus: true,
+         score: 0,
+         lives: 3,
+         power: difficulty == EASY ? 7 : 1,
+         difficulty: difficulty,
+         current_level: 0,
+         special_available: 1,
+         cooldown_reduction: 6,
+         current_bonus_level: 0,
+      };
+      this.game.state.start("Game", true, false, config);
    }
 }
