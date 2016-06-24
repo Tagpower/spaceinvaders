@@ -43,7 +43,6 @@ invaders.prototype = {
       self.gameoversound = false;
       self.introduction_sound = true;
       self.music = null;
-      self.isPlaying = config.isPlaying;
       self.music_bonus = null;
       self.music_ohgod = null;
       self.pickup_sd = null;
@@ -81,6 +80,8 @@ invaders.prototype = {
       self.special_cooldown = 0;
       self.special_available = 1;
       self.cooldown_reduction = config.cooldown_reduction;
+      self.init_x = config.init_x;
+      self.init_y = config.init_y;
    },
    // }}}
    // {{{ CREATE
@@ -96,14 +97,6 @@ invaders.prototype = {
       self.shots = self.game.add.group();
       self.shots.enableBody = true;
 
-      // little optimization
-      for (var i = 0; i < 200; i++) {
-         var shot = self.game.add.sprite(0,0,'shot');
-         self.shots.add(shot);
-         shot.anchor.setTo(0.5, 0.5);
-         shot.kill();
-      }
-
       self.special_shots = self.game.add.group();
       self.special_shots.enableBody = true;
 
@@ -112,15 +105,6 @@ invaders.prototype = {
 
       self.explosions = self.game.add.group();
       self.explosions.enableBody = true;
-      for(var i = 0; i < 100; i++) {
-         var explosion = self.game.add.sprite(0,0,'explosion');
-         self.game.physics.arcade.enable(explosion);
-         explosion.anchor.setTo(0.5,0.5);
-         explosion.smoothed = false;
-         explosion.body.immovable = true;
-         self.explosions.add(explosion);
-         explosion.kill();
-      }
 
       self.enemies = self.game.add.group();
       self.enemies.enableBody = true;
@@ -162,15 +146,12 @@ invaders.prototype = {
 
       self.music = self.game.add.audio('ambient');
       self.music.loop = true;
-      self.music.isPlaying = self.isPlaying;
+      self.music.volume = 1;
       self.music_bonus = self.game.add.audio('bonus_loop');
       self.music_bonus.loop = true;
 
-      if (!self.mute && !self.in_bonus_level && !self.music.isPlaying) {
+      if (!self.mute) {
          self.music.play();
-      }
-      else if (!self.mute && self.in_bonus_level) {
-         self.music_bonus.play();
       }
 
       //Create all sounds
@@ -178,10 +159,15 @@ invaders.prototype = {
       self.hellyeah_sd = self.game.add.audio('hellyeah');
       self.playerhit_sd = self.game.add.audio('explode');
       self.hitenemy_sd = self.game.add.audio('hitenemy');
+      self.hitenemy_sd.volume = 0.1;
       self.killenemy_sd = self.game.add.audio('killenemy');
+      self.killenemy_sd.volume = 0.1;
       self.fire_sd = self.game.add.audio('fire');
+      self.fire_sd.volume = 0.1;
       self.firespecial_sd = self.game.add.audio('firespecial');
+      self.firespecial_sd.volume = 0.1;
       self.enemyfire_sd = self.game.add.audio('enemyfire');
+      self.enemyfire_sd.volume = 0.1;
       self.wave_sd = self.game.add.audio('wave');
       self.intro_sd = self.game.add.audio('intro');
       self.win_sd = self.game.add.audio('win');
@@ -423,12 +409,9 @@ invaders.prototype = {
             self.in_bonus_level = false;
             self.just_end_bonus = true;
             self.music_bonus.stop();
-            //self.music.play();
+            self.music.play();
          }
-         //loadLevel(++current_level);
-         // TODO restart the state with the next level
-         self.loadNextLevel();
-
+         self.loadLevel(++self.current_level);
       }
 
       //Kill shots and items when touching bounds
@@ -461,7 +444,7 @@ invaders.prototype = {
    // {{{ CREATEPLAYER
    createPlayer: function() {
       var self = this;
-      self.player = self.game.add.sprite(300,550,'ship');
+      self.player = self.game.add.sprite(self.init_x,self.init_y,'ship');
       self.game.physics.arcade.enable(self.player);
 
       self.player.body.collideWorldBounds = true;
@@ -554,10 +537,18 @@ invaders.prototype = {
       console.log('\tbonus ship dans %.2f s',delay/1000);
       self.timer = self.game.time.create(true);
       self.timer.add(delay, function(){
-         var bship = self.game.add.sprite(-32, 15, 'bonusship', 0); 
-
+         var bship = self.bonusships.getFirstDead();
+         if(bship === null || bship === undefined) {
+            bship = self.game.add.sprite(-32, 15, 'bonusship', 0); 
+            self.bonusships.add(bship); 
+         }
+         else {
+            bship.revive();
+            bship.reset(-32,15);
+         }
+         bship.checkWorldBounds = true;
+         bship.outOfBoundsKill = true;
          bship.animations.add('move', [0,1,2,3], 12, true);
-         self.bonusships.add(bship); 
          bship.animations.play('move');
          bship.value = 1000;  
 
@@ -654,7 +645,18 @@ invaders.prototype = {
    enemyFire: function(enemy,velx,vely) {
       var self = this;
       // TODO sprite optimization
-      var enemyshot = self.game.add.sprite(enemy.body.center.x, enemy.body.center.y, 'enemyshots', enemy.type-1);
+      var enemyshot = self.enemy_shots.getFirstDead();
+      if (enemyshot === null || enemyshot === undefined) {
+         enemyshot = self.game.add.sprite(enemy.body.center.x, enemy.body.center.y, 'enemyshots', enemy.type-1);
+         self.enemy_shots.add(enemyshot);
+      }
+      else {
+         enemyshot.revive();
+         enemyshot.frame = enemy.type-1;
+         enemyshot.reset(enemy.body.center.x, enemy.body.center.y);
+      }
+      enemyshot.checkWorldBounds = true;
+      enemyshot.outOfBoundsKill = true;
       self.game.physics.arcade.enable(enemyshot);
       enemyshot.body.velocity.x = velx;
       enemyshot.body.velocity.y = vely;
@@ -671,21 +673,28 @@ invaders.prototype = {
             enemyshot.body.gravity.x = -10-(enemy.body.x - self.player.body.x)/10;
          }
       }
-      self.enemy_shots.add(enemyshot);
    },
    // }}}
    // {{{ CREATESHOT
    createShot: function(x,y,velx,vely) {
       var self = this;
-      var shot = self.game.add.sprite(x, y, 'shot');
+      var shot = self.shots.getFirstDead();
+      if (shot === null || shot === undefined) {
+         shot = self.game.add.sprite(x,y, "shot");
+         self.shots.add(shot);
+      }
+      else {
+         shot.revive();
+         shot.reset(x,y);
+      }
+      shot.checkWorldBounds = true;
+      shot.outOfBoundsKill = true;
       self.game.physics.arcade.enable(shot);
       shot.body.velocity.x = velx;
       shot.body.velocity.y = vely;
       if (!self.mute) {
          self.fire_sd.play();
       }
-
-      self.shots.add(shot);
    },
    // }}}
    // {{{ HITENEMY
@@ -787,15 +796,24 @@ invaders.prototype = {
    // {{{ CREATEEXPLOSION
    createExplosion: function(x,y) {
       var self = this;
-      var expl = self.game.add.sprite(x, y, 'explosion');
+      var expl = self.explosions.getFirstDead();
+      if (expl === null || expl == undefined) {
+         expl = self.game.add.sprite(x, y, 'explosion');
+         self.explosions.add(expl);
+      }
+      else {
+         expl.revive();
+         expl.reset(x,y);
+      }
       self.game.physics.arcade.enable(expl);
       expl.anchor.setTo(0.5);
       expl.smoothed = false;
       expl.body.immovable = true;
+      expl.checkWorldBounds = true;
+      expl.outOfBoundsKill = true;
       if (!self.mute) {
             self.playerhit_sd.play();
       }
-      self.explosions.add(expl);
       self.enemies.forEachAlive( function(e) {
          if (self.game.physics.arcade.distanceBetween(expl, e) < 40) {
             self.hitEnemy(expl, e);
@@ -1015,7 +1033,7 @@ invaders.prototype = {
             break;
 
             case 'bonus_level': //Skips current level and warps the player to a bonus level
-               self.changeToBonusLevel();
+               self.loadBonusLevel();
                self.score += 3000;
                self.text_ship.text = "";
             break;
@@ -1102,6 +1120,7 @@ invaders.prototype = {
    // }}}
    // {{{ HITBONUSSHIP
    hitBonusShip: function(shot, bship) {
+      console.log("HITTED !!!");
       var self = this;
       shot.kill();
       if (!bship.touched) {
@@ -1115,7 +1134,7 @@ invaders.prototype = {
          bship.kill();
 
          //randomly create a bonus
-         var random = Math.random() * 100;
+         var random = 100;//Math.random() * 100;
          if (random <= 10) {
             self.createItem(bship.body.center.x, bship.body.center.y, 'extralife');
          }
@@ -1213,6 +1232,8 @@ invaders.prototype = {
          score: self.score,
          lives: self.lives,
          power: self.power,
+         init_x: self.player.x,
+         init_y: self.player.y,
          difficulty: self.difficulty,
          isPlaying: self.music.isPlaying,   
          special_available: self.special_available,
@@ -1222,13 +1243,21 @@ invaders.prototype = {
       };
       if (self.just_end_bonus)
          self.just_end_bonus = false;
-      self.game.state.start("Game", false, false, config);
+      self.game.state.start("Game", true, false, config);
    },
    // }}}
    // {{{ LOADBONUSLEVEL
    loadBonusLevel: function() {
       var self = this;
+      self.in_bonus_level = true;
       self.music.stop();
+      self.music_bonus.play();
+      self.items.removeAll();
+      self.shots.removeAll();
+      self.special_shots.removeAll();
+      self.bonusships.removeAll();
+      self.enemies.removeAll();
+      self.enemy_shots.removeAll();
 
       self.text_middle.text = "Niveau bonus !";
       self.text_level.text = "YAY ! (il est en travaux btw)";
@@ -1253,34 +1282,10 @@ invaders.prototype = {
          self.game.add.tween(text_level) .to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
          //createEnemies(levels[lvl]);   
       }, 3000);
+      self.timer.start();
       self.wait_next_level = true;
       self.createEnemies(bonus_levels[self.current_bonus_level]);
       self.wait_next_level = false;
-   },
-   // }}}
-   // {{{ CHANGETOBONUSLEVEL
-   changeToBonusLevel: function() {
-      var self = this;
-      self.items.removeAll();
-      self.shots.removeAll();
-      self.special_shots.removeAll();
-      self.bonusships.removeAll();
-      self.enemies.removeAll();
-      self.enemy_shots.removeAll();
-      self.player.kill();
-      var config = {
-         is_boss: false,
-         is_bonus: true,
-         score: self.score,
-         lives: self.lives,
-         power: self.power,
-         difficulty: self.difficulty,
-         current_level: self.current_level,
-         special_available: self.special_available,
-         cooldown_reduction: self.cooldown_reduction,
-         current_bonus_level: self.current_bonus_level,
-      };
-      self.game.state.start("Game", true, false, config);
    },
    // }}}
 }

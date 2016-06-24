@@ -12,14 +12,16 @@ gameTitle.prototype = {
       var difficulty = EASY;
       var config = {
          is_boss: false,
-         is_bonus: true,
+         is_bonus: false,
          score: 0,
          lives: 3,
-         power: difficulty == EASY ? 7 : 1,
+         power: difficulty == EASY ? 2 : 1,
+         init_x: 300,
+         init_y: 500,
          difficulty: difficulty,
          current_level: 0,
          special_available: 1,
-         cooldown_reduction: 6,
+         cooldown_reduction: 0,
          current_bonus_level: 0,
       };
       this.game.state.start("Game", true, false, config);

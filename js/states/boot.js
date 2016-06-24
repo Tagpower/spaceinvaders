@@ -13,7 +13,7 @@ boot.prototype = {
 
       this.game.renderer.clearBeforeRender = false;
       this.game.renderer.roundPixels = true;
-   
+
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
       console.log("-*- Booted -*-");
