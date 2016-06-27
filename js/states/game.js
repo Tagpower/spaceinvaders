@@ -150,7 +150,7 @@ invaders.prototype = {
       self.music_bonus = self.game.add.audio('bonus_loop');
       self.music_bonus.loop = true;
 
-      if (!self.mute) {
+      if (!self.mute && !self.music.isPlaying){
          self.music.play();
       }
 
