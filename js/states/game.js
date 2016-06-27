@@ -1194,13 +1194,14 @@ invaders.prototype = {
    // {{{ RESTART
    restart: function(level) {
       var self = this;
-      items.removeAll();
-      shots.removeAll();
-      special_shots.removeAll();
-      bonusships.removeAll();
-      enemies.removeAll();
-      enemy_shots.removeAll();
-      player.kill();
+      self.items.removeAll();
+      self.shots.removeAll();
+      self.special_shots.removeAll();
+      self.bonusships.removeAll();
+      self.enemies.removeAll();
+      self.enemy_shots.removeAll();
+      self.player.kill();
+      
       var config = {
          score: 0,
          lives: 3,
@@ -1213,7 +1214,7 @@ invaders.prototype = {
          current_bonus_level: 0,
          power: (difficulty == EASY ? 2 : 1)
       }
-      
+      self.game.state.start("Game", true, false, config);
    },
    // }}}
    // {{{ LOADNEXTLEVEL
