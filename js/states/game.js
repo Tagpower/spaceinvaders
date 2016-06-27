@@ -1210,7 +1210,7 @@ invaders.prototype = {
          special_cooldown: 0,
          special_available: 1,
          cooldown_reduction: 0,
-         current_level: level-1,
+         current_level: 0,
          current_bonus_level: 0,
          power: (difficulty == EASY ? 2 : 1)
       }
