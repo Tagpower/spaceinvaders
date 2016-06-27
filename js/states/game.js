@@ -1278,8 +1278,8 @@ invaders.prototype = {
       */
       self.timer = self.game.time.create(true);
       self.timer.add(3000, function(){
-         self.game.add.tween(text_middle).to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
-         self.game.add.tween(text_level) .to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
+         self.game.add.tween(self.text_middle).to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
+         self.game.add.tween(self.text_level) .to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
          //createEnemies(levels[lvl]);   
       }, 3000);
       self.timer.start();
