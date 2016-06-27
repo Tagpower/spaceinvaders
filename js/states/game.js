@@ -843,6 +843,9 @@ invaders.prototype = {
                   self.power /= 2;
                   self.power = Math.ceil(self.power);
                }
+               else {
+                  self.power = 2;
+               }
             } else {
                if (self.power > 1) {
                   self.power /= 2;
@@ -1019,9 +1022,7 @@ invaders.prototype = {
             break;
 
             case 'powerup_warp': //TODO : Warps the enemies back to the top of the screen
-               self.enemies.forEachAlive(function(e) {
-                  //game.add.tween(e).to( {y: e.x - 300}, 1000, Phaser.Easing.Quadratic.Out, true);
-               });
+               self.game.add.tween(self.enemies).to( {x: 10, y: 30}, 1000, Phaser.Easing.Quadratic.Out, true);
                self.score += 400;
                self.text_ship.text = "Retour en haut !";
             break;

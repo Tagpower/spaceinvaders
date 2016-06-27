@@ -8,9 +8,8 @@
 	- Trouver le bug qui déplace les ennemis en boucle
 
 - NIVEAUX DE DIFFICULTÉ
-	- Facile : moins de tirs, puissance 2 minimum
 	- Normal : par défaut
-	- Dur : moins de bonus, plus de tirs, plus rapide
+	- Dur : moins de bonus, plus rapide
 	- OH GOD : 	- TOUS LES ORANGES DEVIENNENT VERTS (?) DONE !
 				- ENCORE MOINS DE BONUS
 				- ENCORE PLUS DE TIRS
