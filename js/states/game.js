@@ -1194,7 +1194,21 @@ invaders.prototype = {
    // {{{ RESTART
    restart: function(level) {
       var self = this;
-      self.game.state.start("GameTitle", true, false);
+      var config = {
+         is_boss: false,
+         is_bonus: false,
+         score: 0,
+         lives: 3,
+         power: self.difficulty == EASY ? 2 : 1,
+         init_x: 300,
+         init_y: 500,
+         difficulty: self.difficulty,
+         current_level: 0,
+         special_available: 1,
+         cooldown_reduction: 0,
+         current_bonus_level: 0,
+      };
+      this.game.state.start("Game", true, false, config);
    },
    // }}}
    // {{{ LOADNEXTLEVEL
