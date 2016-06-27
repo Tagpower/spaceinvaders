@@ -6,8 +6,6 @@
 - Trouver une autre musique pour le mode OH GOD
 - Powerup warp (qui ramène les ennemis plus haut)
 	- Trouver le bug qui déplace les ennemis en boucle
-- Corriger les délais (ex : bonus ship qui arrive pendant la pause)
-	- Faire marcher les timers de Phaser
 
 - NIVEAUX DE DIFFICULTÉ
 	- Facile : moins de tirs, puissance 2 minimum
