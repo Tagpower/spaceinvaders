@@ -1194,6 +1194,15 @@ invaders.prototype = {
    // {{{ RESTART
    restart: function(level) {
       var self = this;
+      self.items.removeAll();
+      self.shots.removeAll();
+      self.special_shots.removeAll();
+      self.bonusships.removeAll();
+      self.enemies.removeAll();
+      self.enemy_shots.removeAll();
+      self.player.kill();
+      self.music.stop();
+      self.music_bonus.stop();
       var config = {
          is_boss: false,
          is_bonus: false,
