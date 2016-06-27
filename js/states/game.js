@@ -1194,27 +1194,7 @@ invaders.prototype = {
    // {{{ RESTART
    restart: function(level) {
       var self = this;
-      self.items.removeAll();
-      self.shots.removeAll();
-      self.special_shots.removeAll();
-      self.bonusships.removeAll();
-      self.enemies.removeAll();
-      self.enemy_shots.removeAll();
-      self.player.kill();
-      
-      var config = {
-         score: 0,
-         lives: 3,
-         shield_time: 0,
-         shots_cooldown: 0,
-         special_cooldown: 0,
-         special_available: 1,
-         cooldown_reduction: 0,
-         current_level: 0,
-         current_bonus_level: 0,
-         power: (difficulty == EASY ? 2 : 1)
-      }
-      self.game.state.start("Game", true, false, config);
+      self.game.state.start("GameTitle", true, false);
    },
    // }}}
    // {{{ LOADNEXTLEVEL
