@@ -150,7 +150,7 @@ invaders.prototype = {
       self.music_bonus = self.game.add.audio('bonus_loop');
       self.music_bonus.loop = true;
 
-      if (!self.mute) {
+      if (!self.mute && !self.music.isPlaying){
          self.music.play();
       }
 
@@ -1195,26 +1195,30 @@ invaders.prototype = {
    // {{{ RESTART
    restart: function(level) {
       var self = this;
-      items.removeAll();
-      shots.removeAll();
-      special_shots.removeAll();
-      bonusships.removeAll();
-      enemies.removeAll();
-      enemy_shots.removeAll();
-      player.kill();
+      self.items.removeAll();
+      self.shots.removeAll();
+      self.special_shots.removeAll();
+      self.bonusships.removeAll();
+      self.enemies.removeAll();
+      self.enemy_shots.removeAll();
+      self.player.kill();
+      self.music.stop();
+      self.music_bonus.stop();
       var config = {
+         is_boss: false,
+         is_bonus: false,
          score: 0,
          lives: 3,
-         shield_time: 0,
-         shots_cooldown: 0,
-         special_cooldown: 0,
+         power: self.difficulty == EASY ? 2 : 1,
+         init_x: 300,
+         init_y: 500,
+         difficulty: self.difficulty,
+         current_level: 0,
          special_available: 1,
          cooldown_reduction: 0,
-         current_level: level-1,
          current_bonus_level: 0,
-         power: (difficulty == EASY ? 2 : 1)
-      }
-      
+      };
+      this.game.state.start("Game", true, false, config);
    },
    // }}}
    // {{{ LOADNEXTLEVEL
