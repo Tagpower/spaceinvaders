@@ -75,6 +75,7 @@ invaders.prototype = {
       self.score = config.score;
       self.lives = config.lives;
       self.power = config.power;
+      self.clear_nofiretime = 0;
       self.shield_time = 0;
       self.shots_cooldown = 0;
       self.special_cooldown = 0;
@@ -300,6 +301,7 @@ invaders.prototype = {
             }
          }		
 
+         //Shield decay over time
          if (self.shield_time > 0) {
             self.shield_time--;
          } else {
@@ -307,6 +309,12 @@ invaders.prototype = {
          }
          self.shield.alpha = Math.min(self.shield_time/60.0, 0.75); //Fade the shield sprite with time
 
+         //When a clear powerup is collected, enemies can't fire for a while
+         if (self.clear_nofiretime > 0) {
+            self.clear_nofiretime--;
+         } else {
+            self.clear_nofiretime = 0;
+         }
 
          if (self.shots_cooldown > 0) {
             self.shots_cooldown--;
@@ -323,7 +331,7 @@ invaders.prototype = {
 
       } else {
          //When the player dies
-         console.log("DEAD ?");
+         //console.log("DEAD ?");
          self.player.body.velocity.x = 0;
          self.player.animations.play('dead');
          //enemies.setAll('body.velocity.x', 0);
@@ -363,7 +371,7 @@ invaders.prototype = {
 
          //Make the enemies fire
          self.random = Math.random();
-         if (self.random < enemy.fireProba) {
+         if (self.random < enemy.fireProba && self.clear_nofiretime == 0) {
             switch (enemy.type) {
                default:
                case 1:
@@ -391,7 +399,7 @@ invaders.prototype = {
       });
 
       //When the level is beaten
-      console.log("is beaten ?");
+      //console.log("is beaten ?");
       if (self.enemies.countLiving() == 0 && self.enemy_shots.countLiving() == 0 && self.current_level < levels.length && !self.wait_next_level) {
          self.bonusships.forEachAlive(function(bship) {
             if (bship.body.velocity.x == 0) {
@@ -660,12 +668,14 @@ invaders.prototype = {
       self.game.physics.arcade.enable(enemyshot);
       enemyshot.body.velocity.x = velx;
       enemyshot.body.velocity.y = vely;
+      enemyshot.body.gravity.x = 0;
+      enemyshot.body.gravity.y = 0;
       enemyshot.body.mass = 0;
       enemyshot.type = enemy.type;
       if (!self.mute) {
          self.enemyfire_sd.play();
       }
-      if (enemy.type == 7) {
+      if (enemyshot.type == 7) {
          enemyshot.body.gravity.y = 250;
          if (enemy.body.x <= self.player.body.x) {
             enemyshot.body.gravity.x = 10-(enemy.body.x - self.player.body.x)/10;
@@ -970,6 +980,7 @@ invaders.prototype = {
                }
                self.enemy_shots.removeAll();
                self.score += 300;
+               self.clear_nofiretime += 120;
                self.text_ship.text = "Neutralisation !";
             break;
 
@@ -1120,7 +1131,7 @@ invaders.prototype = {
    // }}}
    // {{{ HITBONUSSHIP
    hitBonusShip: function(shot, bship) {
-      console.log("HITTED !!!");
+      console.log("HIT !!!");
       var self = this;
       shot.kill();
       if (!bship.touched) {
@@ -1134,7 +1145,7 @@ invaders.prototype = {
          bship.kill();
 
          //randomly create a bonus
-         var random = 100;//Math.random() * 100;
+         var random = Math.random() * 100;
          if (random <= 10) {
             self.createItem(bship.body.center.x, bship.body.center.y, 'extralife');
          }

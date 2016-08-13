@@ -12,7 +12,7 @@ boot.prototype = {
       this.scale.setScreenSize();
 
       this.game.renderer.clearBeforeRender = false;
-      this.game.renderer.roundPixels = true;
+      this.game.renderer.roundPixels = false;
 
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
 

@@ -9,7 +9,7 @@ gameTitle.prototype = {
    create: function() {
       console.log("-*- Launch the game -*-");
       //parameters: difficulty, level, power, firerate, isBonus
-      var difficulty = EASY;
+      var difficulty = NORMAL;
       var config = {
          is_boss: false,
          is_bonus: false,
@@ -17,7 +17,7 @@ gameTitle.prototype = {
          lives: 3,
          power: difficulty == EASY ? 2 : 1,
          init_x: 300,
-         init_y: 500,
+         init_y: 600,
          difficulty: difficulty,
          current_level: 0,
          special_available: 1,
