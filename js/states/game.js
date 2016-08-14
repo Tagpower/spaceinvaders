@@ -135,15 +135,21 @@ invaders.prototype = {
       self.pause_btn.onDown.add(self.pauseGame, self);
 
       //Ingame Text
-      self.text_middle = self.game.add.text(200, self.game.world.height/2, '', {font: '32px Minecraftia', fill: '#ffffff'});
+      self.text_middle = self.game.add.text(self.game.world.width/2, self.game.world.height/2, '', {font: '32px Minecraftia', fill: '#ffffff'});
       self.text_middle.fixedToCamera = true;
-      self.text_pause = self.game.add.text(200, self.game.world.height/1.5, 'PAUSE', {font: '32px Minecraftia', fill: '#ffffff'});
+      self.text_middle.anchor.setTo(0.5);
+
+      self.text_pause = self.game.add.text(self.game.world.width/2, self.game.world.height/1.5, 'PAUSE', {font: '32px Minecraftia', fill: '#ffffff'});
       self.text_pause.fixedToCamera = true;
+      self.text_middle.anchor.setTo(0.5);
       self.text_pause.alpha = 0;
+
       self.text_score = self.game.add.text(16, 5, '', {font: '16px Minecraftia', fill: '#00aaff'});
       self.text_score.fixedToCamera = true;
-      self.text_level = self.game.add.text(200, game.world.height/2 + 40, '', {font: '16px Minecraftia', fill: '#00aaff'});
+
+      self.text_level = self.game.add.text(self.game.world.width/2, game.world.height/2 + 40, '', {font: '16px Minecraftia', fill: '#00aaff'});
       self.text_level.fixedToCamera = true;
+      self.text_level.anchor.setTo(0.5);
 
       self.music = self.game.add.audio('ambient');
       self.music.loop = true;
@@ -205,7 +211,7 @@ invaders.prototype = {
       //Check collisions for everything
       self.game.physics.arcade.collide(self.shots, self.enemies, self.hitEnemy, null, self);
       self.game.physics.arcade.collide(self.special_shots, self.enemies, self.hitEnemy, false, self); 
-      self.game.physics.arcade.collide(self.explosions, self.enemies, self.hitEnemy, null, self);
+      //self.game.physics.arcade.collide(self.explosions, self.enemies, self.hitEnemy, null, self);
       self.game.physics.arcade.collide(self.shots, self.bonusships, self.hitBonusShip, null, self);
       //game.physics.arcade.collide(player, enemies, levelFailed, null, self)
       self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, function(){return (!self.lostAlife && self.shield_time == 0);}, self);
@@ -551,6 +557,8 @@ invaders.prototype = {
             self.bonusships.add(bship); 
          }
          else {
+            bship.touched = false;
+            bship.body.enable = true;
             bship.revive();
             bship.reset(-32,15);
          }
@@ -815,6 +823,8 @@ invaders.prototype = {
          self.explosions.add(expl);
       }
       else {
+         expl.alpha = 1;
+         expl.scale.setTo(1);
          expl.revive();
          expl.reset(x,y);
       }
@@ -936,7 +946,7 @@ invaders.prototype = {
             break;
             case 'powerup_cooldown': //Raises the player's rate of fire
                if (self.cooldown_reduction < MAX_CDR) {
-                  self.cooldown_reduction += 3;
+                  self.cooldown_reduction += 5;
                }
                if (self.cooldown_reduction >= MAX_CDR) {
                   self.cooldown_reduction = MAX_CDR;

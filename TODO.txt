@@ -1,4 +1,4 @@
-﻿TODO LIST :
+﻿=====TODO LIST=====
 
 - Boss
 - Plus d'armes ?
@@ -9,9 +9,10 @@
 - FAIRE UN MENU
 
 
-BUGS :
+=====BUGS=====
 
+---MAJEURS---
+- Quand on chope un niveau bonus juste après avoir terminé un niveau, le niveau bonus apparaît en même temps que le niveau suivant
+
+---MINEURS---
 - Trouver le bug qui déplace les ennemis en boucle
-- Sprite explosion qui apparaît une seule fois
-- Niveau bonus qui apparaît en même temps qu'un niveau normal
-- Vaisseau bonus qui se barre ?...
