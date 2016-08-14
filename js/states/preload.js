@@ -68,6 +68,9 @@ preload.prototype = {
 		this.game.load.audio('win', ['assets/audio/tunak-tunak-tun.mp3']);
 		this.game.load.audio('over', ['assets/audio/gameover.ogg']); 
 		this.game.load.audio('sax', ['assets/audio/sax.mp3']);
+
+		var loadingBar = game.add.sprite(game.world.centerX, 400, 'shield');
+		this.load.setPreloadSprite(loadingBar);
    },
    create: function() {
       console.log("-*- Preloaded -*-");
