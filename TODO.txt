@@ -14,3 +14,4 @@ BUGS :
 - Trouver le bug qui déplace les ennemis en boucle
 - Sprite explosion qui apparaît une seule fois
 - Niveau bonus qui apparaît en même temps qu'un niveau normal
+- Vaisseau bonus qui se barre ?...

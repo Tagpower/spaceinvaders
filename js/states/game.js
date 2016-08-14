@@ -260,28 +260,28 @@ invaders.prototype = {
             if (self.shots_cooldown == 0) {
                switch (self.power) { //Number of shots depends on the ship's power
                   case 7:
-                     self.createShot(self.player.body.center.x-17, self.player.body.y, -30, -270);
-                     self.createShot(self.player.body.center.x+13, self.player.body.y, 30, -270);
+                     self.createShot(self.player.body.center.x-15, self.player.body.y, -30, -270);
+                     self.createShot(self.player.body.center.x+15, self.player.body.y, 30, -270);
                   case 5:
-                     self.createShot(self.player.body.center.x-12, self.player.body.y, -20, -280);
-                     self.createShot(self.player.body.center.x+8, self.player.body.y, 20, -280);
+                     self.createShot(self.player.body.center.x-10, self.player.body.y, -20, -280);
+                     self.createShot(self.player.body.center.x+10, self.player.body.y, 20, -280);
                   case 3:
-                     self.createShot(self.player.body.center.x-7, self.player.body.y, -10, -290);
-                     self.createShot(self.player.body.center.x+3, self.player.body.y, 10, -290);
+                     self.createShot(self.player.body.center.x-5, self.player.body.y, -10, -290);
+                     self.createShot(self.player.body.center.x+5, self.player.body.y, 10, -290);
                   case 1:
                   default:
-                     self.createShot(self.player.body.center.x-2, self.player.body.y, 0, -300);
+                     self.createShot(self.player.body.center.x, self.player.body.y, 0, -300);
                      //createShot(player.body.center.x-2, player.body.y, Math.random()*60-30, -300); //Another weapon ?
                      break;
                   case 6:
-                     self.createShot(self.player.body.center.x-16, self.player.body.y, -16, -280);
-                     self.createShot(self.player.body.center.x+12, self.player.body.y, 16, -280);                        
+                     self.createShot(self.player.body.center.x-14, self.player.body.y, -16, -280);
+                     self.createShot(self.player.body.center.x+14, self.player.body.y, 16, -280);                        
                   case 4:
-                     self.createShot(self.player.body.center.x-11, self.player.body.y, -8, -290);
-                     self.createShot(self.player.body.center.x+7, self.player.body.y, 8, -290);
+                     self.createShot(self.player.body.center.x-9, self.player.body.y, -8, -290);
+                     self.createShot(self.player.body.center.x+9, self.player.body.y, 8, -290);
                   case 2:
-                     self.createShot(self.player.body.center.x-6, self.player.body.y, 0, -300);
-                     self.createShot(self.player.body.center.x+2, self.player.body.y, 0, -300);
+                     self.createShot(self.player.body.center.x-4, self.player.body.y, 0, -300);
+                     self.createShot(self.player.body.center.x+4, self.player.body.y, 0, -300);
                      break;
                }
                self.shots_cooldown = (DEFAULT_FIRE_COOLDOWN + 10*self.power) * (1-self.cooldown_reduction/(MAX_CDR*2.0));
@@ -668,6 +668,7 @@ invaders.prototype = {
       self.game.physics.arcade.enable(enemyshot);
       enemyshot.body.velocity.x = velx;
       enemyshot.body.velocity.y = vely;
+      enemyshot.angle = -Math.atan2(velx, vely)*(180 / Math.PI);
       enemyshot.body.gravity.x = 0;
       enemyshot.body.gravity.y = 0;
       enemyshot.body.mass = 0;
@@ -702,6 +703,8 @@ invaders.prototype = {
       self.game.physics.arcade.enable(shot);
       shot.body.velocity.x = velx;
       shot.body.velocity.y = vely;
+      shot.anchor.setTo(0.5);
+      shot.angle = -Math.atan2(velx, vely)*(180 / Math.PI);
       if (!self.mute) {
          self.fire_sd.play();
       }
@@ -961,15 +964,20 @@ invaders.prototype = {
                self.text_ship.text = "Bouclier !";
             break;
 
-            case 'powerup_kill': //Tries to shoot all the enemies at once
-               self.enemies.forEachAlive(function(enemy) {
-                  self.createShot(player.body.center.x, player.body.center.y,  (enemy.x-player.x+enemy.body.velocity.x)*2, (enemy.y-player.y)*2);
-               });
+            case 'powerup_kill': //Fires a large volley of shots
+               // for (var i = -2; i <= 2; i++) {
+               //    for (var j = -2; j <= 2; j++) {
+               //       self.createShot(player.body.center.x, player.body.center.y, i*25, -600+(j*25));
+               //    };
+               // };
+               for (var a = -Math.PI/4; a <= Math.PI/4; a += Math.PI/60) {
+                  self.createShot(player.body.center.x, player.body.center.y, 300*Math.sin(a), -500-300*Math.cos(a));
+               }
                self.score += 750;
                self.text_ship.text = "KILL 'EM ALL !";
             break;
 
-            case 'powerup_clear': //Clears the screen of enemy fire
+            case 'powerup_clear': //Clears the screen of enemy fire and prevents it for a while
                var wave = self.game.add.sprite(player.body.center.x, player.body.center.y, 'clear_wave');
                wave.anchor.setTo(0.5, 0.5);
                wave.smoothed = false;
@@ -980,7 +988,7 @@ invaders.prototype = {
                }
                self.enemy_shots.removeAll();
                self.score += 300;
-               self.clear_nofiretime += 120;
+               self.clear_nofiretime += 120; //Prevent enemy fire
                self.text_ship.text = "Neutralisation !";
             break;
 
