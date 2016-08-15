@@ -713,7 +713,7 @@ invaders.prototype = {
    // {{{ ENEMYFIREPOL
    enemyFirePol: function(enemy, vel, theta) { //Theta is the angle from the vertical in radians, so 0 means straight down
       var self = this;
-      self.enemyFire(enemy, vel*Math.sin(theta) , vel*Math.cos(theta));
+      self.enemyFire(enemy, vel*Math.cos(theta) , vel*Math.sin(theta));
    }, 
 
    // }}}
@@ -741,12 +741,12 @@ invaders.prototype = {
          self.fire_sd.play();
       }
    },
-
+   // }}}
+   // {{{
    createShotPol: function(x,y, vel, theta, pow) { //Theta is the angle from the vertical, so 0 means straight up
       var self = this;
-      self.createShot(x,y, vel*Math.sin(theta), -vel*Math.cos(theta), pow);
+      self.createShot(x,y, vel*Math.cos(theta), -vel*Math.cos(theta), pow);
    },
-
    // }}}
    // {{{ HITENEMY
    hitEnemy: function(shot, enemy) {
