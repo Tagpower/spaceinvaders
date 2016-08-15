@@ -785,6 +785,7 @@ invaders.prototype = {
 
             //randomly create a bonus
             var random = Math.random();
+            if (random <= POWERUP_CHANCE || (self.in_bonus_level && random <= POWERUP_CHANCE_IN_BONUS)) { //In a bonus level, bonus are 2x as likely to appear
                //Bonus roulette
                var roulette = Math.random()*105;
                if (roulette <= 20) {
