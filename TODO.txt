@@ -2,9 +2,8 @@
 
 - Boss
 - Plus d'armes ?
-- Trouver une musique originale
+- Trouver/composer une musique originale
 - Trouver une autre musique pour le mode OH GOD
-- Powerup warp (qui ramène les ennemis plus haut)
 	
 - FAIRE UN MENU
 

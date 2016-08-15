@@ -192,14 +192,14 @@ invaders.prototype = {
          console.log("\tLoading level " + self.current_level + " ...");
          self.loadLevel(self.current_level);
          console.log("\t-*- Level loaded -*-");
-      }
-      else {
+      } else {
          console.log("Loading bonus level " + self.current_bonus_level + " ...");
          self.loadBonusLevel(self.current_bonus_level);
          console.log("-*- Bonus level loaded -*-");
       }
       self.enemies.setAll('body.velocity.x', self.speed); 
    },
+
    // }}}
    // {{{ UPDATE
    update: function() {
@@ -381,27 +381,27 @@ invaders.prototype = {
          if (self.random < enemy.fireProba && self.clear_nofiretime == 0) {
             switch (enemy.type) {
                default:
-               case 1:
+               case 1: //Orange
                   self.enemyFire(enemy, 0, 100);
                   break;
-               case 2:
+               case 2: //Red
                   self.enemyFire(enemy, -25, 100);
                   self.enemyFire(enemy, 0, 100);
                   self.enemyFire(enemy, 25, 100);
                   break;
-               case 3:
+               case 3: //Green
                   self.enemyFire(enemy, 0, 300);
                   break; 
-               case 7:
+               case 7: //Cyan
                   self.enemyFire(enemy, 0, 1);
                   break;
-               case 9:
+               case 9: //Blue
                   self.enemyFire(enemy, Math.random()*200-100, Math.random()*200+50);
                   break;
                case 11: //OH GOD
                   self.enemyFire(enemy, 0, 600);
                   break; 
-               case 12:
+               case 12: //Magenta
                   var random2 = Math.random();
                   for (var a = 0; a < 16; a++) {
                      self.enemyFirePol(enemy, 200, a*Math.PI/8 + (random2 < 0.5 ? 0 : Math.PI/16));
@@ -465,6 +465,7 @@ invaders.prototype = {
       });
    },
    // }}}
+
    // {{{ CREATEPLAYER
    createPlayer: function() {
       var self = this;
@@ -484,7 +485,9 @@ invaders.prototype = {
       self.player.animations.add('dead', [6],6,true);
    },
    // }}}
+
    // {{{ LOADLEVEL
+   // Load a level and its enemies
    loadLevel: function(lvl) {
       var self = this;
       if(lvl >= levels.length) {
@@ -535,6 +538,7 @@ invaders.prototype = {
 
    },
    // }}}
+
    // {{{ PAUSEGAME
    pauseGame: function() {
       var self = this;
@@ -555,7 +559,9 @@ invaders.prototype = {
       }   
    },
    // }}}
+
    // {{{ BONUSSHIP
+   // Prepares a bonus ship to appear after 'delay' seconds
    bonusShip: function(delay) {
       var self = this;
       console.log('\tbonus ship dans %.2f s',delay/1000);
@@ -589,13 +595,16 @@ invaders.prototype = {
       self.timer.start();
    },
    // }}}
+
    // {{{ CREATEENEMIES
    createEnemies: function(array) {
       var self = this;
       self.createEnemiesAbs(array, 10, 30);
    },
    // }}}
+
    // {{{ CREATEENEMIESABS
+   // Creates an array of enemies at a set position
    createEnemiesAbs: function(array, x, y) {
       var self = this;
       for (var i = 0; i < array.length; i++) {
@@ -678,7 +687,9 @@ invaders.prototype = {
       }   
    },
    // }}}
+
    // {{{ ENEMYFIRE
+   // Makes an enemy fire
    enemyFire: function(enemy,velx,vely) {
       var self = this;
       // TODO sprite optimization
@@ -715,16 +726,19 @@ invaders.prototype = {
          }
       }
    },
-
    // }}}
+
    // {{{ ENEMYFIREPOL
+   // Makes an enemy fire, polar version
    enemyFirePol: function(enemy, vel, theta) { //Theta is the angle from the vertical in radians, so 0 means straight down
       var self = this;
       self.enemyFire(enemy, vel*Math.sin(theta) , vel*Math.cos(theta));
    }, 
 
    // }}}
+
    // {{{ CREATESHOT
+   // Makes the player fire
    createShot: function(x,y,velx,vely,pow) {
       var self = this;
       var shot = self.shots.getFirstDead();
@@ -749,13 +763,17 @@ invaders.prototype = {
       }
    },
    // }}}
+
    // {{{ CREATESHOTPOL
+   // Makes the player fire, polar version
    createShotPol: function(x,y, vel, theta, pow) { //Theta is the angle from the vertical, so 0 means straight up
       var self = this;
       self.createShot(x,y, vel*Math.sin(theta), -vel*Math.cos(theta), pow);
    },
    // }}}
+
    // {{{ HITENEMY
+   // When an enemy is hit by a player shot or an explosion
    hitEnemy: function(shot, enemy) {
       var self = this;
       if (shot.key != 'explosion')  {
@@ -826,7 +844,9 @@ invaders.prototype = {
       }
    },
    // }}}
+
    // {{{ CREATEITEM
+   // Generates a powerup to collect
    createItem: function(x, y, key) {
       var self = this;
       var item = self.game.add.sprite(x, y, key);
@@ -854,7 +874,9 @@ invaders.prototype = {
       self.items.add(item);
    },
    // }}}
+
    // {{{ CREATEEXPLOSION
+   // Generates an explosion at the given coordinates
    createExplosion: function(x,y, pow) {
       var self = this;
       var expl = self.explosions.getFirstDead();
@@ -887,7 +909,9 @@ invaders.prototype = {
       self.game.add.tween(expl.scale).to( {x: 2, y: 2 }, 1500, Phaser.Easing.Quintic.Out, true);
    },
    // }}}
+
    // {{{ PLAYERHIT
+   // When the player is hit by enemy fire or an enemy 
    playerHit: function(player, shot) {
       var self = this;
       shot.kill();
@@ -900,8 +924,9 @@ invaders.prototype = {
          player.body.velocity.y = 125;
          self.createExplosion(player.body.center.x, player.body.center.y, 20);
          //var tween_death = game.add.tween(player.body).to( { y: game.world.height+10 }, 1000, Phaser.Easing.Linear.None, true);
-         
+
          if (!self.in_bonus_level) {
+            //Player stats are halved
             if (difficulty == EASY) {
                if (self.power > 2) {
                   self.power /= 2;
@@ -969,7 +994,9 @@ invaders.prototype = {
       }
    },
    // }}}
+
    // {{{ COLLECTITEM
+   // When a bonus item is collected
    collectItem: function(player, item) {
       var self = this;
       if (!self.lostAlife) {         
@@ -1130,7 +1157,9 @@ invaders.prototype = {
       }
    },
    // }}}
+
    // {{{ LEVELFAILED
+   // When the level is failed by letting enemies go too low 
    levelFailed: function() {
       var self = this;
       if (!self.lostAlife) {   
@@ -1186,7 +1215,9 @@ invaders.prototype = {
       }
    },
    // }}}
+
    // {{{ CREATESPECIALSHOT
+   // Makes the player fire a special shot
    createSpecialShot: function(x, y, velx, vely) { //V2.0
       var self = this;
       for (var i=0; i < 9+self.power; i++) {
@@ -1198,7 +1229,9 @@ invaders.prototype = {
       self.special_cooldown = DEFAULT_FIRE_COOLDOWN;
    },
    // }}}
+
    // {{{ HITBONUSSHIP
+   // When the player successfully hits a bonus ship
    hitBonusShip: function(shot, bship) {
       console.log("HIT !!!");
       var self = this;
@@ -1245,6 +1278,7 @@ invaders.prototype = {
       }
    },
    // }}}
+
    // {{{ MUTEGAME
    muteGame: function() {
       var self = this;
@@ -1265,7 +1299,9 @@ invaders.prototype = {
       self.mute_wait = 30;
    },
    // }}}
+
    // {{{ ONLYN
+   // Generates a level with only one type of enemy
    only: function(n) {
       return [[0,0,n,n,n,n,n,n,0,0],
             [0,n,n,n,n,n,n,n,n,0],
@@ -1274,7 +1310,9 @@ invaders.prototype = {
 
    },
    // }}}
+
    // {{{ RESTART
+   // Restarts the game from zero
    restart: function(level) {
       var self = this;
       self.items.removeAll();
@@ -1303,7 +1341,9 @@ invaders.prototype = {
       this.game.state.start("Game", true, false, config);
    },
    // }}}
+
    // {{{ LOADNEXTLEVEL
+   // Load the next level when the current is beaten
    loadNextLevel: function() {
       var self = this;
       self.items.removeAll();
@@ -1333,7 +1373,9 @@ invaders.prototype = {
       self.game.state.start("Game", true, false, config);
    },
    // }}}
+
    // {{{ LOADBONUSLEVEL
+   // Loads the next bonus level
    loadBonusLevel: function() {
       var self = this;
       self.in_bonus_level = true;
