@@ -277,6 +277,7 @@ invaders.prototype = {
                   case 1:
                   default:
                      self.createShot(self.player.body.center.x, self.player.body.y, 0, -300, 10);
+                     //self.createShotPol(self.player.body.center.x, self.player.body.y, 300, 0, 10); //Polar version
                      //createShot(player.body.center.x-2, player.body.y, Math.random()*60-30, -300); //Another weapon ?
                      break;
                   case 6:
@@ -381,7 +382,7 @@ invaders.prototype = {
             switch (enemy.type) {
                default:
                case 1:
-                  self.enemyFire(enemy, 0, 100)
+                  self.enemyFire(enemy, 0, 100);
                   break;
                case 2:
                   self.enemyFire(enemy, -25, 100);
@@ -740,6 +741,12 @@ invaders.prototype = {
          self.fire_sd.play();
       }
    },
+
+   createShotPol: function(x,y, vel, theta, pow) { //Theta is the angle from the vertical, so 0 means straight up
+      var self = this;
+      self.createShot(x,y, vel*Math.sin(theta), -vel*Math.cos(theta), pow);
+   },
+
    // }}}
    // {{{ HITENEMY
    hitEnemy: function(shot, enemy) {
@@ -1005,7 +1012,9 @@ invaders.prototype = {
                //    };
                // };
                for (var a = -Math.PI/4; a <= Math.PI/4; a += Math.PI/60) {
-                  self.createShot(player.body.center.x, player.body.center.y, 300*Math.sin(a), -500-300*Math.cos(a), 15);
+                  //self.createShot(player.body.center.x, player.body.center.y, 300*Math.sin(a), -500-300*Math.cos(a), 15);
+                  self.createShotPol(player.body.center.x, player.body.center.y, 500, a, 15);
+                  self.createShotPol(player.body.center.x, player.body.center.y, 450, a, 15);
                }
                self.score += 750;
                self.text_ship.text = "KILL 'EM ALL !";
