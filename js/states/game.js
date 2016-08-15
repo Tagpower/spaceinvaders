@@ -298,10 +298,10 @@ invaders.prototype = {
          if (self.special_btn.isDown) {
             if (self.special_available > 0 && self.special_cooldown == 0) {
                if (self.power == MAX_POWER) {
-                  self.createSpecialShot(self.player.body.center.x-2, self.player.body.y, -10, -300);
-                  self.createSpecialShot(self.player.body.center.x-2, self.player.body.y, 10, -300)
+                  self.createSpecialShot(self.player.body.center.x-4, self.player.body.y, 0, -300);
+                  self.createSpecialShot(self.player.body.center.x+4, self.player.body.y, 0, -300)
                } else {
-                  self.createSpecialShot(self.player.body.center.x-2, self.player.body.y, 0, -300);
+                  self.createSpecialShot(self.player.body.center.x, self.player.body.y, 0, -300);
                }
                self.special_available--;
             }
@@ -400,6 +400,11 @@ invaders.prototype = {
                case 11: //OH GOD
                   self.enemyFire(enemy, 0, 600);
                   break; 
+               case 12:
+                  for (var a = 0; a < 16; a++) {
+                     self.enemyFire(enemy, 200*Math.cos(a*Math.PI/8), 200*Math.sin(a*Math.PI/8));
+                  }
+                  break;
             }
          }
       });
@@ -650,6 +655,11 @@ invaders.prototype = {
                   case 11: //DARK GREEN : Fires REALLY FAST shots
                      enemy.value = 400;
                      break;
+                  case 12: //MAGENTA : Fires in a circle, takes 2 hits
+                     enemy.health = 20;
+                     enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*0.5;
+                     enemy.value = 300;
+                     break;
                }
                self.enemies.add(enemy);
             }
@@ -674,6 +684,7 @@ invaders.prototype = {
       enemyshot.checkWorldBounds = true;
       enemyshot.outOfBoundsKill = true;
       self.game.physics.arcade.enable(enemyshot);
+      enemyshot.anchor.setTo(0.5);
       enemyshot.body.velocity.x = velx;
       enemyshot.body.velocity.y = vely;
       enemyshot.angle = -Math.atan2(velx, vely)*(180 / Math.PI);
@@ -749,7 +760,7 @@ invaders.prototype = {
 
             //randomly create a bonus
             var random = Math.random();
-            if (random <= POWERUP_CHANCE || (in_bonus_level && random <= POWERUP_CHANCE_IN_BONUS)) { //In a bonus level, bonus are 2x as likely to appear
+            if (random <= POWERUP_CHANCE || (self.in_bonus_level && random <= POWERUP_CHANCE_IN_BONUS)) { //In a bonus level, bonus are 2x as likely to appear
                //Bonus roulette
                var roulette = Math.random()*100;
                if (roulette <= 20) {

@@ -5,7 +5,7 @@ var boot = function(game) {
 boot.prototype = {
    preload: function() {
       
-      this.game.load.image('shield', 'assets/shield_WIP.png');
+      this.game.load.image('loading', 'assets/loadingbar.png');
    },
    create : function() {
       this.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
