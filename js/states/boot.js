@@ -4,15 +4,15 @@ var boot = function(game) {
 
 boot.prototype = {
    preload: function() {
-      // load splash or loading bar
+      
+      this.game.load.image('loading', 'assets/loadingbar.png');
    },
    create : function() {
-      this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-      this.scale.pageAlignHorizontally = true;
-      this.scale.setScreenSize();
+      this.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
+      //this.scale.pageAlignHorizontally = true;
 
       this.game.renderer.clearBeforeRender = false;
-      this.game.renderer.roundPixels = true;
+      this.game.renderer.roundPixels = false;
 
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
 

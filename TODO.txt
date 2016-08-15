@@ -1,19 +1,17 @@
-﻿TODO LIST :
+﻿=====TODO LIST=====
 
 - Boss
 - Plus d'armes ?
-- Trouver une musique originale
+- Trouver/composer une musique originale
 - Trouver une autre musique pour le mode OH GOD
-- Powerup warp (qui ramène les ennemis plus haut)
-	- Trouver le bug qui déplace les ennemis en boucle
-
-- NIVEAUX DE DIFFICULTÉ
-	- Normal : par défaut
-	- Dur : moins de bonus, plus rapide
-	- OH GOD : 	- TOUS LES ORANGES DEVIENNENT VERTS (?) DONE !
-				- ENCORE MOINS DE BONUS
-				- ENCORE PLUS DE TIRS
-				- MOUHAHAHAHAHAHA
-
-
+	
 - FAIRE UN MENU
+
+=====BUGS=====
+
+---MAJEURS---
+- Quand on chope un niveau bonus juste après avoir terminé un niveau, le niveau bonus apparaît en même temps que le niveau suivant
+- Gérer le dépassement du nombre de niveaux bonus
+
+---MINEURS---
+- Trouver le bug qui déplace les ennemis en boucle

@@ -11,11 +11,12 @@ var SPEEDUP_INIT = 5;
 var SPEEDUP_ACCEL = 0.5;
 var PLAYER_SPEED = 150;
 var DEFAULTS = [START_SPEED, SPEEDUP_INIT, SPEEDUP_ACCEL];
-var DEFAULT_FIRE_COOLDOWN = 30;
+var DEFAULT_FIRE_COOLDOWN = 40;
 var ENEMY_DEFAULT_FIRE_PROBA = 0.004 + difficulty*0.001;
 var POWERUP_CHANCE = 0.05 - difficulty*0.01;
-var MAX_POWER = 7;
-var MAX_CDR = 30;
+var POWERUP_CHANCE_IN_BONUS = 2*POWERUP_CHANCE;
+var MAX_POWER = (difficulty < OHGOD ? 7 : 5);
+var MAX_CDR = 50;
 
 
 
@@ -68,6 +69,10 @@ preload.prototype = {
 		this.game.load.audio('win', ['assets/audio/tunak-tunak-tun.mp3']);
 		this.game.load.audio('over', ['assets/audio/gameover.ogg']); 
 		this.game.load.audio('sax', ['assets/audio/sax.mp3']);
+
+		var loadingBar = this.game.add.sprite(game.world.centerX, 400, "loading");
+		//loadingBar.anchor.setTo(0.5);
+		this.load.setPreloadSprite(loadingBar, 0);
    },
    create: function() {
       console.log("-*- Preloaded -*-");
