@@ -713,7 +713,7 @@ invaders.prototype = {
    // {{{ ENEMYFIREPOL
    enemyFirePol: function(enemy, vel, theta) { //Theta is the angle from the vertical in radians, so 0 means straight down
       var self = this;
-      self.enemyFire(enemy, vel*Math.cos(theta) , vel*Math.sin(theta));
+      self.enemyFire(enemy, vel*Math.sin(theta) , vel*Math.cos(theta));
    }, 
 
    // }}}
@@ -736,16 +736,16 @@ invaders.prototype = {
       shot.body.velocity.x = velx;
       shot.body.velocity.y = vely;
       shot.anchor.setTo(0.5);
-      shot.angle = -Math.atan2(velx, vely)*(180 / Math.PI);
+      shot.angle = Math.atan2(velx, vely)*(180 / Math.PI);
       if (!self.mute) {
          self.fire_sd.play();
       }
    },
    // }}}
-   // {{{
+   // {{{ CREATESHOTPOL
    createShotPol: function(x,y, vel, theta, pow) { //Theta is the angle from the vertical, so 0 means straight up
       var self = this;
-      self.createShot(x,y, vel*Math.cos(theta), -vel*Math.cos(theta), pow);
+      self.createShot(x,y, vel*Math.sin(theta), -vel*Math.cos(theta), pow);
    },
    // }}}
    // {{{ HITENEMY
@@ -778,7 +778,7 @@ invaders.prototype = {
 
             //randomly create a bonus
             var random = Math.random();
-            if (random <= POWERUP_CHANCE || (self.in_bonus_level && random <= POWERUP_CHANCE_IN_BONUS)) { //In a bonus level, bonus are 2x as likely to appear
+            if (random <= POWERUP_CHANCE +1111|| (self.in_bonus_level && random <= POWERUP_CHANCE_IN_BONUS)) { //In a bonus level, bonus are 2x as likely to appear
                //Bonus roulette
                var roulette = Math.random()*105;
                if (roulette <= 20) {
