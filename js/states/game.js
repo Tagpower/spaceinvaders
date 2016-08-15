@@ -743,7 +743,7 @@ invaders.prototype = {
       shot.body.velocity.x = velx;
       shot.body.velocity.y = vely;
       shot.anchor.setTo(0.5);
-      shot.angle = Math.atan2(velx, vely)*(180 / Math.PI);
+      shot.angle = -Math.atan2(velx, vely)*(180 / Math.PI);
       if (!self.mute) {
          self.fire_sd.play();
       }
@@ -785,7 +785,6 @@ invaders.prototype = {
 
             //randomly create a bonus
             var random = Math.random();
-            if (random <= POWERUP_CHANCE +1111|| (self.in_bonus_level && random <= POWERUP_CHANCE_IN_BONUS)) { //In a bonus level, bonus are 2x as likely to appear
                //Bonus roulette
                var roulette = Math.random()*105;
                if (roulette <= 20) {
