@@ -4,7 +4,7 @@ Weapon.Weapon1B = function (game) {
 
    this.nextFire = 0;
    this.bulletSpeed = 600;
-   this.fireRate = 100;
+   this.fireRate = 800;
    this.power = 10;
 
    return this;

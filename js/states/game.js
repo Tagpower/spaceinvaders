@@ -126,6 +126,10 @@ invaders.prototype = {
       self.weapons.push(new Weapon.Weapon1B(self.game));
       self.weapons.push(new Weapon.Weapon2B(self.game));
       self.weapons.push(new Weapon.Weapon3B(self.game));
+      self.weapons.push(new Weapon.Weapon4B(self.game));
+      self.weapons.push(new Weapon.Weapon5B(self.game));
+      self.weapons.push(new Weapon.Weapon6B(self.game));
+      self.weapons.push(new Weapon.Weapon7B(self.game));
 
 
       //Create the player's ship
@@ -889,6 +893,9 @@ invaders.prototype = {
                   self.power = Math.floor(self.power);
                }
             }
+            self.weapon.removeAll();
+            self.weapon = self.weapons[self.power];
+            
             if (self.cooldown_reduction > 0) {
                self.cooldown_reduction /= 2;
                self.cooldown_reduction = Math.floor(self.cooldown_reduction);
@@ -952,6 +959,7 @@ invaders.prototype = {
          switch (item.key) {
             case 'powerup_power': //Raises the player's firepower
                if (self.power < MAX_POWER) {
+                  self.weapon.removeAll();
                   self.weapon = self.weapons[self.power];
                   self.power++;
                }        
