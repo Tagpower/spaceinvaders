@@ -141,7 +141,7 @@ invaders.prototype = {
 
       self.text_pause = self.game.add.text(self.game.world.width/2, self.game.world.height/1.5, 'PAUSE', {font: '32px Minecraftia', fill: '#ffffff'});
       self.text_pause.fixedToCamera = true;
-      self.text_middle.anchor.setTo(0.5);
+      self.text_pause.anchor.setTo(0.5);
       self.text_pause.alpha = 0;
 
       self.text_score = self.game.add.text(16, 5, '', {font: '16px Minecraftia', fill: '#00aaff'});
