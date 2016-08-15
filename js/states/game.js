@@ -123,8 +123,9 @@ invaders.prototype = {
 
 
       // Weapons
-      self.weapons.push(new Weapon.Weapon1B(self.game, self.shots));
-      self.weapons.push(new Weapon.Weapon2B(self.game, self.shots));
+      self.weapons.push(new Weapon.Weapon1B(self.game));
+      self.weapons.push(new Weapon.Weapon2B(self.game));
+      self.weapons.push(new Weapon.Weapon3B(self.game));
 
 
       //Create the player's ship
@@ -220,7 +221,7 @@ invaders.prototype = {
          self.restart(self.current_level);
       }
       //Check collisions for everything
-      self.game.physics.arcade.collide(self.shots, self.enemies, self.hitEnemy, null, self);
+      self.game.physics.arcade.collide(self.weapon, self.enemies, self.hitEnemy, null, self);
       self.game.physics.arcade.collide(self.special_shots, self.enemies, self.hitEnemy, false, self); 
       //self.game.physics.arcade.collide(self.explosions, self.enemies, self.hitEnemy, null, self);
       self.game.physics.arcade.collide(self.shots, self.bonusships, self.hitBonusShip, null, self);
@@ -275,7 +276,6 @@ invaders.prototype = {
          //Fire shots
          if (self.fire_btn.isDown) {
             self.weapon.fire(self.player);
-            console.log(self.shots.total);
          }
 
          //Fire super special shots 

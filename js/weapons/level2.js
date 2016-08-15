@@ -1,10 +1,13 @@
-Weapon.Weapon2B = function (game, group) {
+Weapon.Weapon2B = function (game) {
 
-   Phaser.Group.call(this, game, group, 'Base Weapon Level 1', false, true, Phaser.Physics.ARCADE);
+   Phaser.Group.call(this, game, game.world, 'Base Weapon Level 2', false, true, Phaser.Physics.ARCADE);
    
-   this.weapon1 = new Weapon.Weapon1B(game, group);
-   this.weapon2 = new Weapon.Weapon1B(game, group);
+   this.weapon1 = new Weapon.Weapon1B(game);
+   this.weapon2 = new Weapon.Weapon1B(game);
    this.power = 10;
+
+   this.add(this.weapon1, true);
+   this.add(this.weapon2, true);
 
    return this;
 
