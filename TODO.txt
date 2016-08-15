@@ -5,6 +5,7 @@
 - Trouver une musique originale
 - Trouver une autre musique pour le mode OH GOD
 - Powerup warp (qui ramène les ennemis plus haut)
+- Rééquilibrer la power
 	
 - FAIRE UN MENU
 

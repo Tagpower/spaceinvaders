@@ -216,7 +216,7 @@ invaders.prototype = {
       //game.physics.arcade.collide(player, enemies, levelFailed, null, self)
       self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, function(){return (!self.lostAlife && self.shield_time == 0);}, self);
       self.game.physics.arcade.collide(self.player, self.enemy_shots, self.playerHit, null, self);
-      self.game.physics.arcade.collide(self.player, self.items, self.collectItem, null, self);
+      self.game.physics.arcade.collide(self.player, self.items, self.collectItem, function(){return (!self.lostAlife);}, self);
 
 
 
@@ -266,31 +266,31 @@ invaders.prototype = {
             if (self.shots_cooldown == 0) {
                switch (self.power) { //Number of shots depends on the ship's power
                   case 7:
-                     self.createShot(self.player.body.center.x-15, self.player.body.y, -30, -270);
-                     self.createShot(self.player.body.center.x+15, self.player.body.y, 30, -270);
+                     self.createShot(self.player.body.center.x-15, self.player.body.y, -30, -270, 10);
+                     self.createShot(self.player.body.center.x+15, self.player.body.y, 30, -270, 10);
                   case 5:
-                     self.createShot(self.player.body.center.x-10, self.player.body.y, -20, -280);
-                     self.createShot(self.player.body.center.x+10, self.player.body.y, 20, -280);
+                     self.createShot(self.player.body.center.x-10, self.player.body.y, -20, -280, 10);
+                     self.createShot(self.player.body.center.x+10, self.player.body.y, 20, -280, 10);
                   case 3:
-                     self.createShot(self.player.body.center.x-5, self.player.body.y, -10, -290);
-                     self.createShot(self.player.body.center.x+5, self.player.body.y, 10, -290);
+                     self.createShot(self.player.body.center.x-5, self.player.body.y, -10, -290, 10);
+                     self.createShot(self.player.body.center.x+5, self.player.body.y, 10, -290, 10);
                   case 1:
                   default:
-                     self.createShot(self.player.body.center.x, self.player.body.y, 0, -300);
+                     self.createShot(self.player.body.center.x, self.player.body.y, 0, -300, 10);
                      //createShot(player.body.center.x-2, player.body.y, Math.random()*60-30, -300); //Another weapon ?
                      break;
                   case 6:
-                     self.createShot(self.player.body.center.x-14, self.player.body.y, -16, -280);
-                     self.createShot(self.player.body.center.x+14, self.player.body.y, 16, -280);                        
+                     self.createShot(self.player.body.center.x-14, self.player.body.y, -16, -280, 10);
+                     self.createShot(self.player.body.center.x+14, self.player.body.y, 16, -280, 10);                        
                   case 4:
-                     self.createShot(self.player.body.center.x-9, self.player.body.y, -8, -290);
-                     self.createShot(self.player.body.center.x+9, self.player.body.y, 8, -290);
+                     self.createShot(self.player.body.center.x-9, self.player.body.y, -8, -290, 10);
+                     self.createShot(self.player.body.center.x+9, self.player.body.y, 8, -290, 10);
                   case 2:
-                     self.createShot(self.player.body.center.x-4, self.player.body.y, 0, -300);
-                     self.createShot(self.player.body.center.x+4, self.player.body.y, 0, -300);
+                     self.createShot(self.player.body.center.x-4, self.player.body.y, 0, -300, 10);
+                     self.createShot(self.player.body.center.x+4, self.player.body.y, 0, -300, 10);
                      break;
                }
-               self.shots_cooldown = (DEFAULT_FIRE_COOLDOWN + 10*self.power) * (1-self.cooldown_reduction/(MAX_CDR*2.0));
+               self.shots_cooldown = (DEFAULT_FIRE_COOLDOWN + 20*(self.power-1)) * (1-self.cooldown_reduction/(MAX_CDR*2.0));
             }
          }
 
@@ -605,7 +605,7 @@ invaders.prototype = {
                }
                enemy.animations.add('move', [2*(enemy.type-1), 2*(enemy.type-1)+1], 6, true);
                enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA;
-               enemy.health = 1;
+               enemy.health = 10;
                switch (enemy.type) {
                   default:
                   case 1: //ORANGE : normal
@@ -623,7 +623,7 @@ invaders.prototype = {
                      enemy.value = 150
                         break;
                   case 5: //GRAY : takes 2 hits
-                     enemy.health = 2;
+                     enemy.health = 20;
                      enemy.value = 250
                         break;
                   case 6: //YELLOW : Fires 5 shots when killed
@@ -635,7 +635,7 @@ invaders.prototype = {
                      enemy.value = 200
                         break;
                   case 8: //PINK : takes 3 hits, fires more often
-                     enemy.health = 3;
+                     enemy.health = 30;
                      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*1.5;
                      enemy.value = 400
                         break;
@@ -695,7 +695,7 @@ invaders.prototype = {
    },
    // }}}
    // {{{ CREATESHOT
-   createShot: function(x,y,velx,vely) {
+   createShot: function(x,y,velx,vely,pow) {
       var self = this;
       var shot = self.shots.getFirstDead();
       if (shot === null || shot === undefined) {
@@ -706,6 +706,7 @@ invaders.prototype = {
          shot.revive();
          shot.reset(x,y);
       }
+      shot.power = pow;
       shot.checkWorldBounds = true;
       shot.outOfBoundsKill = true;
       self.game.physics.arcade.enable(shot);
@@ -725,7 +726,7 @@ invaders.prototype = {
          shot.kill();
       }
       if (!enemy.touched) {
-         if (enemy.health == 1) {
+         if (enemy.health <= shot.power) {
             enemy.touched = true;
             enemy.animations.stop();
             enemy.body.enable = false;
@@ -743,12 +744,12 @@ invaders.prototype = {
                self.enemyFire(enemy, 40, 250);
                self.enemyFire(enemy, 80, 250);
             } else if (enemy.type == 10) {
-               self.createExplosion(enemy.body.center.x, enemy.body.center.y);
+               self.createExplosion(enemy.body.center.x, enemy.body.center.y, 20);
             }
 
             //randomly create a bonus
             var random = Math.random();
-            if (random <= POWERUP_CHANCE) {
+            if (random <= POWERUP_CHANCE || (in_bonus_level && random <= POWERUP_CHANCE_IN_BONUS)) { //In a bonus level, bonus are 2x as likely to appear
                //Bonus roulette
                var roulette = Math.random()*100;
                if (roulette <= 20) {
@@ -778,7 +779,7 @@ invaders.prototype = {
             }
             //*/
          } else {
-            enemy.health--;
+            enemy.health -= shot.power;
             if (!self.mute) {
                self.hitenemy_sd.play();
             }
@@ -815,7 +816,7 @@ invaders.prototype = {
    },
    // }}}
    // {{{ CREATEEXPLOSION
-   createExplosion: function(x,y) {
+   createExplosion: function(x,y, pow) {
       var self = this;
       var expl = self.explosions.getFirstDead();
       if (expl === null || expl == undefined) {
@@ -828,6 +829,7 @@ invaders.prototype = {
          expl.revive();
          expl.reset(x,y);
       }
+      expl.power = pow;
       self.game.physics.arcade.enable(expl);
       expl.anchor.setTo(0.5);
       expl.smoothed = false;
@@ -857,7 +859,7 @@ invaders.prototype = {
          player.touched = true;
          player.body.collideWorldBounds = false;
          player.body.velocity.y = 125;
-         self.createExplosion(player.body.center.x, player.body.center.y);
+         self.createExplosion(player.body.center.x, player.body.center.y, 20);
          //var tween_death = game.add.tween(player.body).to( { y: game.world.height+10 }, 1000, Phaser.Easing.Linear.None, true);
          
          if (!self.in_bonus_level) {
@@ -884,7 +886,7 @@ invaders.prototype = {
                   player.body.collideWorldBounds = true;
                   //player.y = 550;
                   console.log("replace player");
-                  self.game.add.tween(player.body).to( { y: 550 }, 500, Phaser.Easing.Quadratic.In, true);
+                  self.game.add.tween(player.body).to( { y: 700 }, 500, Phaser.Easing.Quadratic.In, true);
                   self.game.add.tween(player.body).to( { x: 300 }, 500, Phaser.Easing.Quadratic.In, true);
                   self.lostAlife = false;
                   player.alpha = 0.5;
@@ -910,7 +912,7 @@ invaders.prototype = {
             self.timer.add(1500, function(){
                player.body.collideWorldBounds = true;
                //player.y = 550;
-               self.game.add.tween(player.body).to( { y: 550 }, 500, Phaser.Easing.Quadratic.In, true);
+               self.game.add.tween(player.body).to( { y: 700 }, 500, Phaser.Easing.Quadratic.In, true);
                self.game.add.tween(player.body).to( { x: 300 }, 500, Phaser.Easing.Quadratic.In, true);
                self.lostAlife = false;
                player.alpha = 0.5;
@@ -981,7 +983,7 @@ invaders.prototype = {
                //    };
                // };
                for (var a = -Math.PI/4; a <= Math.PI/4; a += Math.PI/60) {
-                  self.createShot(player.body.center.x, player.body.center.y, 300*Math.sin(a), -500-300*Math.cos(a));
+                  self.createShot(player.body.center.x, player.body.center.y, 300*Math.sin(a), -500-300*Math.cos(a), 15);
                }
                self.score += 750;
                self.text_ship.text = "KILL 'EM ALL !";
@@ -1049,7 +1051,7 @@ invaders.prototype = {
 
             case 'powerup_warp': //TODO : Warps the enemies back to the top of the screen
                self.enemies.forEachAlive(function(e) {
-                  //game.add.tween(e).to( {y: e.x - 300}, 1000, Phaser.Easing.Quadratic.Out, true);
+                  game.add.tween(e).to( {y: e.x - 300}, 1000, Phaser.Easing.Quadratic.Out, true);
                });
                self.score += 400;
                self.text_ship.text = "Retour en haut !";
@@ -1090,7 +1092,7 @@ invaders.prototype = {
          self.player.touched = true;
          self.player.body.collideWorldBounds = false;
          self.player.body.velocity.y = 125;
-         self.createExplosion(self.player.body.center.x, self.player.body.center.y);
+         self.createExplosion(self.player.body.center.x, self.player.body.center.y, 20);
          //var tween_death = game.add.tween(player.body).to( { y: game.world.height+10 }, 1000, Phaser.Easing.Linear.None, true);
 
          self.lives--;
@@ -1131,6 +1133,8 @@ invaders.prototype = {
          } else { //GAME OVER
             self.text_middle.alpha = 1;
             self.text_middle.text = 'GAME OVER';
+            self.text_level.alpha = 1;
+            self.text_level.text = 'Presser R pour recommencer';
          }
       }
    },
@@ -1139,7 +1143,7 @@ invaders.prototype = {
    createSpecialShot: function(x, y, velx, vely) { //V2.0
       var self = this;
       for (var i=0; i < 9+self.power; i++) {
-         self.createShot(x, y, velx, vely-i*20);
+         self.createShot(x, y, velx, vely-i*20, 10);
       }
       if (!self.mute) {
          self.firespecial_sd.play();
@@ -1239,7 +1243,7 @@ invaders.prototype = {
          lives: 3,
          power: self.difficulty == EASY ? 2 : 1,
          init_x: 300,
-         init_y: 500,
+         init_y: 700,
          difficulty: self.difficulty,
          current_level: 0,
          special_available: 1,
