@@ -15,7 +15,7 @@ var DEFAULT_FIRE_COOLDOWN = 40;
 var ENEMY_DEFAULT_FIRE_PROBA = 0.004 + difficulty*0.001;
 var POWERUP_CHANCE = 0.05 - difficulty*0.01;
 var POWERUP_CHANCE_IN_BONUS = 2*POWERUP_CHANCE;
-var MAX_POWER = 7;
+var MAX_POWER = (difficulty < OHGOD ? 7 : 5);
 var MAX_CDR = 50;
 
 

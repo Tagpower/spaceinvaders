@@ -402,8 +402,9 @@ invaders.prototype = {
                   self.enemyFire(enemy, 0, 600);
                   break; 
                case 12:
+                  var random2 = Math.random();
                   for (var a = 0; a < 16; a++) {
-                     self.enemyFirePol(enemy, 200, a*Math.PI/8);
+                     self.enemyFirePol(enemy, 200, a*Math.PI/8 + (random2 < 0.5 ? 0 : Math.PI/16));
                   }
                   break;
                case 13: //WIP
@@ -606,10 +607,16 @@ invaders.prototype = {
                enemy.body.immovable = true;		
                enemy.type = array[i][j];
                if (difficulty == OHGOD) {
-                  if (array[i][j] == 1) {
-                     enemy.type = 3;
-                  } else if (array[i][j] == 3) {
-                     enemy.type = 11;
+                  switch (array[i][j]) {
+                     case 1:
+                        enemy.type = 3;
+                        break;
+                     case 2:
+                        enemy.type = 12;
+                        break;
+                     case 3:
+                        enemy.type = 11;
+                        break;
                   }
                }
                enemy.animations.add('move', [2*(enemy.type-1), 2*(enemy.type-1)+1], 6, true);
@@ -1000,7 +1007,7 @@ invaders.prototype = {
                player.addChild(self.shield);
                self.shield.anchor.setTo(0.5, 0.5);
                self.shield.smoothed = false;
-               self.shield_time += 300;
+               self.shield_time += (300 - difficulty * 60);
                if (!self.mute) {
                   //shield.play();
                }
@@ -1091,7 +1098,7 @@ invaders.prototype = {
                   }
                });
                self.enemies.forEachAlive(function(e) {
-                  game.add.tween(e).to( {y: e.y - (highest-20)}, 1000, Phaser.Easing.Quadratic.Out, true);
+                  game.add.tween(e).to( {y: e.y - (highest-40)}, 1000, Phaser.Easing.Quadratic.Out, true);
                });
                self.score += 400;
                self.text_ship.text = "Retour en haut !";
