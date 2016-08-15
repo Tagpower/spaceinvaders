@@ -381,7 +381,7 @@ invaders.prototype = {
             switch (enemy.type) {
                default:
                case 1:
-                  self.enemyFire(enemy, 0, 100);
+                  self.enemyFire(enemy, 0, 100)
                   break;
                case 2:
                   self.enemyFire(enemy, -25, 100);
@@ -402,9 +402,12 @@ invaders.prototype = {
                   break; 
                case 12:
                   for (var a = 0; a < 16; a++) {
-                     self.enemyFire(enemy, 200*Math.cos(a*Math.PI/8), 200*Math.sin(a*Math.PI/8));
+                     self.enemyFirePol(enemy, 200, a*Math.PI/8);
                   }
                   break;
+               case 13: //WIP
+                  game.time.events.repeat(Phaser.Timer.SECOND * 0.2, 5, function () {self.enemyFire(enemy, 0, 300)}, this);
+                  break; 
             }
          }
       });
@@ -704,6 +707,14 @@ invaders.prototype = {
          }
       }
    },
+
+   // }}}
+   // {{{ ENEMYFIREPOL
+   enemyFirePol: function(enemy, vel, theta) { //Theta is the angle from the vertical in radians, so 0 means straight down
+      var self = this;
+      self.enemyFire(enemy, vel*Math.sin(theta) , vel*Math.cos(theta));
+   }, 
+
    // }}}
    // {{{ CREATESHOT
    createShot: function(x,y,velx,vely,pow) {
