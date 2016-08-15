@@ -780,7 +780,7 @@ invaders.prototype = {
             var random = Math.random();
             if (random <= POWERUP_CHANCE || (self.in_bonus_level && random <= POWERUP_CHANCE_IN_BONUS)) { //In a bonus level, bonus are 2x as likely to appear
                //Bonus roulette
-               var roulette = Math.random()*100;
+               var roulette = Math.random()*105;
                if (roulette <= 20) {
                   self.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_power');
                }
@@ -800,9 +800,12 @@ invaders.prototype = {
                   self.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_freeze');
                }
                if (roulette > 90 && roulette <= 95) {
-                  self.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_kill');
+                  self.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_warp');
                }
                if (roulette > 95 && roulette <= 100) {
+                  self.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_kill');
+               }
+               if (roulette > 100 && roulette <= 105) {
                   self.createItem(enemy.body.center.x, enemy.body.center.y, 'extralife');
                }
             }
@@ -1006,12 +1009,12 @@ invaders.prototype = {
             break;
 
             case 'powerup_kill': //Fires a large volley of shots
-               // for (var i = -2; i <= 2; i++) {
+               // for (var i = -2; i <= 2; i++) { //Square version
                //    for (var j = -2; j <= 2; j++) {
                //       self.createShot(player.body.center.x, player.body.center.y, i*25, -600+(j*25));
                //    };
                // };
-               for (var a = -Math.PI/4; a <= Math.PI/4; a += Math.PI/60) {
+               for (var a = -Math.PI/4; a <= Math.PI/4; a += Math.PI/60) { //Arc version
                   //self.createShot(player.body.center.x, player.body.center.y, 300*Math.sin(a), -500-300*Math.cos(a), 15);
                   self.createShotPol(player.body.center.x, player.body.center.y, 500, a, 15);
                   self.createShotPol(player.body.center.x, player.body.center.y, 450, a, 15);
@@ -1057,7 +1060,7 @@ invaders.prototype = {
                   e.value = 100
                });
                self.score += 500;
-               if (!self.already_all_orange) {
+               if (!already_all_orange) {
                   self.text_ship.text = "Tous oranges !";
                } else {
                   self.text_ship.text = "Très utile !";
@@ -1080,9 +1083,15 @@ invaders.prototype = {
                self.text_ship.text = "Stop !";
             break;
 
-            case 'powerup_warp': //TODO : Warps the enemies back to the top of the screen
+            case 'powerup_warp': //Warps the enemies back to the top of the screen
+               var highest = 1000; 
                self.enemies.forEachAlive(function(e) {
-                  game.add.tween(e).to( {y: e.x - 300}, 1000, Phaser.Easing.Quadratic.Out, true);
+                  if (e.y < highest) {
+                     highest = e.y;
+                  }
+               });
+               self.enemies.forEachAlive(function(e) {
+                  game.add.tween(e).to( {y: e.y - (highest-20)}, 1000, Phaser.Easing.Quadratic.Out, true);
                });
                self.score += 400;
                self.text_ship.text = "Retour en haut !";
@@ -1198,7 +1207,7 @@ invaders.prototype = {
          bship.kill();
 
          //randomly create a bonus
-         var random = Math.random() * 100;
+         var random = Math.random() * 110;
          if (random <= 10) {
             self.createItem(bship.body.center.x, bship.body.center.y, 'extralife');
          }
@@ -1215,12 +1224,15 @@ invaders.prototype = {
             self.createItem(bship.body.center.x, bship.body.center.y, 'powerup_freeze');
          }
          if (random > 70 && random <= 80) {
-            self.createItem(bship.body.center.x, bship.body.center.y, 'powerup_kill');
+            self.createItem(bship.body.center.x, bship.body.center.y, 'powerup_warp');
          }           
          if (random > 80 && random <= 90) {
-            self.createItem(bship.body.center.x, bship.body.center.y, 'powerup_orange');
+            self.createItem(bship.body.center.x, bship.body.center.y, 'powerup_kill');
          }           
          if (random > 90 && random <= 100) {
+            self.createItem(bship.body.center.x, bship.body.center.y, 'powerup_orange');
+         }
+         if (random > 100 && random <= 110) {
             self.createItem(bship.body.center.x, bship.body.center.y, 'bonus_level');
          }
       }
