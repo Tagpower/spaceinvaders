@@ -19,6 +19,9 @@ invaders.prototype = {
       self.explosions = null;
       self.shield = null;
 
+      // Weapons
+      self.weapons = [];
+
       // Inputs
       self.cursors = null;
       self.fire_btn = null;
@@ -89,6 +92,7 @@ invaders.prototype = {
    create: function() {
       var self = this;
       //Create the background
+      
       self.background = game.add.tileSprite(0, 0, game.width, game.height, 'space');
       if (difficulty == OHGOD) {
          self.background.tint = 0xff0000;
@@ -97,7 +101,7 @@ invaders.prototype = {
       }
       self.shots = self.game.add.group();
       self.shots.enableBody = true;
-
+      
       self.special_shots = self.game.add.group();
       self.special_shots.enableBody = true;
 
@@ -117,11 +121,17 @@ invaders.prototype = {
 
       self.shield = self.game.add.sprite(0, 0, 'shield');
 
+
+      // Weapons
+      self.weapons.push(new Weapon.Weapon1B(self.game, self.shots));
+      self.weapons.push(new Weapon.Weapon2B(self.game, self.shots));
+
+
       //Create the player's ship
       console.log("\tCreating player...");
       self.createPlayer();
       console.log("\t-*- Player created -*-");
-      self.game.camera.follow(self.player);
+      self.game.camera.follow(self.player); 
 
       //All inputs
       self.cursors = self.game.input.keyboard.createCursorKeys();
@@ -204,6 +214,7 @@ invaders.prototype = {
    // {{{ UPDATE
    update: function() {
       var self = this;
+      
       if (currentDifficulty != difficulty) {
          currentDifficulty = difficulty;
          self.restart(self.current_level);
@@ -263,46 +274,19 @@ invaders.prototype = {
 
          //Fire shots
          if (self.fire_btn.isDown) {
-            if (self.shots_cooldown == 0) {
-               switch (self.power) { //Number of shots depends on the ship's power
-                  case 7:
-                     self.createShot(self.player.body.center.x-15, self.player.body.y, -30, -270, 10);
-                     self.createShot(self.player.body.center.x+15, self.player.body.y, 30, -270, 10);
-                  case 5:
-                     self.createShot(self.player.body.center.x-10, self.player.body.y, -20, -280, 10);
-                     self.createShot(self.player.body.center.x+10, self.player.body.y, 20, -280, 10);
-                  case 3:
-                     self.createShot(self.player.body.center.x-5, self.player.body.y, -10, -290, 10);
-                     self.createShot(self.player.body.center.x+5, self.player.body.y, 10, -290, 10);
-                  case 1:
-                  default:
-                     self.createShot(self.player.body.center.x, self.player.body.y, 0, -300, 10);
-                     //self.createShotPol(self.player.body.center.x, self.player.body.y, 300, 0, 10); //Polar version
-                     //createShot(player.body.center.x-2, player.body.y, Math.random()*60-30, -300); //Another weapon ?
-                     break;
-                  case 6:
-                     self.createShot(self.player.body.center.x-14, self.player.body.y, -16, -280, 10);
-                     self.createShot(self.player.body.center.x+14, self.player.body.y, 16, -280, 10);                        
-                  case 4:
-                     self.createShot(self.player.body.center.x-9, self.player.body.y, -8, -290, 10);
-                     self.createShot(self.player.body.center.x+9, self.player.body.y, 8, -290, 10);
-                  case 2:
-                     self.createShot(self.player.body.center.x-4, self.player.body.y, 0, -300, 10);
-                     self.createShot(self.player.body.center.x+4, self.player.body.y, 0, -300, 10);
-                     break;
-               }
-               self.shots_cooldown = (DEFAULT_FIRE_COOLDOWN + 20*(self.power-1)) * (1-self.cooldown_reduction/(MAX_CDR*2.0));
-            }
+            self.weapon.fire(self.player);
+            console.log(self.shots.total);
          }
 
          //Fire super special shots 
          if (self.special_btn.isDown) {
+            self.weapon.fire(self.player);
             if (self.special_available > 0 && self.special_cooldown == 0) {
                if (self.power == MAX_POWER) {
-                  self.createSpecialShot(self.player.body.center.x-4, self.player.body.y, 0, -300);
-                  self.createSpecialShot(self.player.body.center.x+4, self.player.body.y, 0, -300)
+                  //self.createSpecialShot(self.player.body.center.x-4, self.player.body.y, 0, -300);
+                  //self.createSpecialShot(self.player.body.center.x+4, self.player.body.y, 0, -300)
                } else {
-                  self.createSpecialShot(self.player.body.center.x, self.player.body.y, 0, -300);
+                  //self.createSpecialShot(self.player.body.center.x, self.player.body.y, 0, -300);
                }
                self.special_available--;
             }
@@ -423,8 +407,7 @@ invaders.prototype = {
             }
          });
          console.log('level ' + (self.current_level+1) + ' beaten');
-         self.shots.removeAll();
-
+   
          //timer.start();
          //console.log(timer.seconds);
          if (self.in_bonus_level) {
@@ -438,11 +421,6 @@ invaders.prototype = {
       }
 
       //Kill shots and items when touching bounds
-      self.shots.forEachAlive(function(proj) {
-         if (proj.body.y < -10 || proj.body.x < -4 || proj.body.x > self.game.world.width + 4) {
-            proj.kill();
-         }
-      });
 
       self.enemy_shots.forEachAlive(function(proj) {
          if (proj.body.y > self.game.world.height+8 || proj.body.x < -4 || proj.body.x > self.game.world.width + 4) {
@@ -481,6 +459,8 @@ invaders.prototype = {
       self.player.animations.add('left', [2,3],6,true);
       self.player.animations.add('right', [4,5],6,true);
       self.player.animations.add('dead', [6],6,true);
+
+      self.weapon = self.weapons[self.power-1];
    },
    // }}}
    // {{{ LOADLEVEL
@@ -751,11 +731,12 @@ invaders.prototype = {
    // {{{ HITENEMY
    hitEnemy: function(shot, enemy) {
       var self = this;
+      console.log("HITTED");
       if (shot.key != 'explosion')  {
          shot.kill();
       }
       if (!enemy.touched) {
-         if (enemy.health <= shot.power) {
+         if (enemy.health <= self.weapon.power) {
             enemy.touched = true;
             enemy.animations.stop();
             enemy.body.enable = false;
@@ -811,7 +792,9 @@ invaders.prototype = {
             }
             //*/
          } else {
-            enemy.health -= shot.power;
+            console.log(enemy.health);
+            enemy.health -= self.weapon.power;
+            console.log(enemy.health);
             if (!self.mute) {
                self.hitenemy_sd.play();
             }
@@ -969,6 +952,7 @@ invaders.prototype = {
          switch (item.key) {
             case 'powerup_power': //Raises the player's firepower
                if (self.power < MAX_POWER) {
+                  self.weapon = self.weapons[self.power];
                   self.power++;
                }        
                if (self.power == MAX_POWER) {
@@ -1369,3 +1353,4 @@ invaders.prototype = {
    },
    // }}}
 }
+
