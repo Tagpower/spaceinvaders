@@ -456,8 +456,6 @@ invaders.prototype = {
       self.lostAlife = false;
       self.touched = false;
 
-      self.player.health = 10;
-
       self.player.anchor.setTo(0.5,0.5);
 
       self.player.animations.add('idle', [0,1],6,true);
@@ -594,7 +592,7 @@ invaders.prototype = {
          for (var j = 0; j < array[i].length; j++) {
             if (array[i][j] > 0) {
                //var enemy = self.game.add.sprite(x+j*25, y+i*25, 'enemy');
-               var enemy = new Enemy.Red(self, x+j*25, y+i*25, 'enemy', ENEMY_DEFAULT_FIRE_PROBA);
+               var enemy = new Enemy.Cyan(self, x+j*25, y+i*25, 'enemy', ENEMY_DEFAULT_FIRE_PROBA);
                //self.game.physics.arcade.enable(enemy);
                //enemy.anchor.setTo(0.5);		
                //enemy.body.immovable = true;		

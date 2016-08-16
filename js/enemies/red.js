@@ -7,12 +7,13 @@ Enemy.Red = function (state, x, y, key, fireProba) {
    this.bulletSpeed = 100;
    this.power = 100;
    this.type = 2;
-   this.fireProba = fireProba;
+   this.fireProba = fireProba*0.8;
    this.value = 200;
    this.game.physics.arcade.enable(this);
    this.anchor.setTo(0.5);		
    this.body.immovable = true;
    this.state = state;
+   this.health = 10;
 
    this.shots = this.game.add.group(game.world, 'bullet pool', false, true, Phaser.Physics.ARCADE);
 
@@ -35,7 +36,7 @@ Enemy.Red.prototype.update = function() {
    this.game.physics.arcade.collide(this.shots, this.state.player, this.collide, function(){return (!this.state.lostAlife && this.state.shield_time == 0);}, this);
 
    if (Math.random() < this.fireProba && this.state.clear_nofiretime == 0) 
-      this.fire(this);
+      this.fire();
 }
 
 Enemy.Red.prototype.collide = function(player, shot) {
