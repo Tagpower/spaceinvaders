@@ -128,7 +128,6 @@ invaders.prototype = {
       self.weapons.push(new Weapon.Weapon6B(self.game));
       self.weapons.push(new Weapon.Weapon7B(self.game));
 
-
       //Create the player's ship
       console.log("\tCreating player...");
       self.createPlayer();
@@ -228,7 +227,7 @@ invaders.prototype = {
       self.game.physics.arcade.collide(self.weapons, self.bonusships, self.hitBonusShip, null, self);
       //game.physics.arcade.collide(player, enemies, levelFailed, null, self)
       self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, function(){return (!self.lostAlife && self.shield_time == 0);}, self);
-      self.game.physics.arcade.collide(self.player, self.enemy_shots, self.playerHit, null, self);
+      //self.game.physics.arcade.collide(self.player, self.enemy_shots, self.playerHit, null, self);
       self.game.physics.arcade.collide(self.player, self.items, self.collectItem, function(){return (!self.lostAlife);}, self);
 
 
@@ -362,7 +361,7 @@ invaders.prototype = {
          }
 
          //Make the enemies fire
-         self.random = Math.random();
+         self.random = 10000;
          if (self.random < enemy.fireProba && self.clear_nofiretime == 0) {
             switch (enemy.type) {
                default:
@@ -456,6 +455,8 @@ invaders.prototype = {
       self.player.body.immovable = false;
       self.lostAlife = false;
       self.touched = false;
+
+      self.player.health = 10;
 
       self.player.anchor.setTo(0.5,0.5);
 
@@ -592,77 +593,78 @@ invaders.prototype = {
       for (var i = 0; i < array.length; i++) {
          for (var j = 0; j < array[i].length; j++) {
             if (array[i][j] > 0) {
-               var enemy = self.game.add.sprite(x+j*25, y+i*25, 'enemy');
-               self.game.physics.arcade.enable(enemy);
-               enemy.anchor.setTo(0.5);		
-               enemy.body.immovable = true;		
-               enemy.type = array[i][j];
-               if (difficulty == OHGOD) {
-                  switch (array[i][j]) {
-                     case 1:
-                        enemy.type = 3;
-                        break;
-                     case 2:
-                        enemy.type = 12;
-                        break;
-                     case 3:
-                        enemy.type = 11;
-                        break;
-                  }
-               }
-               enemy.animations.add('move', [2*(enemy.type-1), 2*(enemy.type-1)+1], 6, true);
-               enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA;
-               enemy.health = 10;
-               switch (enemy.type) {
-                  default:
-                  case 1: //ORANGE : normal
-                     enemy.value = 100;
-                     break;
-                  case 2: //RED : fires multiple shots
-                     enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*0.8;
-                     enemy.value = 200
-                        break;
-                  case 3: //GREEN : fires fast shots
-                     enemy.value = 200
-                        break;
-                  case 4: //PURPLE : fires twice as often
-                     enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*2;
-                     enemy.value = 150
-                        break;
-                  case 5: //GRAY : takes 2 hits
-                     enemy.health = 20;
-                     enemy.value = 250
-                        break;
-                  case 6: //YELLOW : Fires 5 shots when killed
-                     enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*0.5;
-                     enemy.value = 100
-                        break;
-                  case 7: //CYAN : fires gravity-affected shots
-                     enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*1.2;
-                     enemy.value = 200
-                        break;
-                  case 8: //PINK : takes 3 hits, fires more often
-                     enemy.health = 30;
-                     enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*1.5;
-                     enemy.value = 400
-                        break;
-                  case 9: //BLUE : fires in random directions
-                     enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*1.5;
-                     enemy.value = 150;
-                     break;
-                  case 10: //BROWN : explodes when killed
-                     enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*0.75;
-                     enemy.value = 100;
-                     break;
-                  case 11: //DARK GREEN : Fires REALLY FAST shots
-                     enemy.value = 400;
-                     break;
-                  case 12: //MAGENTA : Fires in a circle, takes 2 hits
-                     enemy.health = 20;
-                     enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*0.5;
-                     enemy.value = 300;
-                     break;
-               }
+               //var enemy = self.game.add.sprite(x+j*25, y+i*25, 'enemy');
+               var enemy = new Enemy.Red(self, x+j*25, y+i*25, 'enemy', ENEMY_DEFAULT_FIRE_PROBA);
+               //self.game.physics.arcade.enable(enemy);
+               //enemy.anchor.setTo(0.5);		
+               //enemy.body.immovable = true;		
+               //enemy.type = array[i][j];
+               //if (difficulty == OHGOD) {
+               //   switch (array[i][j]) {
+               //      case 1:
+               //         enemy.type = 3;
+               //         break;
+               //      case 2:
+               //         enemy.type = 12;
+               //         break;
+               //      case 3:
+               //         enemy.type = 11;
+               //         break;
+               //   }
+               //}
+               //enemy.animations.add('move', [2*(enemy.type-1), 2*(enemy.type-1)+1], 6, true);
+               //enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA;
+               //enemy.health = 10;
+               //switch (enemy.type) {
+               //   default:
+               //   case 1: //ORANGE : normal
+               //      enemy.value = 100;
+               //      break;
+               //   case 2: //RED : fires multiple shots
+               //      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*0.8;
+               //      enemy.value = 200
+               //         break;
+               //   case 3: //GREEN : fires fast shots
+               //      enemy.value = 200
+               //         break;
+               //   case 4: //PURPLE : fires twice as often
+               //      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*2;
+               //      enemy.value = 150
+               //         break;
+               //   case 5: //GRAY : takes 2 hits
+               //      enemy.health = 20;
+               //      enemy.value = 250
+               //         break;
+               //   case 6: //YELLOW : Fires 5 shots when killed
+               //      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*0.5;
+               //      enemy.value = 100
+               //         break;
+               //   case 7: //CYAN : fires gravity-affected shots
+               //      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*1.2;
+               //      enemy.value = 200
+               //         break;
+               //   case 8: //PINK : takes 3 hits, fires more often
+               //      enemy.health = 30;
+               //      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*1.5;
+               //      enemy.value = 400
+               //         break;
+               //   case 9: //BLUE : fires in random directions
+               //      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*1.5;
+               //      enemy.value = 150;
+               //      break;
+               //   case 10: //BROWN : explodes when killed
+               //      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*0.75;
+               //      enemy.value = 100;
+               //      break;
+               //   case 11: //DARK GREEN : Fires REALLY FAST shots
+               //      enemy.value = 400;
+               //      break;
+               //   case 12: //MAGENTA : Fires in a circle, takes 2 hits
+               //      enemy.health = 20;
+               //      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*0.5;
+               //      enemy.value = 300;
+               //      break;
+               //}
                self.enemies.add(enemy);
             }
          }

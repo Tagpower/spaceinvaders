@@ -1,11 +1,11 @@
-var Bullet = function (game, key) {
+var Shot = function (game, key, frame, damage) {
 
-   Phaser.Sprite.call(this, game, 0, 0, key);
+   Phaser.Sprite.call(this, game, 0, 0, key, frame);
 
    this.texture.baseTexture.scaleMode = PIXI.scaleModes.NEAREST;
 
    this.anchor.set(0.5);
-
+   this.power = damage;
    this.checkWorldBounds = true;
    this.outOfBoundsKill = true;
    this.exists = false;
@@ -14,13 +14,13 @@ var Bullet = function (game, key) {
    this.scaleSpeed = 0;
 
    return this;
-
+   
 };
 
-Bullet.prototype = Object.create(Phaser.Sprite.prototype);
-Bullet.prototype.constructor = Bullet;
+Shot.prototype = Object.create(Phaser.Sprite.prototype);
+Shot.prototype.constructor = Shot;
 
-Bullet.prototype.fire = function (x, y, angle, speed, gx, gy) {
+Shot.prototype.fire = function (x, y, angle, speed, gx, gy) {
 
    gx = gx || 0;
    gy = gy || 0;
@@ -33,10 +33,11 @@ Bullet.prototype.fire = function (x, y, angle, speed, gx, gy) {
    //this.angle = angle;
 
    this.body.gravity.set(gx, gy);
+   this.body.mass = 0;
 
 };
 
-Bullet.prototype.update = function () {
+Shot.prototype.update = function () {
 
    if (this.tracking)
    {
@@ -52,4 +53,4 @@ Bullet.prototype.update = function () {
 };
 
 
-var Weapon = {};
+var Enemy = {};

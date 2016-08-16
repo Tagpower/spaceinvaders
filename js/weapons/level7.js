@@ -24,13 +24,31 @@ Weapon.Weapon7B.prototype.fire = function (source) {
    var x = source.x;
    var y = source.y - 20;
 
-   this.getFirstExists(false).fire(x-15, y+9, 0, this.bulletSpeed, 0, 0);
-   this.getFirstExists(false).fire(x-10, y+7, 0, this.bulletSpeed, 0, 0);
-   this.getFirstExists(false).fire(x-5 , y+5, 0, this.bulletSpeed, 0, 0);
-   this.getFirstExists(false).fire(x   , y  , 0, this.bulletSpeed, 0, 0);
-   this.getFirstExists(false).fire(x+5 , y+5, 0, this.bulletSpeed, 0, 0);
-   this.getFirstExists(false).fire(x+10, y+7, 0, this.bulletSpeed, 0, 0);
-   this.getFirstExists(false).fire(x+15, y+9, 0, this.bulletSpeed, 0, 0);
+      
+   try {
+      this.getFirstExists(false).fire(x-15, y+9, 0, this.bulletSpeed, 0, 0);
+      this.getFirstExists(false).fire(x-10, y+7, 0, this.bulletSpeed, 0, 0);
+      this.getFirstExists(false).fire(x-5 , y+5, 0, this.bulletSpeed, 0, 0);
+      this.getFirstExists(false).fire(x   , y  , 0, this.bulletSpeed, 0, 0);
+      this.getFirstExists(false).fire(x+5 , y+5, 0, this.bulletSpeed, 0, 0);
+      this.getFirstExists(false).fire(x+10, y+7, 0, this.bulletSpeed, 0, 0);
+      this.getFirstExists(false).fire(x+15, y+9, 0, this.bulletSpeed, 0, 0);
+   } catch(err) {
+      this.add(new Bullet(game, 'shot'), true);
+      this.add(new Bullet(game, 'shot'), true);
+      this.add(new Bullet(game, 'shot'), true);
+      this.add(new Bullet(game, 'shot'), true);
+      this.add(new Bullet(game, 'shot'), true);
+      this.add(new Bullet(game, 'shot'), true);
+      this.add(new Bullet(game, 'shot'), true);
+      this.getFirstExists(false).fire(x-15, y+9, 0, this.bulletSpeed, 0, 0);
+      this.getFirstExists(false).fire(x-10, y+7, 0, this.bulletSpeed, 0, 0);
+      this.getFirstExists(false).fire(x-5 , y+5, 0, this.bulletSpeed, 0, 0);
+      this.getFirstExists(false).fire(x   , y  , 0, this.bulletSpeed, 0, 0);
+      this.getFirstExists(false).fire(x+5 , y+5, 0, this.bulletSpeed, 0, 0);
+      this.getFirstExists(false).fire(x+10, y+7, 0, this.bulletSpeed, 0, 0);
+      this.getFirstExists(false).fire(x+15, y+9, 0, this.bulletSpeed, 0, 0);
+   }
 
    this.nextFire = this.game.time.time + this.fireRate;
 };
