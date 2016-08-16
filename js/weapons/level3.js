@@ -3,8 +3,8 @@ Weapon.Weapon3B = function (game) {
    Phaser.Group.call(this, game, game.world, 'Base Weapon Level 3', false, true, Phaser.Physics.ARCADE);
    
    this.nextFire = 0;
-   this.bulletSpeed = 500;
-   this.fireRate = 1000;
+   this.bulletSpeed = 400;
+   this.fireRate = 1500;
    this.power = 10;
 
    for (var i = 0; i < 64; i++) {
@@ -25,9 +25,9 @@ Weapon.Weapon3B.prototype.fire = function (source) {
    var x = source.x;
    var y = source.y - 20;
 
-   this.getFirstExists(false).fire(x-5, y+5, 0, this.bulletSpeed, 0, 0);
+   this.getFirstExists(false).fire(x-5, y+5, 45, this.bulletSpeed, 0, 0);
    this.getFirstExists(false).fire(x  , y  , 0, this.bulletSpeed, 0, 0);
-   this.getFirstExists(false).fire(x+5, y+5, 0, this.bulletSpeed, 0, 0);
+   this.getFirstExists(false).fire(x+5, y+5, -45, this.bulletSpeed, 0, 0);
 
    this.nextFire = this.game.time.time + this.fireRate;
 };

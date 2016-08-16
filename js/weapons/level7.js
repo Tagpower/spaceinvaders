@@ -3,8 +3,8 @@ Weapon.Weapon7B = function (game) {
    Phaser.Group.call(this, game, game.world, 'Base Weapon Level 7', false, true, Phaser.Physics.ARCADE);
    
    this.nextFire = 0;
-   this.bulletSpeed = 500;
-   this.fireRate = 1000;
+   this.bulletSpeed = 400;
+   this.fireRate = 3500;
    this.power = 10;
 
    for (var i = 0; i < 64; i++) {

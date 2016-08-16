@@ -1,5 +1,7 @@
 ﻿=====TODO LIST=====
 
+- Remettre les tirs spéciaux
+- Réparer le bonus Kill
 - Boss
 - Plus d'armes ?
 - Trouver/composer une musique originale

@@ -890,7 +890,7 @@ invaders.prototype = {
                   self.power = Math.floor(self.power);
                }
             }
-            self.weapon = self.weapons[self.power];
+            self.weapon = self.weapons[self.power-1];
             
             if (self.cooldown_reduction > 0) {
                self.cooldown_reduction /= 2;
@@ -956,7 +956,7 @@ invaders.prototype = {
          switch (item.key) {
             case 'powerup_power': //Raises the player's firepower
                if (self.power < MAX_POWER) {
-                  self.weapon = self.weapons[self.power];
+                  self.weapon = self.weapons[self.power-1];
                   self.weapon.fireRate -= self.cooldown_reduction*10;
                   self.power++;
                }        
