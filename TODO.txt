@@ -11,7 +11,6 @@
 
 ---MAJEURS---
 - Quand on chope un niveau bonus juste après avoir terminé un niveau, le niveau bonus apparaît en même temps que le niveau suivant
-- Gérer le dépassement du nombre de niveaux bonus
 
 ---MINEURS---
 - Trouver le bug qui déplace les ennemis en boucle
