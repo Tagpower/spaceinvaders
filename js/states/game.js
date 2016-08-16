@@ -12,7 +12,6 @@ invaders.prototype = {
       self.player = null;
       self.enemies = null;
       self.items = null;
-      self.shots = null;
       self.special_shots = null;
       self.enemy_shots = null;
       self.bonusships = null;
@@ -99,8 +98,6 @@ invaders.prototype = {
       } else { 
          self.background.tint = 0x3355ee;
       }
-      self.shots = self.game.add.group();
-      self.shots.enableBody = true;
       
       self.special_shots = self.game.add.group();
       self.special_shots.enableBody = true;
@@ -721,41 +718,6 @@ invaders.prototype = {
 
    // }}}
 
-   // {{{ CREATESHOT
-   // Makes the player fire
-   createShot: function(x,y,velx,vely,pow) {
-      var self = this;
-      var shot = self.shots.getFirstDead();
-      if (shot === null || shot === undefined) {
-         shot = self.game.add.sprite(x,y, "shot");
-         self.shots.add(shot);
-      }
-      else {
-         shot.revive();
-         shot.reset(x,y);
-      }
-      shot.power = pow;
-      shot.checkWorldBounds = true;
-      shot.outOfBoundsKill = true;
-      self.game.physics.arcade.enable(shot);
-      shot.body.velocity.x = velx;
-      shot.body.velocity.y = vely;
-      shot.anchor.setTo(0.5);
-      shot.angle = -Math.atan2(velx, vely)*(180 / Math.PI);
-      if (!self.mute) {
-         self.fire_sd.play();
-      }
-   },
-   // }}}
-
-   // {{{ CREATESHOTPOL
-   // Makes the player fire, polar version
-   createShotPol: function(x,y, vel, theta, pow) { //Theta is the angle from the vertical, so 0 means straight up
-      var self = this;
-      self.createShot(x,y, vel*Math.sin(theta), -vel*Math.cos(theta), pow);
-   },
-   // }}}
-
    // {{{ HITENEMY
    // When an enemy is hit by a player shot or an explosion
    hitEnemy: function(shot, enemy) {
@@ -973,7 +935,6 @@ invaders.prototype = {
                player.alpha = 0.5;
                self.enemies.removeAll();
                self.enemy_shots.removeAll();
-               self.shots.removeAll();
                self.current_bonus_level--;
             });
             self.timer.add(3000, function(){
@@ -1310,7 +1271,6 @@ invaders.prototype = {
    restart: function(level) {
       var self = this;
       self.items.removeAll();
-      self.shots.removeAll();
       self.special_shots.removeAll();
       self.bonusships.removeAll();
       self.enemies.removeAll();
@@ -1341,7 +1301,6 @@ invaders.prototype = {
    loadNextLevel: function() {
       var self = this;
       self.items.removeAll();
-      self.shots.removeAll();
       self.special_shots.removeAll();
       self.bonusships.removeAll();
       self.enemies.removeAll();
@@ -1376,7 +1335,6 @@ invaders.prototype = {
       self.music.stop();
       self.music_bonus.play();
       self.items.removeAll();
-      self.shots.removeAll();
       self.special_shots.removeAll();
       self.bonusships.removeAll();
       self.enemies.removeAll();
