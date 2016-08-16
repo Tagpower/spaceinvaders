@@ -414,6 +414,7 @@ invaders.prototype = {
          //console.log(timer.seconds);
          if (self.in_bonus_level) {
             self.current_bonus_level++;
+            self.current_bonus_level = self.current_bonus_level % bonus_levels.length;
             self.in_bonus_level = false;
             self.just_end_bonus = true;
             self.music_bonus.stop();
