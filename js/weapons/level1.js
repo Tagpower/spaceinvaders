@@ -7,6 +7,10 @@ Weapon.Weapon1B = function (game) {
    this.fireRate = 1000;
    this.power = 10;
 
+   for (var i = 0; i < 64; i++) {
+      this.add(new Bullet(game, 'shot'), true);
+   }
+
    return this;
 
 };
@@ -21,12 +25,7 @@ Weapon.Weapon1B.prototype.fire = function (source) {
    var x = source.x;
    var y = source.y - 20;
 
-   var bullet = this.getFirstExists(false);
-   if (bullet === null || bullet === undefined) {
-      bullet = new Bullet(this.game, 'shot');
-      this.add(bullet, true);
-   }
-   bullet.fire(x, y, 0, this.bulletSpeed, 0, 0);
+   this.getFirstExists(false).fire(x, y, 0, this.bulletSpeed, 0, 0);
 
    this.nextFire = this.game.time.time + this.fireRate;
 

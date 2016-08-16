@@ -29,7 +29,7 @@ Bullet.prototype.fire = function (x, y, angle, speed, gx, gy) {
 
    this.game.physics.arcade.velocityFromAngle(angle-90, speed, this.body.velocity);
 
-   this.angle = angle;
+   //this.angle = angle;
 
    this.body.gravity.set(gx, gy);
 
@@ -39,7 +39,7 @@ Bullet.prototype.update = function () {
 
    if (this.tracking)
    {
-      this.rotation = Math.atan2(this.body.velocity.x, this.body.velocity.y);
+      this.rotation = -Math.atan2(this.body.velocity.x, this.body.velocity.y);
    }
 
    if (this.scaleSpeed > 0)
