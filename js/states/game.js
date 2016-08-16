@@ -228,7 +228,7 @@ invaders.prototype = {
       self.game.physics.arcade.collide(self.weapon, self.enemies, self.hitEnemy, null, self);
       self.game.physics.arcade.collide(self.special_shots, self.enemies, self.hitEnemy, false, self); 
       //self.game.physics.arcade.collide(self.explosions, self.enemies, self.hitEnemy, null, self);
-      self.game.physics.arcade.collide(self.shots, self.bonusships, self.hitBonusShip, null, self);
+      self.game.physics.arcade.collide(self.weapons, self.bonusships, self.hitBonusShip, null, self);
       //game.physics.arcade.collide(player, enemies, levelFailed, null, self)
       self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, function(){return (!self.lostAlife && self.shield_time == 0);}, self);
       self.game.physics.arcade.collide(self.player, self.enemy_shots, self.playerHit, null, self);
@@ -760,7 +760,6 @@ invaders.prototype = {
    // When an enemy is hit by a player shot or an explosion
    hitEnemy: function(shot, enemy) {
       var self = this;
-      console.log("HITTED");
       if (shot.key != 'explosion')  {
          shot.kill();
       }
@@ -928,7 +927,6 @@ invaders.prototype = {
                   self.power = Math.floor(self.power);
                }
             }
-            self.weapon.removeAll();
             self.weapon = self.weapons[self.power];
             
             if (self.cooldown_reduction > 0) {
@@ -996,8 +994,8 @@ invaders.prototype = {
          switch (item.key) {
             case 'powerup_power': //Raises the player's firepower
                if (self.power < MAX_POWER) {
-                  self.weapon.removeAll();
                   self.weapon = self.weapons[self.power];
+                  self.weapon.fireRate -= self.cooldown_reduction*10;
                   self.power++;
                }        
                if (self.power == MAX_POWER) {
@@ -1010,6 +1008,7 @@ invaders.prototype = {
             case 'powerup_cooldown': //Raises the player's rate of fire
                if (self.cooldown_reduction < MAX_CDR) {
                   self.cooldown_reduction += 5;
+                  self.weapon.fireRate -= self.cooldown_reduction*10;
                }
                if (self.cooldown_reduction >= MAX_CDR) {
                   self.cooldown_reduction = MAX_CDR;

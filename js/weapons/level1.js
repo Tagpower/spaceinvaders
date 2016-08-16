@@ -3,8 +3,8 @@ Weapon.Weapon1B = function (game) {
    Phaser.Group.call(this, game, game.world, 'Base Weapon Level 1', false, true, Phaser.Physics.ARCADE);
 
    this.nextFire = 0;
-   this.bulletSpeed = 600;
-   this.fireRate = 800;
+   this.bulletSpeed = 500;
+   this.fireRate = 1000;
    this.power = 10;
 
    return this;
@@ -47,5 +47,4 @@ Weapon.Weapon1B.prototype.fireFrom = function (source, dx, dy) {
    bullet.fire(x, y, 0, this.bulletSpeed, 0, 0);
 
    this.nextFire = this.game.time.time + this.fireRate;
-
 };
