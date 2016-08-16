@@ -6,7 +6,7 @@ Enemy.Yellow = function (state, x, y, key, fireProba) {
 
    this.bulletSpeed = 100;
    this.power = 100;
-   this.type = 3;
+   this.type = 6;
    this.fireProba = fireProba*0.5;
    this.value = 100;
    this.game.physics.arcade.enable(this);

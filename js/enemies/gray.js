@@ -6,7 +6,7 @@ Enemy.Gray = function (state, x, y, key, fireProba) {
 
    this.bulletSpeed = 100;
    this.power = 100;
-   this.type = 3;
+   this.type = 5;
    this.fireProba = fireProba;
    this.value = 250;
    this.game.physics.arcade.enable(this);

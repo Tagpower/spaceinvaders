@@ -592,7 +592,7 @@ invaders.prototype = {
          for (var j = 0; j < array[i].length; j++) {
             if (array[i][j] > 0) {
                //var enemy = self.game.add.sprite(x+j*25, y+i*25, 'enemy');
-               var enemy = new Enemy.Cyan(self, x+j*25, y+i*25, 'enemy', ENEMY_DEFAULT_FIRE_PROBA);
+               var enemy = new Enemy.Magenta(self, x+j*25, y+i*25, 'enemy', ENEMY_DEFAULT_FIRE_PROBA);
                //self.game.physics.arcade.enable(enemy);
                //enemy.anchor.setTo(0.5);		
                //enemy.body.immovable = true;		
