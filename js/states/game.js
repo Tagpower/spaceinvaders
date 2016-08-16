@@ -13,7 +13,6 @@ invaders.prototype = {
       self.enemies = null;
       self.items = null;
       self.special_shots = null;
-      self.enemy_shots = null;
       self.bonusships = null;
       self.explosions = null;
       self.shield = null;
@@ -101,9 +100,6 @@ invaders.prototype = {
       
       self.special_shots = self.game.add.group();
       self.special_shots.enableBody = true;
-
-      self.enemy_shots = self.game.add.group();
-      self.enemy_shots.enableBody = true;
 
       self.explosions = self.game.add.group();
       self.explosions.enableBody = true;
@@ -359,48 +355,11 @@ invaders.prototype = {
          if (enemy.position.y > self.game.world.height) {
             self.levelFailed();
          }
-
-         //Make the enemies fire
-         self.random = 10000;
-         if (self.random < enemy.fireProba && self.clear_nofiretime == 0) {
-            switch (enemy.type) {
-               default:
-               case 1: //Orange
-                  self.enemyFire(enemy, 0, 100);
-                  break;
-               case 2: //Red
-                  self.enemyFire(enemy, -25, 100);
-                  self.enemyFire(enemy, 0, 100);
-                  self.enemyFire(enemy, 25, 100);
-                  break;
-               case 3: //Green
-                  self.enemyFire(enemy, 0, 300);
-                  break; 
-               case 7: //Cyan
-                  self.enemyFire(enemy, 0, 1);
-                  break;
-               case 9: //Blue
-                  self.enemyFire(enemy, Math.random()*200-100, Math.random()*200+50);
-                  break;
-               case 11: //OH GOD
-                  self.enemyFire(enemy, 0, 600);
-                  break; 
-               case 12: //Magenta
-                  var random2 = Math.random();
-                  for (var a = 0; a < 16; a++) {
-                     self.enemyFirePol(enemy, 200, a*Math.PI/8 + (random2 < 0.5 ? 0 : Math.PI/16));
-                  }
-                  break;
-               case 13: //WIP
-                  game.time.events.repeat(Phaser.Timer.SECOND * 0.2, 5, function () {self.enemyFire(enemy, 0, 300)}, this);
-                  break; 
-            }
-         }
       });
 
       //When the level is beaten
-      //console.log("is beaten ?");
-      if (self.enemies.countLiving() == 0 && self.enemy_shots.countLiving() == 0 && self.current_level < levels.length && !self.wait_next_level) {
+      //console.log("is beaten ?")
+      if (self.enemies.countLiving() == 0 /*&& e_shots == 0*/ && self.current_level < levels.length && !self.wait_next_level) {
          self.bonusships.forEachAlive(function(bship) {
             if (bship.body.velocity.x == 0) {
                bship.kill();
@@ -419,16 +378,9 @@ invaders.prototype = {
             self.music_bonus.stop();
             self.music.play();
          }
+
          self.loadLevel(++self.current_level);
       }
-
-      //Kill shots and items when touching bounds
-
-      self.enemy_shots.forEachAlive(function(proj) {
-         if (proj.body.y > self.game.world.height+8 || proj.body.x < -4 || proj.body.x > self.game.world.width + 4) {
-            proj.kill();
-         }
-      });
 
       self.explosions.forEachAlive(function(expl) {
          //game.debug.body(expl);
@@ -577,146 +529,71 @@ invaders.prototype = {
    },
    // }}}
 
-   // {{{ CREATEENEMIES
-   createEnemies: function(array) {
-      var self = this;
-      self.createEnemiesAbs(array, 10, 30);
-   },
-   // }}}
-
    // {{{ CREATEENEMIESABS
    // Creates an array of enemies at a set position
-   createEnemiesAbs: function(array, x, y) {
+   createEnemies: function(array) {
       var self = this;
+      var x = 10;
+      var y = 30;
       for (var i = 0; i < array.length; i++) {
          for (var j = 0; j < array[i].length; j++) {
             if (array[i][j] > 0) {
-               //var enemy = self.game.add.sprite(x+j*25, y+i*25, 'enemy');
-               var enemy = new Enemy.Magenta(self, x+j*25, y+i*25, 'enemy', ENEMY_DEFAULT_FIRE_PROBA);
-               //self.game.physics.arcade.enable(enemy);
-               //enemy.anchor.setTo(0.5);		
-               //enemy.body.immovable = true;		
-               //enemy.type = array[i][j];
-               //if (difficulty == OHGOD) {
-               //   switch (array[i][j]) {
-               //      case 1:
-               //         enemy.type = 3;
-               //         break;
-               //      case 2:
-               //         enemy.type = 12;
-               //         break;
-               //      case 3:
-               //         enemy.type = 11;
-               //         break;
-               //   }
-               //}
-               //enemy.animations.add('move', [2*(enemy.type-1), 2*(enemy.type-1)+1], 6, true);
-               //enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA;
-               //enemy.health = 10;
-               //switch (enemy.type) {
-               //   default:
-               //   case 1: //ORANGE : normal
-               //      enemy.value = 100;
-               //      break;
-               //   case 2: //RED : fires multiple shots
-               //      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*0.8;
-               //      enemy.value = 200
-               //         break;
-               //   case 3: //GREEN : fires fast shots
-               //      enemy.value = 200
-               //         break;
-               //   case 4: //PURPLE : fires twice as often
-               //      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*2;
-               //      enemy.value = 150
-               //         break;
-               //   case 5: //GRAY : takes 2 hits
-               //      enemy.health = 20;
-               //      enemy.value = 250
-               //         break;
-               //   case 6: //YELLOW : Fires 5 shots when killed
-               //      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*0.5;
-               //      enemy.value = 100
-               //         break;
-               //   case 7: //CYAN : fires gravity-affected shots
-               //      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*1.2;
-               //      enemy.value = 200
-               //         break;
-               //   case 8: //PINK : takes 3 hits, fires more often
-               //      enemy.health = 30;
-               //      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*1.5;
-               //      enemy.value = 400
-               //         break;
-               //   case 9: //BLUE : fires in random directions
-               //      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*1.5;
-               //      enemy.value = 150;
-               //      break;
-               //   case 10: //BROWN : explodes when killed
-               //      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*0.75;
-               //      enemy.value = 100;
-               //      break;
-               //   case 11: //DARK GREEN : Fires REALLY FAST shots
-               //      enemy.value = 400;
-               //      break;
-               //   case 12: //MAGENTA : Fires in a circle, takes 2 hits
-               //      enemy.health = 20;
-               //      enemy.fireProba = ENEMY_DEFAULT_FIRE_PROBA*0.5;
-               //      enemy.value = 300;
-               //      break;
-               //}
-               self.enemies.add(enemy);
+               var xx = x+j*25;
+               var yy = y+i*25;
+
+               switch (array[i][j]) {
+                  default:
+                     break;
+                  case 1: //ORANGE : normal
+                     if (difficulty == OHGOD)
+                        self.enemies.add(new Enemy.Green(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     else
+                        self.enemies.add(new Enemy.Orange(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     break;
+                  case 2: //RED : fires multiple shots
+                     if (difficulty == OHGOD)
+                        self.enemies.add(new Enemy.Magenta(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     else
+                        self.enemies.add(new Enemy.Red(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     break;
+                  case 3: //GREEN : fires fast shots
+                     if (difficulty == OHGOD)
+                        self.enemies.add(new Enemy.DarkGreen(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     else
+                        self.enemies.add(new Enemy.Green(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     break;
+                  case 4: //PURPLE : fires twice as often
+                     self.enemies.add(new Enemy.Purple(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     break;
+                  case 5: //GRAY : takes 2 hits
+                     self.enemies.add(new Enemy.Gray(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     break;
+                  case 6: //YELLOW : Fires 5 shots when killed
+                     self.enemies.add(new Enemy.Yellow(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     break;
+                  case 7: //CYAN : fires gravity-affected shots
+                     self.enemies.add(new Enemy.Cyan(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     break;
+                  case 8: //PINK : takes 3 hits, fires more often
+                     self.enemies.add(new Enemy.Pink(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     break;
+                  case 9: //BLUE : fires in random directions
+                     self.enemies.add(new Enemy.Blue(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     break;
+                  case 10: //BROWN : explodes when killed
+                     self.enemies.add(new Enemy.Brown(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     break;
+                  case 11: //DARK GREEN : Fires REALLY FAST shots
+                     self.enemies.add(new Enemy.DarkGreen(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     break;
+                  case 12: //MAGENTA : Fires in a circle, takes 2 hits
+                     self.enemies.add(new Enemy.Magenta(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     break;
+               }
             }
          }
       }   
    },
-   // }}}
-
-   // {{{ ENEMYFIRE
-   // Makes an enemy fire
-   enemyFire: function(enemy,velx,vely) {
-      var self = this;
-      // TODO sprite optimization
-      var enemyshot = self.enemy_shots.getFirstDead();
-      if (enemyshot === null || enemyshot === undefined) {
-         enemyshot = self.game.add.sprite(enemy.body.center.x, enemy.body.center.y, 'enemyshots', enemy.type-1);
-         self.enemy_shots.add(enemyshot);
-      }
-      else {
-         enemyshot.revive();
-         enemyshot.frame = enemy.type-1;
-         enemyshot.reset(enemy.body.center.x, enemy.body.center.y);
-      }
-      enemyshot.checkWorldBounds = true;
-      enemyshot.outOfBoundsKill = true;
-      self.game.physics.arcade.enable(enemyshot);
-      enemyshot.anchor.setTo(0.5);
-      enemyshot.body.velocity.x = velx;
-      enemyshot.body.velocity.y = vely;
-      enemyshot.angle = -Math.atan2(velx, vely)*(180 / Math.PI);
-      enemyshot.body.gravity.x = 0;
-      enemyshot.body.gravity.y = 0;
-      enemyshot.body.mass = 0;
-      enemyshot.type = enemy.type;
-      if (!self.mute) {
-         self.enemyfire_sd.play();
-      }
-      if (enemyshot.type == 7) {
-         enemyshot.body.gravity.y = 250;
-         if (enemy.body.x <= self.player.body.x) {
-            enemyshot.body.gravity.x = 10-(enemy.body.x - self.player.body.x)/10;
-         } else {
-            enemyshot.body.gravity.x = -10-(enemy.body.x - self.player.body.x)/10;
-         }
-      }
-   },
-   // }}}
-
-   // {{{ ENEMYFIREPOL
-   // Makes an enemy fire, polar version
-   enemyFirePol: function(enemy, vel, theta) { //Theta is the angle from the vertical in radians, so 0 means straight down
-      var self = this;
-      self.enemyFire(enemy, vel*Math.sin(theta) , vel*Math.cos(theta));
-   }, 
-
    // }}}
 
    // {{{ HITENEMY
@@ -735,18 +612,13 @@ invaders.prototype = {
             if (!self.mute) {
                self.killenemy_sd.play();
             }
+
+            var x = enemy.body.center.x;
+            var y = enemy.body.center.y;
+
             enemy.kill();
             self.speed += self.speedup;
             self.speedup += self.accel;
-            if (enemy.type == 6) { //If the enemy is type 6 (yellow), kamikaze attack !
-               self.enemyFire(enemy, -80, 250);
-               self.enemyFire(enemy, -40, 250);
-               self.enemyFire(enemy, 0, 250);
-               self.enemyFire(enemy, 40, 250);
-               self.enemyFire(enemy, 80, 250);
-            } else if (enemy.type == 10) {
-               self.createExplosion(enemy.body.center.x, enemy.body.center.y, 20);
-            }
 
             //randomly create a bonus
             var random = Math.random();
@@ -754,31 +626,31 @@ invaders.prototype = {
                //Bonus roulette
                var roulette = Math.random()*105;
                if (roulette <= 20) {
-                  self.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_power');
+                  self.createItem(x, y, 'powerup_power');
                }
-               if (roulette > 20 && roulette <= 40) {
-                  self.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_cooldown');
+               else if (roulette > 20 && roulette <= 40) {
+                  self.createItem(x, y, 'powerup_cooldown');
                }
-               if (roulette > 40 && roulette <= 60) {
-                  self.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_special');
+               else if (roulette > 40 && roulette <= 60) {
+                  self.createItem(x, y, 'powerup_special');
                }
-               if (roulette > 60 && roulette <= 75) {
-                  self.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_clear');
+               else if (roulette > 60 && roulette <= 75) {
+                  self.createItem(x, y, 'powerup_clear');
                }
-               if (roulette > 75 && roulette <= 85) {
-                  self.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_shield');
+               else if (roulette > 75 && roulette <= 85) {
+                  self.createItem(x, y, 'powerup_shield');
                }
-               if (roulette > 85 && roulette <= 90) {
-                  self.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_freeze');
+               else if (roulette > 85 && roulette <= 90) {
+                  self.createItem(x, y, 'powerup_freeze');
                }
-               if (roulette > 90 && roulette <= 95) {
-                  self.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_warp');
+               else if (roulette > 90 && roulette <= 95) {
+                  self.createItem(x, y, 'powerup_warp');
                }
-               if (roulette > 95 && roulette <= 100) {
-                  self.createItem(enemy.body.center.x, enemy.body.center.y, 'powerup_kill');
+               else if (roulette > 95 && roulette <= 100) {
+                  self.createItem(x, y, 'powerup_kill');
                }
-               if (roulette > 100 && roulette <= 105) {
-                  self.createItem(enemy.body.center.x, enemy.body.center.y, 'extralife');
+               else if (roulette > 100 && roulette <= 105) {
+                  self.createItem(x, y, 'extralife');
                }
             }
             //*/
@@ -935,7 +807,6 @@ invaders.prototype = {
                self.lostAlife = false;
                player.alpha = 0.5;
                self.enemies.removeAll();
-               self.enemy_shots.removeAll();
                self.current_bonus_level--;
             });
             self.timer.add(3000, function(){
@@ -1022,7 +893,6 @@ invaders.prototype = {
                if (!self.mute) {
                   self.wave_sd.play();
                }
-               self.enemy_shots.removeAll();
                self.score += 300;
                self.clear_nofiretime += 120; //Prevent enemy fire
                self.text_ship.text = "Neutralisation !";
@@ -1275,7 +1145,6 @@ invaders.prototype = {
       self.special_shots.removeAll();
       self.bonusships.removeAll();
       self.enemies.removeAll();
-      self.enemy_shots.removeAll();
       self.player.kill();
       self.music.stop();
       self.music_bonus.stop();
@@ -1305,7 +1174,6 @@ invaders.prototype = {
       self.special_shots.removeAll();
       self.bonusships.removeAll();
       self.enemies.removeAll();
-      self.enemy_shots.removeAll();
       self.player.kill();
       var config = {
          is_boss: false,
@@ -1339,7 +1207,6 @@ invaders.prototype = {
       self.special_shots.removeAll();
       self.bonusships.removeAll();
       self.enemies.removeAll();
-      self.enemy_shots.removeAll();
 
       self.text_middle.text = "Niveau bonus !";
       self.text_level.text = "YAY ! (il est en travaux btw)";

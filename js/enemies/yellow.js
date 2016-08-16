@@ -79,4 +79,6 @@ Enemy.Yellow.prototype.death = function(obj) {
       this.shots.getFirstExists(false).fire(x, y, - 9.09 , -speed, 0, 0);
       this.shots.getFirstExists(false).fire(x, y, -17.74 , -speed, 0, 0);
    }
+
+   this.destroy();
 }
