@@ -47,6 +47,10 @@ Enemy.Brown.prototype.fire = function () {
    var x = this.x;
    var y = this.y;
 
+   if (!self.state.mute) {
+      self.state.enemyfire_sd.play();
+   }
+
    try {
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
    } catch(err) {
@@ -56,34 +60,6 @@ Enemy.Brown.prototype.fire = function () {
 }
 
 Enemy.Brown.prototype.death = function(obj) {
-   var self = this;
-      var expl = self.state.explosions.getFirstDead();
-      if (expl === null || expl == undefined) {
-         expl = self.state.state.game.add.sprite(self.x, self.y, 'explosion');
-         self.state.explosions.add(expl);
-      }
-      else {
-         expl.alpha = 1;
-         expl.scale.setTo(1);
-         expl.revive();
-         expl.reset(self.x, self.y);
-      }
-      expl.power = 20;
-      self.state.game.physics.arcade.enable(expl);
-      expl.anchor.setTo(0.5);
-      expl.smoothed = false;
-      expl.body.immovable = true;
-      expl.checkWorldBounds = true;
-      expl.outOfBoundsKill = true;
-      if (!self.state.mute) {
-            self.state.playerhit_sd.play();
-      }
-      self.state.enemies.forEachAlive( function(e) {
-         if (self.state.game.physics.arcade.distanceBetween(expl, e) < 40) {
-            self.state.hitEnemy(expl, e);
-         }
-      });
-      self.state.game.add.tween(expl).to( { alpha: 0}, 2000, Phaser.Easing.Quintic.Out, true);
-      self.state.game.add.tween(expl.scale).to( {x: 2, y: 2 }, 1500, Phaser.Easing.Quintic.Out, true);
-      self.destroy();
+   this.state.createExplosion(obj.x, obj.y, 20);
+   this.destroy();
 } 

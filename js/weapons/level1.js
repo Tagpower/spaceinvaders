@@ -40,6 +40,10 @@ Weapon.Weapon1B.prototype.fire = function (source) {
    var x = source.x;
    var y = source.y - 20;
 
+   if (!self.state.mute) {
+      self.state.fire_sd.play();
+   }
+
    try {
       this.getFirstExists(false).fire(x, y, 0, this.bulletSpeed, 0, 0);
    } catch(err) {
@@ -49,23 +53,6 @@ Weapon.Weapon1B.prototype.fire = function (source) {
 
    this.nextFire = this.game.time.time + this.fireRate;
 
-};
-
-Weapon.Weapon1B.prototype.fireFrom = function (source, dx, dy) {
-
-   if (this.game.time.time < this.nextFire) { return; }
-
-   var x = source.x + dx;
-   var y = source.y -20 + dy;
-
-   try {
-      this.getFirstExists(false).fire(x, y, 0, this.bulletSpeed, 0, 0);
-   } catch(err) {
-      this.add(new Bullet(game, 'shot'), true);
-      this.getFirstExists(false).fire(x, y, 0, this.bulletSpeed, 0, 0);
-   }
-
-   this.nextFire = this.game.time.time + this.fireRate;
 };
 
 Weapon.Weapon1B.prototype.fireSpecial = function () {

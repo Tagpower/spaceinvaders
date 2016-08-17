@@ -49,6 +49,10 @@ Enemy.Cyan.prototype.fire = function () {
    var gx = 0;
    var dg = 20;
 
+   if (!self.state.mute) {
+      self.state.enemyfire_sd.play();
+   }
+
    if (this.state.player.x > x)
       gx = dg;
    else if (this.state.player.x < x)

@@ -42,6 +42,10 @@ Weapon.Weapon2B.prototype.fire = function (source) {
    var x = source.x;
    var y = source.y - 20;
 
+   if (!self.state.mute) {
+      self.state.fire_sd.play();
+   }
+
    try {
       this.getFirstExists(false).fire(x-5, y, 0, this.bulletSpeed, 0, 0);
       this.getFirstExists(false).fire(x+5, y, 0, this.bulletSpeed, 0, 0);

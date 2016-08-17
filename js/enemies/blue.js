@@ -49,6 +49,10 @@ Enemy.Blue.prototype.fire = function () {
    var angle = this.game.rnd.between(-20,20);
    var speed = this.game.rnd.between(50,200)
 
+   if (!self.state.mute) {
+      self.state.enemyfire_sd.play();
+   }
+
    try {
       this.shots.getFirstExists(false).fire(x, y, angle, -speed, 0, 0);
    } catch(err) {

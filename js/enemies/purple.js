@@ -45,6 +45,10 @@ Enemy.Purple.prototype.fire = function () {
    var x = this.x;
    var y = this.y;
 
+   if (!self.state.mute) {
+      self.state.enemyfire_sd.play();
+   }
+
    try {
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
    } catch(err) {

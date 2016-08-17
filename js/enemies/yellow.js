@@ -47,6 +47,10 @@ Enemy.Yellow.prototype.fire = function () {
    var x = this.x;
    var y = this.y;
 
+   if (!self.state.mute) {
+      self.state.enemyfire_sd.play();
+   }
+
    try {
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
    } catch(err) {
@@ -59,6 +63,10 @@ Enemy.Yellow.prototype.death = function(obj) {
    var x = this.x;
    var y = this.y;
    var speed = 250;
+
+   if (!self.state.mute) {
+      self.state.enemyfire_sd.play();
+   }
 
    try {
       this.shots.getFirstExists(false).fire(x, y,  17.74 , -speed, 0, 0);

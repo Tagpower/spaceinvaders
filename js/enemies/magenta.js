@@ -46,13 +46,17 @@ Enemy.Magenta.prototype.fire = function () {
    var x = this.x;
    var y = this.y;
 
-      for (var i = -60; i < 60; i+=10) {   
-         try {
-            this.shots.getFirstExists(false).fire(x, y, i, -this.bulletSpeed, 0, 0);
-         } catch(err) {
-            this.shots.add(new Shot(game, 'enemyshots', 11, 10), true);
-            this.shots.setAll('tracking', true);
-            this.shots.getFirstExists(false).fire(x, y, i, -this.bulletSpeed, 0, 0);
-         }
+   if (!self.state.mute) {
+      self.state.enemyfire_sd.play();
+   }
+
+   for (var i = -60; i < 60; i+=10) {   
+      try {
+         this.shots.getFirstExists(false).fire(x, y, i, -this.bulletSpeed, 0, 0);
+      } catch(err) {
+         this.shots.add(new Shot(game, 'enemyshots', 11, 10), true);
+         this.shots.setAll('tracking', true);
+         this.shots.getFirstExists(false).fire(x, y, i, -this.bulletSpeed, 0, 0);
       }
+   }
 };

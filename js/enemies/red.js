@@ -49,6 +49,10 @@ Enemy.Red.prototype.fire = function () {
 
    var angle = 14.04;
 
+   if (!self.state.mute) {
+      self.state.enemyfire_sd.play();
+   }
+
    try {
       this.shots.getFirstExists(false).fire(x, y, angle, -this.bulletSpeed, 0, 0);
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
