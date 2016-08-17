@@ -67,6 +67,9 @@ Weapon.Weapon4B.prototype.fireSpecial = function () {
    var timer = this.game.time.create(true);
    timer.repeat(500, 5,
     function(speed) {
+      if (!self.state.mute) {
+         self.state.firespecial_sd.play();
+      }
       var angle = 20;
       self.special.getFirstExists(false)
       .fire(self.state.player.x, self.state.player.y-20, -angle, speed, 0, 0); 

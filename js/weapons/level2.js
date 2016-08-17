@@ -62,6 +62,9 @@ Weapon.Weapon2B.prototype.fireSpecial = function () {
    var timer = this.game.time.create(true);
    timer.repeat(100, 10,
     function(speed) {
+      if (!self.state.mute) {
+         self.state.firespecial_sd.play();
+      }
       var angle = self.game.rnd.between(-10,10); 
       self.special.getFirstExists(false)
       .fire(self.state.player.x, self.state.player.y-20, angle, speed, 0, 0); 

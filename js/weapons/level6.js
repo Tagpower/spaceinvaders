@@ -73,6 +73,9 @@ Weapon.Weapon6B.prototype.fireSpecial = function () {
    var timer = this.game.time.create(true);
    timer.repeat(100, 3,
     function(speed) {
+      if (!self.state.mute) {
+         self.state.firespecial_sd.play();
+      }
       for (var i = -70; i < 70; i+=5)
          self.special.getFirstExists(false).fire(self.state.player.x, self.state.player.y-20, i, speed, 0, 0);
    }, this.game, speed);

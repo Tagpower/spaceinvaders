@@ -70,6 +70,9 @@ Weapon.Weapon5B.prototype.fireSpecial = function () {
    var timer = this.game.time.create(true);
    timer.repeat(100, 15,
     function(speed) {
+      if (!self.state.mute) {
+         self.state.firespecial_sd.play();
+      }
       var gx = self.game.rnd.between(-40, 40);
       var gy = self.game.rnd.between(100, 200);
       self.special.getFirstExists(false)
