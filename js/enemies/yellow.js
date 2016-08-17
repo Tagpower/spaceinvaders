@@ -20,6 +20,8 @@ Enemy.Yellow = function (state, x, y, key, fireProba) {
    this.animations.add('move', [10, 11], 6, true);
    this.animations.play('move');
 
+   this.events.onKilled.add(this.death, this);
+
    return this;
 };
 
