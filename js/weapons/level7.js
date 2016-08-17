@@ -41,8 +41,8 @@ Weapon.Weapon7B.prototype.fire = function (source) {
    var x = source.x;
    var y = source.y - 20;
 
-   if (!self.state.mute) {
-      self.state.fire_sd.play();
+   if (!this.state.mute) {
+      this.state.fire_sd.play();
    }
       
    try {
@@ -80,7 +80,7 @@ Weapon.Weapon7B.prototype.fireSpecial = function () {
    var timer = this.game.time.create(true);
    timer.repeat(300, 5,
     function(speed) {
-      if (!self.state.mute) {
+      if (!this.state.mute) {
          self.state.firespecial_sd.play();
       }
       self.special.getFirstExists(false).fire(self.state.player.x, self.state.player.y-20, 0, speed, 0, 0);

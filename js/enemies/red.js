@@ -49,8 +49,8 @@ Enemy.Red.prototype.fire = function () {
 
    var angle = 14.04;
 
-   if (!self.state.mute) {
-      self.state.enemyfire_sd.play();
+   if (!this.state.mute) {
+      this.state.enemyfire_sd.play();
    }
 
    try {

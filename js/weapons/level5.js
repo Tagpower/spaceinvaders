@@ -41,8 +41,8 @@ Weapon.Weapon5B.prototype.fire = function (source) {
    var x = source.x;
    var y = source.y - 20;
 
-   if (!self.state.mute) {
-      self.state.fire_sd.play();
+   if (!this.state.mute) {
+      this.state.fire_sd.play();
    }
 
    try {
@@ -74,7 +74,7 @@ Weapon.Weapon5B.prototype.fireSpecial = function () {
    var timer = this.game.time.create(true);
    timer.repeat(100, 15,
     function(speed) {
-      if (!self.state.mute) {
+      if (!this.state.mute) {
          self.state.firespecial_sd.play();
       }
       var gx = self.game.rnd.between(-40, 40);

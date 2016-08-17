@@ -47,8 +47,8 @@ Enemy.Brown.prototype.fire = function () {
    var x = this.x;
    var y = this.y;
 
-   if (!self.state.mute) {
-      self.state.enemyfire_sd.play();
+   if (!this.state.mute) {
+      this.state.enemyfire_sd.play();
    }
 
    try {
