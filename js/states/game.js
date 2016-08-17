@@ -12,7 +12,6 @@ invaders.prototype = {
       self.player = null;
       self.enemies = null;
       self.items = null;
-      self.special_shots = null;
       self.bonusships = null;
       self.explosions = null;
       self.shield = null;
@@ -97,9 +96,6 @@ invaders.prototype = {
       } else { 
          self.background.tint = 0x3355ee;
       }
-      
-      self.special_shots = self.game.add.group();
-      self.special_shots.enableBody = true;
 
       self.explosions = self.game.add.group();
       self.explosions.enableBody = true;
@@ -218,7 +214,6 @@ invaders.prototype = {
       }
       //Check collisions for everything
       self.game.physics.arcade.collide(self.weapon, self.enemies, self.hitEnemy, null, self);
-      self.game.physics.arcade.collide(self.special_shots, self.enemies, self.hitEnemy, false, self); 
       //self.game.physics.arcade.collide(self.explosions, self.enemies, self.hitEnemy, null, self);
       self.game.physics.arcade.collide(self.weapons, self.bonusships, self.hitBonusShip, null, self);
       //game.physics.arcade.collide(player, enemies, levelFailed, null, self)
@@ -1037,24 +1032,9 @@ invaders.prototype = {
    },
    // }}}
 
-   // {{{ CREATESPECIALSHOT
-   // Makes the player fire a special shot
-   createSpecialShot: function(x, y, velx, vely) { //V2.0
-      var self = this;
-      for (var i=0; i < 9+self.power; i++) {
-         self.createShot(x, y, velx, vely-i*20, 10);
-      }
-      if (!self.mute) {
-         self.firespecial_sd.play();
-      }
-      self.special_cooldown = DEFAULT_FIRE_COOLDOWN;
-   },
-   // }}}
-
    // {{{ HITBONUSSHIP
    // When the player successfully hits a bonus ship
    hitBonusShip: function(shot, bship) {
-      console.log("HIT !!!");
       var self = this;
       shot.kill();
       if (!bship.touched) {
@@ -1137,7 +1117,6 @@ invaders.prototype = {
    restart: function(level) {
       var self = this;
       self.items.removeAll();
-      self.special_shots.removeAll();
       self.bonusships.removeAll();
       self.enemies.removeAll();
       self.player.kill();
@@ -1166,7 +1145,6 @@ invaders.prototype = {
    loadNextLevel: function() {
       var self = this;
       self.items.removeAll();
-      self.special_shots.removeAll();
       self.bonusships.removeAll();
       self.enemies.removeAll();
       self.player.kill();
@@ -1199,7 +1177,6 @@ invaders.prototype = {
       self.music.stop();
       self.music_bonus.play();
       self.items.removeAll();
-      self.special_shots.removeAll();
       self.bonusships.removeAll();
       self.enemies.removeAll();
 
