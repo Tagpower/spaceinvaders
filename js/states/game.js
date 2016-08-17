@@ -349,7 +349,14 @@ invaders.prototype = {
 
       //When the level is beaten
       //console.log("is beaten ?")
-      if (self.enemies.countLiving() == 0 /*&& e_shots == 0*/ && self.current_level < levels.length && !self.wait_next_level) {
+
+      self.living_e_shots = 0;
+      self.enemies.forEach(function(e, cpt) {
+         self.living_e_shots += e.livingShots();
+      }, self);
+      console.log(self.living_e_shots);
+
+      if (self.enemies.countLiving() == 0 && self.living_e_shots === 0 && self.current_level < levels.length && !self.wait_next_level) {
          self.bonusships.forEachAlive(function(bship) {
             if (bship.body.velocity.x == 0) {
                bship.kill();
@@ -625,7 +632,7 @@ invaders.prototype = {
                   self.createItem(x, y, 'powerup_special');
                }
                else if (roulette > 60 && roulette <= 75) {
-                  self.createItem(x, y, 'powerup_clear');
+                  //self.createItem(x, y, 'powerup_clear');
                }
                else if (roulette > 75 && roulette <= 85) {
                   self.createItem(x, y, 'powerup_shield');
@@ -637,7 +644,7 @@ invaders.prototype = {
                   self.createItem(x, y, 'powerup_warp');
                }
                else if (roulette > 95 && roulette <= 100) {
-                  self.createItem(x, y, 'powerup_kill');
+                  //self.createItem(x, y, 'powerup_kill');
                }
                else if (roulette > 100 && roulette <= 105) {
                   self.createItem(x, y, 'extralife');
@@ -796,7 +803,7 @@ invaders.prototype = {
                self.game.add.tween(player.body).to( { x: 300 }, 500, Phaser.Easing.Quadratic.In, true);
                self.lostAlife = false;
                player.alpha = 0.5;
-               self.enemies.removeAll();
+               self.enemies.removeAll(true);
                self.current_bonus_level--;
             });
             self.timer.add(3000, function(){
@@ -903,11 +910,7 @@ invaders.prototype = {
                   if (e.type != 1) {
                      already_all_orange = false;
                   }
-                  e.type = 1;
-                  e.animations.add('move', [0, 1], 6, true);
-                  e.health = 1;
-                  e.fireProba = ENEMY_DEFAULT_FIRE_PROBA;
-                  e.value = 100
+                  e = new Enemy.Orange(self, e.x, e.y, 'enemy', ENEMY_DEFAULT_FIRE_PROBA);
                });
                self.score += 500;
                if (!already_all_orange) {
@@ -1012,7 +1015,7 @@ invaders.prototype = {
                self.player.body.collideWorldBounds = true;
                //player.body.velocity.y = -100;
                //player.body.position.y = 300; 
-               self.enemies.removeAll();
+               self.enemies.removeAll(true);
                self.lostAlife = false;
                self.player.alpha = 0.5;
             });
@@ -1068,10 +1071,10 @@ invaders.prototype = {
             self.createItem(bship.body.center.x, bship.body.center.y, 'powerup_warp');
          }           
          if (random > 80 && random <= 90) {
-            self.createItem(bship.body.center.x, bship.body.center.y, 'powerup_kill');
+            //self.createItem(bship.body.center.x, bship.body.center.y, 'powerup_kill');
          }           
          if (random > 90 && random <= 100) {
-            self.createItem(bship.body.center.x, bship.body.center.y, 'powerup_orange');
+            //self.createItem(bship.body.center.x, bship.body.center.y, 'powerup_orange');
          }
          if (random > 100 && random <= 110) {
             self.createItem(bship.body.center.x, bship.body.center.y, 'bonus_level');
@@ -1118,7 +1121,7 @@ invaders.prototype = {
       var self = this;
       self.items.removeAll();
       self.bonusships.removeAll();
-      self.enemies.removeAll();
+      self.enemies.removeAll(true);
       self.player.kill();
       self.music.stop();
       self.music_bonus.stop();
@@ -1146,7 +1149,7 @@ invaders.prototype = {
       var self = this;
       self.items.removeAll();
       self.bonusships.removeAll();
-      self.enemies.removeAll();
+      self.enemies.removeAll(true);
       self.player.kill();
       var config = {
          is_boss: false,
@@ -1178,7 +1181,7 @@ invaders.prototype = {
       self.music_bonus.play();
       self.items.removeAll();
       self.bonusships.removeAll();
-      self.enemies.removeAll();
+      self.enemies.removeAll(true);
 
       self.text_middle.text = "Niveau bonus !";
       self.text_level.text = "YAY ! (il est en travaux btw)";

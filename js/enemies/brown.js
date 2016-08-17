@@ -17,10 +17,6 @@ Enemy.Brown = function (state, x, y, key, fireProba) {
 
    this.shots = this.game.add.group(game.world, 'bullet pool', false, true, Phaser.Physics.ARCADE);
 
-   for (var i = 0; i < 5; i++) {
-      this.shots.add(new Shot(game, 'enemyshots', 9, 10), true);
-   }
-
    this.animations.add('move', [18, 19], 6, true);
    this.animations.play('move');
 
@@ -32,10 +28,14 @@ Enemy.Brown = function (state, x, y, key, fireProba) {
 Enemy.Brown.prototype = Object.create(Phaser.Sprite.prototype);
 Enemy.Brown.prototype.constructor = Enemy.Brown;
 
+Enemy.Brown.prototype.livingShots = function() {
+   return this.shots.countLiving();
+}
+
 Enemy.Brown.prototype.update = function() {
    this.game.physics.arcade.collide(this.shots, this.state.player, this.collide, function(){return (!this.state.lostAlife && this.state.shield_time == 0);}, this);
 
-   if (Math.random() < this.fireProba && this.state.clear_nofiretime == 0) 
+   if (this.alive && Math.random() < this.fireProba && this.state.clear_nofiretime == 0) 
       this.fire();
 }
 
@@ -52,7 +52,7 @@ Enemy.Brown.prototype.fire = function () {
    }
 
    try {
-      this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
+      this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, 0, 0);
    } catch(err) {
       this.shots.add(new Shot(game, 'enemyshots', 9, 10), true);
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
@@ -61,5 +61,4 @@ Enemy.Brown.prototype.fire = function () {
 
 Enemy.Brown.prototype.death = function(obj) {
    this.state.createExplosion(obj.x, obj.y, 20);
-   this.destroy();
 } 

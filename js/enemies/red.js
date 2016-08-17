@@ -16,11 +16,6 @@ Enemy.Red = function (state, x, y, key, fireProba) {
    this.health = 10;
 
    this.shots = this.game.add.group(game.world, 'bullet pool', false, true, Phaser.Physics.ARCADE);
-
-   for (var i = 0; i < 5; i++) {
-      this.shots.add(new Shot(game, 'enemyshots', 1, 10), true);
-   }
-
    this.shots.setAll('tracking', true);
 
    this.animations.add('move', [2, 3], 6, true);
@@ -32,10 +27,14 @@ Enemy.Red = function (state, x, y, key, fireProba) {
 Enemy.Red.prototype = Object.create(Phaser.Sprite.prototype);
 Enemy.Red.prototype.constructor = Enemy.Red;
 
+Enemy.Red.prototype.livingShots = function() {
+   return this.shots.countLiving();
+}
+
 Enemy.Red.prototype.update = function() {
    this.game.physics.arcade.collide(this.shots, this.state.player, this.collide, function(){return (!this.state.lostAlife && this.state.shield_time == 0);}, this);
 
-   if (Math.random() < this.fireProba && this.state.clear_nofiretime == 0) 
+   if (this.alive && Math.random() < this.fireProba && this.state.clear_nofiretime == 0) 
       this.fire();
 }
 
@@ -54,16 +53,26 @@ Enemy.Red.prototype.fire = function () {
    }
 
    try {
-      this.shots.getFirstExists(false).fire(x, y, angle, -this.bulletSpeed, 0, 0);
-      this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
-      this.shots.getFirstExists(false).fire(x, y, -angle, -this.bulletSpeed, 0, 0);
+      this.shots.getFirstDead().fire(x, y, angle, -this.bulletSpeed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(game, 'enemyshots', 1, 10), true);
-      this.shots.add(new Shot(game, 'enemyshots', 1, 10), true);
       this.shots.add(new Shot(game, 'enemyshots', 1, 10), true);
       this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, angle, -this.bulletSpeed, 0, 0);
+   }
+
+   try {
+      this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, 0, 0);
+   } catch(err) {
+      this.shots.add(new Shot(game, 'enemyshots', 1, 10), true);
+      this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
+   }
+
+   try {
+      this.shots.getFirstDead().fire(x, y, -angle, -this.bulletSpeed, 0, 0);
+   } catch(err) {
+      this.shots.add(new Shot(game, 'enemyshots', 1, 10), true);
+      this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, -angle, -this.bulletSpeed, 0, 0);
    }
 };

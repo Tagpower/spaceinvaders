@@ -17,10 +17,6 @@ Enemy.Purple = function (state, x, y, key, fireProba) {
 
    this.shots = this.game.add.group(game.world, 'bullet pool', false, true, Phaser.Physics.ARCADE);
 
-   for (var i = 0; i < 5; i++) {
-      this.shots.add(new Shot(game, 'enemyshots', 3, 10), true);
-   }
-
    this.animations.add('move', [6, 7], 6, true);
    this.animations.play('move');
 
@@ -30,10 +26,14 @@ Enemy.Purple = function (state, x, y, key, fireProba) {
 Enemy.Purple.prototype = Object.create(Phaser.Sprite.prototype);
 Enemy.Purple.prototype.constructor = Enemy.Purple;
 
+Enemy.Purple.prototype.livingShots = function() {
+   return this.shots.countLiving();
+}
+
 Enemy.Purple.prototype.update = function() {
    this.game.physics.arcade.collide(this.shots, this.state.player, this.collide, function(){return (!this.state.lostAlife && this.state.shield_time == 0);}, this);
 
-   if (Math.random() < this.fireProba && this.state.clear_nofiretime == 0) 
+   if (this.alive && Math.random() < this.fireProba && this.state.clear_nofiretime == 0) 
       this.fire();
 }
 
@@ -50,7 +50,7 @@ Enemy.Purple.prototype.fire = function () {
    }
 
    try {
-      this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
+      this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, 0, 0);
    } catch(err) {
       this.shots.add(new Shot(game, 'enemyshots', 3, 10), true);
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);

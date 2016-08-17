@@ -17,9 +17,6 @@ Enemy.Blue = function (state, x, y, key, fireProba) {
 
    this.shots = this.game.add.group(game.world, 'bullet pool', false, true, Phaser.Physics.ARCADE);
 
-   for (var i = 0; i < 5; i++) {
-      this.shots.add(new Shot(game, 'enemyshots', 8, 10), true);
-   }
    this.shots.setAll('tracking', true);
 
    this.animations.add('move', [16, 17], 6, true);
@@ -31,10 +28,14 @@ Enemy.Blue = function (state, x, y, key, fireProba) {
 Enemy.Blue.prototype = Object.create(Phaser.Sprite.prototype);
 Enemy.Blue.prototype.constructor = Enemy.Blue;
 
+Enemy.Blue.prototype.livingShots = function() {
+   return this.shots.countLiving();
+}
+
 Enemy.Blue.prototype.update = function() {
    this.game.physics.arcade.collide(this.shots, this.state.player, this.collide, function(){return (!this.state.lostAlife && this.state.shield_time == 0);}, this);
 
-   if (Math.random() < this.fireProba && this.state.clear_nofiretime == 0) 
+   if (this.alive && Math.random() < this.fireProba && this.state.clear_nofiretime == 0) 
       this.fire();
 }
 
@@ -54,10 +55,8 @@ Enemy.Blue.prototype.fire = function () {
    }
 
    try {
-      this.shots.getFirstExists(false).fire(x, y, angle, -speed, 0, 0);
+      this.shots.getFirstDead(false).fire(x, y, angle, -speed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(game, 'enemyshots', 8, 10), true);
-      this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, angle, -speed, 0, 0);
    }
 };

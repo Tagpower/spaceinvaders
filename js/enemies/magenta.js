@@ -16,10 +16,6 @@ Enemy.Magenta = function (state, x, y, key, fireProba) {
    this.health = 20;
 
    this.shots = this.game.add.group(game.world, 'bullet pool', false, true, Phaser.Physics.ARCADE);
-
-   for (var i = 0; i < 5; i++) {
-      this.shots.add(new Shot(game, 'enemyshots', 11, 10), true);
-   }
    this.shots.setAll('tracking', true);
 
    this.animations.add('move', [22, 23], 6, true);
@@ -31,10 +27,14 @@ Enemy.Magenta = function (state, x, y, key, fireProba) {
 Enemy.Magenta.prototype = Object.create(Phaser.Sprite.prototype);
 Enemy.Magenta.prototype.constructor = Enemy.Magenta;
 
+Enemy.Magenta.prototype.livingShots = function() {
+   return this.shots.countLiving();
+}
+
 Enemy.Magenta.prototype.update = function() {
    this.game.physics.arcade.collide(this.shots, this.state.player, this.collide, function(){return (!this.state.lostAlife && this.state.shield_time == 0);}, this);
 
-   if (Math.random() < this.fireProba && this.state.clear_nofiretime == 0) 
+   if (this.alive && Math.random() < this.fireProba && this.state.clear_nofiretime == 0) 
       this.fire();
 }
 
@@ -52,7 +52,7 @@ Enemy.Magenta.prototype.fire = function () {
 
    for (var i = -60; i < 60; i+=10) {   
       try {
-         this.shots.getFirstExists(false).fire(x, y, i, -this.bulletSpeed, 0, 0);
+         this.shots.getFirstDead().fire(x, y, i, -this.bulletSpeed, 0, 0);
       } catch(err) {
          this.shots.add(new Shot(game, 'enemyshots', 11, 10), true);
          this.shots.setAll('tracking', true);

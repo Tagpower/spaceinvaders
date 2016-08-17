@@ -9,6 +9,7 @@ var Shot = function (game, key, frame, damage) {
    this.checkWorldBounds = true;
    this.outOfBoundsKill = true;
    this.exists = false;
+   this.alive = false;
 
    this.tracking = false;
    this.scaleSpeed = 0;
@@ -25,6 +26,7 @@ Shot.prototype.fire = function (x, y, angle, speed, gx, gy) {
    gx = gx || 0;
    gy = gy || 0;
 
+   this.revive();
    this.reset(x, y);
    this.scale.set(1);
 
