@@ -1,20 +1,9 @@
-var game = new Phaser.Game(600, 800, Phaser.AUTO, 'game'), Main = function () {};
+var game = new Phaser.Game(600, 600, Phaser.AUTO, 'contentor');
 
-Main.prototype = {
+game.state.add("Boot", boot);
+game.state.add("Preload", preload);
+game.state.add("GameTitle", gameTitle);
+game.state.add("Game", invaders);
+game.state.add("GameOver", gameOver);
 
-  preload: function () {
-    game.load.image('stars',    'assets/images/stars.jpg');
-    game.load.image('loading',  'assets/images/loading.png');
-    game.load.image('brand',    'assets/images/logo.png');
-    game.load.script('splash',  'states/Splash.js');
-  },
-
-  create: function () {
-    game.state.add('Splash', Splash);
-    game.state.start('Splash');
-  }
-
-};
-
-game.state.add('Main', Main);
-game.state.start('Main');
+game.state.start("Boot");
