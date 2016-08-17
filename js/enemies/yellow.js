@@ -107,6 +107,4 @@ Enemy.Yellow.prototype.death = function(obj) {
       this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, -17.74 , -speed, 0, 0);
    }
-
-   this.destroy();
 }
