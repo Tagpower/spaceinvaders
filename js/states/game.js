@@ -116,13 +116,13 @@ invaders.prototype = {
 
 
       // Weapons
-      self.weapons.push(new Weapon.Weapon1B(self.game));
-      self.weapons.push(new Weapon.Weapon2B(self.game));
-      self.weapons.push(new Weapon.Weapon3B(self.game));
-      self.weapons.push(new Weapon.Weapon4B(self.game));
-      self.weapons.push(new Weapon.Weapon5B(self.game));
-      self.weapons.push(new Weapon.Weapon6B(self.game));
-      self.weapons.push(new Weapon.Weapon7B(self.game));
+      self.weapons.push(new Weapon.Weapon1B(self));
+      self.weapons.push(new Weapon.Weapon2B(self));
+      self.weapons.push(new Weapon.Weapon3B(self));
+      self.weapons.push(new Weapon.Weapon4B(self));
+      self.weapons.push(new Weapon.Weapon5B(self));
+      self.weapons.push(new Weapon.Weapon6B(self));
+      self.weapons.push(new Weapon.Weapon7B(self));
 
       //Create the player's ship
       console.log("\tCreating player...");
@@ -276,15 +276,10 @@ invaders.prototype = {
 
          //Fire super special shots 
          if (self.special_btn.isDown) {
-            self.weapon.fire(self.player);
             if (self.special_available > 0 && self.special_cooldown == 0) {
-               if (self.power == MAX_POWER) {
-                  //self.createSpecialShot(self.player.body.center.x-4, self.player.body.y, 0, -300);
-                  //self.createSpecialShot(self.player.body.center.x+4, self.player.body.y, 0, -300)
-               } else {
-                  //self.createSpecialShot(self.player.body.center.x, self.player.body.y, 0, -300);
-               }
+               self.weapon.fireSpecial(self.player);
                self.special_available--;
+               self.special_cooldown = DEFAULT_FIRE_COOLDOWN
             }
          }		
 
