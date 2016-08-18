@@ -1,4 +1,4 @@
-var Bullet = function (game, key) {
+var Bullet = function (game, key, power) {
 
    Phaser.Sprite.call(this, game, 0, 0, key);
 
@@ -13,7 +13,7 @@ var Bullet = function (game, key) {
    this.tracking = false;
    this.scaleSpeed = 0;
 
-   return this;
+   this.power = power;
 
 };
 

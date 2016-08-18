@@ -9,13 +9,13 @@ Weapon.Weapon1B = function (state) {
    this.state = state;
 
    for (var i = 0; i < 5; i++) {
-      this.add(new Bullet(this.game, 'shot'), true);
+      this.add(new Bullet(this.game, 'shot', this.power), true);
    }
 
    this.special = this.game.add.group(this.game.world, 'Special Weapon Level 1', false, true, Phaser.Physics.ARCADE);
 
    for (i = 0; i < 12; i++) {
-      this.special.add(new Bullet(this.game, 'shot'), true);
+      this.special.add(new Bullet(this.game, 'shot', this.power), true);
    }
 
    return this;
@@ -47,7 +47,7 @@ Weapon.Weapon1B.prototype.fire = function (source) {
    try {
       this.getFirstExists(false).fire(x, y, 0, this.bulletSpeed, 0, 0);
    } catch(err) {
-      this.add(new Bullet(game, 'shot'), true);
+      this.add(new Bullet(game, 'shot', this.power), true);
       this.getFirstExists(false).fire(x, y, 0, this.bulletSpeed, 0, 0);
    }  
 

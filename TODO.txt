@@ -6,6 +6,9 @@
 	
 - FAIRE UN MENU
 
+- bonus ship ==> classe
+- player ==> classe
+
 =====BUGS=====
 
 ---MAJEURS---
@@ -16,3 +19,4 @@
 ---MINEURS---
 - Trouver le bug qui déplace les ennemis en boucle
 - mettre une méthode aux enemy pour clear les bullets
+- reworks weapons: héritage + try..catch special + generation sprite opti

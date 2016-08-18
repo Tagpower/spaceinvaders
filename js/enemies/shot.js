@@ -77,6 +77,9 @@ var Enemy = function (state, game, x, y, key, bulletSpeed, power, type, fireProb
 
    this.animations.add('move', framesAnim, timeAnim, true);
    this.animations.play('move');
+
+   this.events.onKilled.add(this.dropItem, this);
+   this.events.onKilled.add(this.enemyDeath, this);
 }
 
 Enemy.prototype = Object.create(Phaser.Sprite.prototype);
@@ -94,4 +97,52 @@ Enemy.prototype.update = function() {
 
    if (this.alive && Math.random() < this.fireProba && this.state.clear_nofiretime == 0) 
       this.fire();
+}
+
+Enemy.prototype.dropItem = function(obj) {
+   var x = obj.body.center.x;
+   var y = obj.body.center.y;
+
+   //randomly create a bonus
+   var random = Math.random();
+   if (random <= POWERUP_CHANCE || (this.state.in_bonus_level && random <= POWERUP_CHANCE_IN_BONUS)) { //In a bonus level, bonus are 2x as likely to appear
+      //Bonus roulette
+      var roulette = Math.random()*105;
+      if (roulette <= 20) {
+         this.state.createItem(x, y, 'powerup_power');
+      }
+      else if (roulette > 20 && roulette <= 40) {
+         this.state.createItem(x, y, 'powerup_cooldown');
+      }
+      else if (roulette > 40 && roulette <= 60) {
+         this.state.createItem(x, y, 'powerup_special');
+      }
+      else if (roulette > 60 && roulette <= 75) {
+         //this.state.createItem(x, y, 'powerup_clear');
+      }
+      else if (roulette > 75 && roulette <= 85) {
+         this.state.createItem(x, y, 'powerup_shield');
+      }
+      else if (roulette > 85 && roulette <= 90) {
+         this.state.createItem(x, y, 'powerup_freeze');
+      }
+      else if (roulette > 90 && roulette <= 95) {
+         this.state.createItem(x, y, 'powerup_warp');
+      }
+      else if (roulette > 95 && roulette <= 100) {
+         //this.state.createItem(x, y, 'powerup_kill');
+      }
+      else if (roulette > 100 && roulette <= 105) {
+         this.state.createItem(x, y, 'extralife');
+      }
+   }
+}
+
+Enemy.prototype.enemyDeath = function(obj) {
+   this.state.speed += this.state.speedup;
+   this.state.speedup += this.state.accel;
+   this.state.score += this.value;
+   if (!this.state.mute) {
+      this.state.killenemy_sd.play();
+   }
 }
