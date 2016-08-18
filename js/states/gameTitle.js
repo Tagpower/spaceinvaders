@@ -10,6 +10,8 @@ gameTitle.prototype = {
       console.log("-*- Launch the game -*-");
       //parameters: difficulty, level, power, firerate, isBonus
 
+      this.background = game.add.tileSprite(0, 0, game.width, game.height, 'space');
+
       var easy_button = game.add.button(game.world.centerX, 400, 'menu_buttons', this.easy, this, 0, 0, 0, 0);
       easy_button.anchor.setTo(0.5);
 
@@ -23,6 +25,15 @@ gameTitle.prototype = {
       ohgod_button.anchor.setTo(0.5);
       ohgod_button.animations.add('tilt', [3,4,5,6], 25, true);
       ohgod_button.animations.play('tilt');
+
+      var text_difficulty = self.game.add.text(self.game.world.width/2, game.world.height/2 + 40, '', {font: '16px Minecraftia', fill: '#00aaff'});
+      text_difficulty.fixedToCamera = true;
+      text_difficulty.anchor.setTo(0.5);
+      text_difficulty.text = "Choisissez la difficulté :";
+   },
+
+   update: function() {
+      this.background.tilePosition.y += 1
    },
 
    easy: function() {

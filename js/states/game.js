@@ -316,7 +316,9 @@ invaders.prototype = {
          //enemies.setAll('body.velocity.x', 0);
          if (self.lives == 0) {
             if (self.restart_btn.isDown) {
-               self.restart(0);
+               //self.restart(0);
+               self.music.stop();
+               this.game.state.start("GameTitle");
             }
          }
       };
