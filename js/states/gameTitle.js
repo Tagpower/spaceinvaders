@@ -9,13 +9,45 @@ gameTitle.prototype = {
    create: function() {
       console.log("-*- Launch the game -*-");
       //parameters: difficulty, level, power, firerate, isBonus
-      var difficulty = NORMAL;
+
+      var easy_button = game.add.button(game.world.centerX, 400, 'menu_buttons', this.easy, this, 0, 0, 0, 0);
+      easy_button.anchor.setTo(0.5);
+
+      var normal_button = game.add.button(game.world.centerX, 450, 'menu_buttons', this.normal, this, 1,1,1,1);
+      normal_button.anchor.setTo(0.5);
+
+      var hard_button = game.add.button(game.world.centerX, 500, 'menu_buttons', this.hard, this, 2,2,2,2);
+      hard_button.anchor.setTo(0.5);
+
+      var ohgod_button = game.add.button(game.world.centerX, 550, 'menu_buttons', this.ohgod, this, 3,3,3,3);
+      ohgod_button.anchor.setTo(0.5);
+      ohgod_button.animations.add('tilt', [3,4,5,6], 25, true);
+      ohgod_button.animations.play('tilt');
+   },
+
+   easy: function() {
+      this.launch(EASY, 2);
+   },
+
+   normal: function() {
+      this.launch(NORMAL, 1);
+   },
+
+   hard: function() {
+      this.launch(HARD, 1);
+   },
+
+   ohgod: function() {
+      this.launch(OHGOD, 1);
+   },
+
+   launch: function(difficulty, power) {
       var config = {
          is_boss: false,
          is_bonus: false,
          score: 0,
          lives: 3,
-         power: difficulty == EASY ? 2 : 1,
+         power: power,
          init_x: 300,
          init_y: 700,
          difficulty: difficulty,
@@ -26,4 +58,5 @@ gameTitle.prototype = {
       };
       this.game.state.start("Game", true, false, config);
    }
+
 }

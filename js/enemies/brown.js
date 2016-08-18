@@ -1,49 +1,12 @@
-Enemy.Brown = function (state, x, y, key, fireProba) {
-
-   Phaser.Sprite.call(this, state.game, x, y, key, 18);
-
-   this.texture.baseTexture.scaleMode = PIXI.scaleModes.NEAREST;
-
-   this.bulletSpeed = 100;
-   this.power = 100;
-   this.type = 10;
-   this.fireProba = fireProba*0.75;
-   this.value = 100;
-   this.game.physics.arcade.enable(this);
-   this.anchor.setTo(0.5);		
-   this.body.immovable = true;
-   this.state = state;
-   this.health = 10;
-
-   this.shots = this.game.add.group(game.world, 'bullet pool', false, true, Phaser.Physics.ARCADE);
-
-   this.animations.add('move', [18, 19], 6, true);
-   this.animations.play('move');
-
+Brown = function (state, x, y, key, fireProba) {
+   Enemy.call(this, state, state.game, x, y, key, 100, 100, 10, fireProba*0.75, 100, 10, [18, 19], 6);
    this.events.onKilled.add(this.death, this);
-
-   return this;
 };
 
-Enemy.Brown.prototype = Object.create(Phaser.Sprite.prototype);
-Enemy.Brown.prototype.constructor = Enemy.Brown;
+Brown.prototype = Object.create(Enemy.prototype);
+Brown.prototype.constructor = Brown;
 
-Enemy.Brown.prototype.livingShots = function() {
-   return this.shots.countLiving();
-}
-
-Enemy.Brown.prototype.update = function() {
-   this.game.physics.arcade.collide(this.shots, this.state.player, this.collide, function(){return (!this.state.lostAlife && this.state.shield_time == 0);}, this);
-
-   if (this.alive && Math.random() < this.fireProba && this.state.clear_nofiretime == 0) 
-      this.fire();
-}
-
-Enemy.Brown.prototype.collide = function(player, shot) {
-   this.state.playerHit(player, shot);
-}
-
-Enemy.Brown.prototype.fire = function () {
+Brown.prototype.fire = function () {
    var x = this.x;
    var y = this.y;
 
@@ -59,6 +22,6 @@ Enemy.Brown.prototype.fire = function () {
    }
 }
 
-Enemy.Brown.prototype.death = function(obj) {
+Brown.prototype.death = function(obj) {
    this.state.createExplosion(obj.x, obj.y, 20);
 } 

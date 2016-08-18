@@ -1,47 +1,11 @@
-Enemy.Orange = function (state, x, y, key, fireProba) {
-
-   Phaser.Sprite.call(this, state.game, x, y, key);
-
-   this.texture.baseTexture.scaleMode = PIXI.scaleModes.NEAREST;
-
-   this.bulletSpeed = 100;
-   this.power = 100;
-   this.type = 1;
-   this.fireProba = fireProba;
-   this.value = 100;
-   this.game.physics.arcade.enable(this);
-   this.anchor.setTo(0.5);		
-   this.body.immovable = true;
-   this.state = state;
-   this.health = 10;
-
-   this.shots = this.game.add.group(game.world, 'bullet pool', false, true, Phaser.Physics.ARCADE);
-
-   this.animations.add('move', [0, 1], 6, true);
-   this.animations.play('move');
-
-   return this;
+Orange = function (state, x, y, key, fireProba) {
+   Enemy.call(this, state, state.game, x, y, key, 100, 100, 1, fireProba, 100, 10, [0, 1], 6);
 };
 
-Enemy.Orange.prototype = Object.create(Phaser.Sprite.prototype);
-Enemy.Orange.prototype.constructor = Enemy.Orange;
+Orange.prototype = Object.create(Enemy.prototype);
+Orange.prototype.constructor = Orange;
 
-Enemy.Orange.prototype.livingShots = function() {
-   return this.shots.countLiving();
-}
-
-Enemy.Orange.prototype.update = function() {
-   this.game.physics.arcade.collide(this.shots, this.state.player, this.collide, function(){return (!this.state.lostAlife && this.state.shield_time == 0);}, this);
-
-   if (this.alive && Math.random() < this.fireProba && this.state.clear_nofiretime == 0) 
-      this.fire();
-}
-
-Enemy.Orange.prototype.collide = function(player, shot) {
-   this.state.playerHit(player, shot);
-}
-
-Enemy.Orange.prototype.fire = function () {
+Orange.prototype.fire = function () {
    var x = this.x;
    var y = this.y;
 

@@ -50,6 +50,7 @@ preload.prototype = {
 		this.game.load.spritesheet('powerup_warp', 'assets/powerup_warp.png', 16, 16);
 		this.game.load.spritesheet('powerup_shield', 'assets/powerup_shield.png', 16, 16);
 		this.game.load.spritesheet('bonus_level', 'assets/bonus_level.png', 16, 16);
+		this.game.load.spritesheet('menu_buttons', 'assets/menu_buttons.png', 96, 32);
 
 		//Music
 		this.game.load.audio('ambient', ['assets/audio/e1m1.mp3']);

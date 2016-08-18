@@ -1,18 +1,20 @@
 ﻿=====TODO LIST=====
-
 - Boss
 - Plus d'armes ?
 - Trouver/composer une musique originale
 - Trouver une autre musique pour le mode OH GOD
-	
-- FAIRE UN MENU
+
+- bonus ship ==> classe
+- player ==> classe
 
 =====BUGS=====
 
 ---MAJEURS---
 - Quand on chope un niveau bonus juste après avoir terminé un niveau, le niveau bonus apparaît en même temps que le niveau suivant
 - fix powerups: clear, kill, orange
+- fix special + normal cooldown
 
 ---MINEURS---
 - Trouver le bug qui déplace les ennemis en boucle
 - mettre une méthode aux enemy pour clear les bullets
+- reworks weapons: héritage + try..catch special + generation sprite opti

@@ -60,6 +60,8 @@ invaders.prototype = {
       self.over_sd = null;
 
       // Others
+      difficulty = config.difficulty;
+      currentDifficulty = config.difficulty;
       self.left = false;
       self.lostAlife = false;
       self.mute_wait = 0;
@@ -215,7 +217,7 @@ invaders.prototype = {
       //Check collisions for everything
       self.game.physics.arcade.collide(self.weapon, self.enemies, self.hitEnemy, null, self);
       //self.game.physics.arcade.collide(self.explosions, self.enemies, self.hitEnemy, null, self);
-      self.game.physics.arcade.collide(self.weapons, self.bonusships, self.hitBonusShip, null, self);
+      self.game.physics.arcade.collide(self.weapon, self.bonusships, self.hitBonusShip, null, self);
       //game.physics.arcade.collide(player, enemies, levelFailed, null, self)
       self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, function(){return (!self.lostAlife && self.shield_time == 0);}, self);
       //self.game.physics.arcade.collide(self.player, self.enemy_shots, self.playerHit, null, self);
@@ -354,7 +356,6 @@ invaders.prototype = {
       self.enemies.forEach(function(e, cpt) {
          self.living_e_shots += e.livingShots();
       }, self);
-      console.log(self.living_e_shots);
 
       if (self.enemies.countLiving() == 0 && self.living_e_shots === 0 && self.current_level < levels.length && !self.wait_next_level) {
          self.bonusships.forEachAlive(function(bship) {
@@ -537,54 +538,54 @@ invaders.prototype = {
             if (array[i][j] > 0) {
                var xx = x+j*25;
                var yy = y+i*25;
-
+               
                switch (array[i][j]) {
                   default:
                      break;
                   case 1: //ORANGE : normal
                      if (difficulty == OHGOD)
-                        self.enemies.add(new Enemy.Green(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new Green(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      else
-                        self.enemies.add(new Enemy.Orange(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new Orange(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 2: //RED : fires multiple shots
                      if (difficulty == OHGOD)
-                        self.enemies.add(new Enemy.Magenta(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new Magenta(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      else
-                        self.enemies.add(new Enemy.Red(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new Red(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 3: //GREEN : fires fast shots
                      if (difficulty == OHGOD)
-                        self.enemies.add(new Enemy.DarkGreen(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new DarkGreen(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      else
-                        self.enemies.add(new Enemy.Green(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new Green(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 4: //PURPLE : fires twice as often
-                     self.enemies.add(new Enemy.Purple(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Purple(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 5: //GRAY : takes 2 hits
-                     self.enemies.add(new Enemy.Gray(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Gray(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 6: //YELLOW : Fires 5 shots when killed
-                     self.enemies.add(new Enemy.Yellow(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Yellow(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 7: //CYAN : fires gravity-affected shots
-                     self.enemies.add(new Enemy.Cyan(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Cyan(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 8: //PINK : takes 3 hits, fires more often
-                     self.enemies.add(new Enemy.Pink(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Pink(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 9: //BLUE : fires in random directions
-                     self.enemies.add(new Enemy.Blue(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Blue(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 10: //BROWN : explodes when killed
-                     self.enemies.add(new Enemy.Brown(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Brown(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 11: //DARK GREEN : Fires REALLY FAST shots
-                     self.enemies.add(new Enemy.DarkGreen(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new DarkGreen(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 12: //MAGENTA : Fires in a circle, takes 2 hits
-                     self.enemies.add(new Enemy.Magenta(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Magenta(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                }
             }
@@ -597,68 +598,16 @@ invaders.prototype = {
    // When an enemy is hit by a player shot or an explosion
    hitEnemy: function(shot, enemy) {
       var self = this;
+      var amount = shot.power;
+
       if (shot.key != 'explosion')  {
          shot.kill();
       }
-      if (!enemy.touched) {
-         if (enemy.health <= self.weapon.power) {
-            enemy.touched = true;
-            enemy.animations.stop();
-            enemy.body.enable = false;
-            self.score += enemy.value;
-            if (!self.mute) {
-               self.killenemy_sd.play();
-            }
 
-            var x = enemy.body.center.x;
-            var y = enemy.body.center.y;
+      enemy.damage(amount);
 
-            enemy.kill();
-            self.speed += self.speedup;
-            self.speedup += self.accel;
-
-            //randomly create a bonus
-            var random = Math.random();
-            if (random <= POWERUP_CHANCE || (self.in_bonus_level && random <= POWERUP_CHANCE_IN_BONUS)) { //In a bonus level, bonus are 2x as likely to appear
-               //Bonus roulette
-               var roulette = Math.random()*105;
-               if (roulette <= 20) {
-                  self.createItem(x, y, 'powerup_power');
-               }
-               else if (roulette > 20 && roulette <= 40) {
-                  self.createItem(x, y, 'powerup_cooldown');
-               }
-               else if (roulette > 40 && roulette <= 60) {
-                  self.createItem(x, y, 'powerup_special');
-               }
-               else if (roulette > 60 && roulette <= 75) {
-                  //self.createItem(x, y, 'powerup_clear');
-               }
-               else if (roulette > 75 && roulette <= 85) {
-                  self.createItem(x, y, 'powerup_shield');
-               }
-               else if (roulette > 85 && roulette <= 90) {
-                  self.createItem(x, y, 'powerup_freeze');
-               }
-               else if (roulette > 90 && roulette <= 95) {
-                  self.createItem(x, y, 'powerup_warp');
-               }
-               else if (roulette > 95 && roulette <= 100) {
-                  //self.createItem(x, y, 'powerup_kill');
-               }
-               else if (roulette > 100 && roulette <= 105) {
-                  self.createItem(x, y, 'extralife');
-               }
-            }
-            //*/
-         } else {
-            console.log(enemy.health);
-            enemy.health -= self.weapon.power;
-            console.log(enemy.health);
-            if (!self.mute) {
-               self.hitenemy_sd.play();
-            }
-         }
+      if (enemy.alive && !self.mute) {
+         self.hitenemy_sd.play();
       }
    },
    // }}}
@@ -759,7 +708,7 @@ invaders.prototype = {
                   self.power = Math.floor(self.power);
                }
             }
-            self.weapon = self.weapons[self.power];
+            self.weapon = self.weapons[self.power-1];
             
             if (self.cooldown_reduction > 0) {
                self.cooldown_reduction /= 2;
@@ -824,9 +773,9 @@ invaders.prototype = {
          switch (item.key) {
             case 'powerup_power': //Raises the player's firepower
                if (self.power < MAX_POWER) {
-                  self.weapon = self.weapons[self.power];
-                  self.weapon.fireRate -= self.cooldown_reduction*10;
                   self.power++;
+                  self.weapon = self.weapons[self.power-1];
+                  self.weapon.fireRate -= self.cooldown_reduction*10;
                }        
                if (self.power == MAX_POWER) {
                   self.text_ship.text = "PUISSANCE MAX!";
