@@ -60,6 +60,8 @@ invaders.prototype = {
       self.over_sd = null;
 
       // Others
+      difficulty = config.difficulty;
+      currentDifficulty = config.difficulty;
       self.left = false;
       self.lostAlife = false;
       self.mute_wait = 0;

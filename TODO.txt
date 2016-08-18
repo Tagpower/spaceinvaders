@@ -3,8 +3,6 @@
 - Plus d'armes ?
 - Trouver/composer une musique originale
 - Trouver une autre musique pour le mode OH GOD
-	
-- FAIRE UN MENU
 
 - bonus ship ==> classe
 - player ==> classe
