@@ -1,5 +1,5 @@
 Brown = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, state.game, x, y, key, 100, 100, 10, fireProba*0.75, 100, 10, [18, 19], 6);
+   Enemy.call(this, state, x, y, key, 100, 100, 10, fireProba*0.75, 100, 10, [18, 19], 6);
    this.events.onKilled.add(this.death, this);
 };
 

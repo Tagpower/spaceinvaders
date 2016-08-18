@@ -57,7 +57,7 @@ Shot.prototype.update = function () {
 /*/
    ENEMY MOTHER CLASS !!!
 //*/
-var Enemy = function (state, game, x, y, key, bulletSpeed, power, type, fireProba, value, health, framesAnim, timeAnim) {
+var Enemy = function (state, x, y, key, bulletSpeed, power, type, fireProba, value, health, framesAnim, timeAnim) {
    Phaser.Sprite.call(this, state.game, x, y, key);
 
    this.texture.baseTexture.scaleMode = PIXI.scaleModes.NEAREST;

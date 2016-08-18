@@ -1,41 +1,16 @@
-Weapon.Weapon7B = function (state) {
-
-   Phaser.Group.call(this, state.game, state.game.world, 'Base Weapon Level 1', false, true, Phaser.Physics.ARCADE);
-
-   this.nextFire = 0;
-   this.bulletSpeed = 400;
-   this.fireRate = 3500;
-   this.power = 10;
-   this.state = state;
-
-   for (var i = 0; i < 5; i++) {
-      this.add(new Bullet(this.game, 'shot'), true);
-   }
-
-   this.special = this.game.add.group(this.game.world, 'Special Weapon Level 1', false, true, Phaser.Physics.ARCADE);
-
+Weapon7B = function (state) {
+   Weapon.call(this, state, 400, 3500, 10);
    for (i = 0; i < 10; i++) {
       var bullet = new Shot(this.game, 'enemyshots', 2, 100);
       bullet.events.onKilled.add(this.specialDeath, this);
       this.special.add(bullet, true);
    }
-
-   return this;
-
 };
 
-Weapon.Weapon7B.prototype = Object.create(Phaser.Group.prototype);
-Weapon.Weapon7B.prototype.constructor = Weapon.Weapon7B;
+Weapon7B.prototype = Object.create(Weapon.prototype);
+Weapon7B.prototype.constructor = Weapon7B;
 
-Weapon.Weapon7B.prototype.update = function() {
-   this.game.physics.arcade.collide(this.special, this.state.enemies, this.collide, false, this);
-}
-
-Weapon.Weapon7B.prototype.collide = function(shot, enemy) {
-   this.state.hitEnemy(shot, enemy);
-}
-
-Weapon.Weapon7B.prototype.fire = function (source) {
+Weapon7B.prototype.fire = function (source) {
    if (this.game.time.time < this.nextFire) { return; }
 
    var x = source.x;
@@ -45,35 +20,18 @@ Weapon.Weapon7B.prototype.fire = function (source) {
       this.state.fire_sd.play();
    }
       
-   try {
-      this.getFirstExists(false).fire(x-15, y+9, 0, this.bulletSpeed, 0, 0);
-      this.getFirstExists(false).fire(x-10, y+7, 0, this.bulletSpeed, 0, 0);
-      this.getFirstExists(false).fire(x-5 , y+5, 0, this.bulletSpeed, 0, 0);
-      this.getFirstExists(false).fire(x   , y  , 0, this.bulletSpeed, 0, 0);
-      this.getFirstExists(false).fire(x+5 , y+5, 0, this.bulletSpeed, 0, 0);
-      this.getFirstExists(false).fire(x+10, y+7, 0, this.bulletSpeed, 0, 0);
-      this.getFirstExists(false).fire(x+15, y+9, 0, this.bulletSpeed, 0, 0);
-   } catch(err) {
-      this.add(new Bullet(game, 'shot'), true);
-      this.add(new Bullet(game, 'shot'), true);
-      this.add(new Bullet(game, 'shot'), true);
-      this.add(new Bullet(game, 'shot'), true);
-      this.add(new Bullet(game, 'shot'), true);
-      this.add(new Bullet(game, 'shot'), true);
-      this.add(new Bullet(game, 'shot'), true);
-      this.getFirstExists(false).fire(x-15, y+9, 0, this.bulletSpeed, 0, 0);
-      this.getFirstExists(false).fire(x-10, y+7, 0, this.bulletSpeed, 0, 0);
-      this.getFirstExists(false).fire(x-5 , y+5, 0, this.bulletSpeed, 0, 0);
-      this.getFirstExists(false).fire(x   , y  , 0, this.bulletSpeed, 0, 0);
-      this.getFirstExists(false).fire(x+5 , y+5, 0, this.bulletSpeed, 0, 0);
-      this.getFirstExists(false).fire(x+10, y+7, 0, this.bulletSpeed, 0, 0);
-      this.getFirstExists(false).fire(x+15, y+9, 0, this.bulletSpeed, 0, 0);
-   }
+   this.makeBullet(x-15, y+9, 0, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(x-10, y+7, 0, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(x-5 , y+5, 0, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(x   , y  , 0, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(x+5 , y+5, 0, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(x+10, y+7, 0, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(x+15, y+9, 0, this.bulletSpeed, 0, 0, 'shot', 0);
 
    this.nextFire = this.game.time.time + this.fireRate;
 };
 
-Weapon.Weapon7B.prototype.fireSpecial = function () {
+Weapon7B.prototype.fireSpecial = function () {
    var self = this;
    var speed = 500;
 
@@ -83,12 +41,19 @@ Weapon.Weapon7B.prototype.fireSpecial = function () {
       if (!this.state.mute) {
          self.state.firespecial_sd.play();
       }
-      self.special.getFirstExists(false).fire(self.state.player.x, self.state.player.y-20, 0, speed, 0, 0);
+      try {
+         self.special.getFirstDead().fire(self.state.player.x, self.state.player.y-20, 0, speed, 0, 0);
+      } catch(err) {
+         var bullet = new Shot(self.game, 'enemyshots', 2, 100);
+         bullet.events.onKilled.add(self.specialDeath, self);
+         self.special.add(bullet, true);
+         self.special.getFirstExists(false).fire(self.state.player.x, self.state.player.y-20, 0, speed, 0, 0);
+      }
    }, this.game, speed);
    timer.start();
 };
 
-Weapon.Weapon7B.prototype.specialDeath = function (obj) {
+Weapon7B.prototype.specialDeath = function (obj) {
    console.log("death");
    this.state.createExplosion(obj.x, obj.y, 50);
 };

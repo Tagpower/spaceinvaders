@@ -114,13 +114,13 @@ invaders.prototype = {
 
 
       // Weapons
-      self.weapons.push(new Weapon.Weapon1B(self));
-      self.weapons.push(new Weapon.Weapon2B(self));
-      self.weapons.push(new Weapon.Weapon3B(self));
-      self.weapons.push(new Weapon.Weapon4B(self));
-      self.weapons.push(new Weapon.Weapon5B(self));
-      self.weapons.push(new Weapon.Weapon6B(self));
-      self.weapons.push(new Weapon.Weapon7B(self));
+      self.weapons.push(new Weapon1B(self));
+      self.weapons.push(new Weapon2B(self));
+      self.weapons.push(new Weapon3B(self));
+      self.weapons.push(new Weapon4B(self));
+      self.weapons.push(new Weapon5B(self));
+      self.weapons.push(new Weapon6B(self));
+      self.weapons.push(new Weapon7B(self));
 
       //Create the player's ship
       console.log("\tCreating player...");

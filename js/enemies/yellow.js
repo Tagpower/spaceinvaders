@@ -1,5 +1,5 @@
 Yellow = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, state.game, x, y, key, 100, 100, 6, fireProba*0.5, 100, 10, [10, 11], 6);
+   Enemy.call(this, state, x, y, key, 100, 100, 6, fireProba*0.5, 100, 10, [10, 11], 6);
    this.events.onKilled.add(this.death, this);
 };
 

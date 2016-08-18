@@ -1,41 +1,12 @@
-Weapon.Weapon3B = function (state) {
-
-   Phaser.Group.call(this, state.game, state.game.world, 'Base Weapon Level 1', false, true, Phaser.Physics.ARCADE);
-
-   this.nextFire = 0;
-   this.bulletSpeed = 400;
-   this.fireRate = 1500;
-   this.power = 10;
-   this.state = state;
-
-   for (var i = 0; i < 5; i++) {
-      this.add(new Bullet(this.game, 'shot'), true);
-   }
-
-   this.special = this.game.add.group(this.game.world, 'Special Weapon Level 1', false, true, Phaser.Physics.ARCADE);
-
-   for (i = 0; i < 40; i++) {
-      this.special.add(new Bullet(this.game, 'shot'), true);
-   }
-
+Weapon3B = function (state) {
+   Weapon.call(this, state, 400, 1500, 10);
    this.special.setAll('tracking', true);
-
-   return this;
-
 };
 
-Weapon.Weapon3B.prototype = Object.create(Phaser.Group.prototype);
-Weapon.Weapon3B.prototype.constructor = Weapon.Weapon3B;
+Weapon3B.prototype = Object.create(Weapon.prototype);
+Weapon3B.prototype.constructor = Weapon3B;
 
-Weapon.Weapon3B.prototype.update = function() {
-   this.game.physics.arcade.collide(this.special, this.state.enemies, this.collide, false, this);
-}
-
-Weapon.Weapon3B.prototype.collide = function(shot, enemy) {
-   this.state.hitEnemy(shot, enemy);
-}
-
-Weapon.Weapon3B.prototype.fire = function (source) {
+Weapon3B.prototype.fire = function (source) {
    
    if (this.game.time.time < this.nextFire) { return; }
 
@@ -46,23 +17,14 @@ Weapon.Weapon3B.prototype.fire = function (source) {
       this.state.fire_sd.play();
    }
 
-   try {
-      this.getFirstExists(false).fire(x-5, y+5, 0, this.bulletSpeed, 0, 0);
-      this.getFirstExists(false).fire(x  , y  , 0, this.bulletSpeed, 0, 0);
-      this.getFirstExists(false).fire(x+5, y+5, 0, this.bulletSpeed, 0, 0);
-   } catch(err) {
-      this.add(new Bullet(game, 'shot'), true);
-      this.add(new Bullet(game, 'shot'), true);
-      this.add(new Bullet(game, 'shot'), true);
-      this.getFirstExists(false).fire(x-5, y+5, 0, this.bulletSpeed, 0, 0);
-      this.getFirstExists(false).fire(x  , y  , 0, this.bulletSpeed, 0, 0);
-      this.getFirstExists(false).fire(x+5, y+5, 0, this.bulletSpeed, 0, 0);
-   }
+   this.makeBullet(x-5, y+5, 0, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(x  , y  , 0, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(x+5, y+5, 0, this.bulletSpeed, 0, 0, 'shot', 0);
 
    this.nextFire = this.game.time.time + this.fireRate;
 };
 
-Weapon.Weapon3B.prototype.fireSpecial = function () {
+Weapon3B.prototype.fireSpecial = function () {
    var self = this;
    var speed = 300;
 
@@ -73,12 +35,29 @@ Weapon.Weapon3B.prototype.fireSpecial = function () {
          self.state.firespecial_sd.play();
       }
       var gx = 100;
-      self.special.getFirstExists(false)
-      .fire(self.state.player.x, self.state.player.y-20, 0, speed, -gx, 0); 
-      self.special.getFirstExists(false)
-      .fire(self.state.player.x, self.state.player.y-20, 0, speed, 0, 0); 
-      self.special.getFirstExists(false)
-      .fire(self.state.player.x, self.state.player.y-20, 0, speed, gx, 0); 
+      try {
+         self.special.getFirstDead().fire(self.state.player.x, self.state.player.y-20, 0, speed, -gx, 0);
+      } catch(err) {
+         self.special.add(new Bullet(game, 'shot'), true);
+         self.special.setAll('tracking', true);
+         self.special.getFirstExists(false).fire(self.state.player.x, self.state.player.y-20, 0, speed, -gx, 0);
+      }
+
+      try {
+         self.special.getFirstDead().fire(self.state.player.x, self.state.player.y-20, 0, speed, 0, 0);
+      } catch(err) {
+         self.special.add(new Bullet(game, 'shot'), true);
+         self.special.setAll('tracking', true);
+         self.special.getFirstExists(false).fire(self.state.player.x, self.state.player.y-20, 0, speed, 0, 0);
+      }
+
+      try {
+         self.special.getFirstDead().fire(self.state.player.x, self.state.player.y-20, 0, speed, gx, 0); 
+      } catch(err) {
+         self.special.add(new Bullet(game, 'shot'), true);
+         self.special.setAll('tracking', true);
+         self.special.getFirstExists(false).fire(self.state.player.x, self.state.player.y-20, 0, speed, gx, 0); 
+      }
    }, this.game, speed);
    timer.start();
 };

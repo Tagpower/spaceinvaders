@@ -1,5 +1,5 @@
 Red = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, state.game, x, y, key, 100, 100, 2, fireProba*0.8, 200, 10, [2, 3], 6);
+   Enemy.call(this, state, x, y, key, 100, 100, 2, fireProba*0.8, 200, 10, [2, 3], 6);
    this.shots.setAll('tracking', true);
 };
 

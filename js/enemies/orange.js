@@ -1,5 +1,5 @@
 Orange = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, state.game, x, y, key, 100, 100, 1, fireProba, 100, 10, [0, 1], 6);
+   Enemy.call(this, state, x, y, key, 100, 100, 1, fireProba, 100, 10, [0, 1], 6);
 };
 
 Orange.prototype = Object.create(Enemy.prototype);

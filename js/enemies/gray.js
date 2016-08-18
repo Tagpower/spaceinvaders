@@ -1,5 +1,5 @@
 Gray = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, state.game, x, y, key, 100, 100, 5, fireProba, 250, 20, [8, 9], 6);
+   Enemy.call(this, state, x, y, key, 100, 100, 5, fireProba, 250, 20, [8, 9], 6);
 };
 
 Gray.prototype = Object.create(Enemy.prototype);

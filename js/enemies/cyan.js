@@ -1,5 +1,5 @@
 Cyan = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, state.game, x, y, key, 100, 100, 7, fireProba*1.2, 200, 10, [12, 13], 6);
+   Enemy.call(this, state, x, y, key, 100, 100, 7, fireProba*1.2, 200, 10, [12, 13], 6);
    this.shots.setAll('tracking', true);
 };
 
