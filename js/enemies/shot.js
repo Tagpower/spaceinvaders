@@ -54,5 +54,44 @@ Shot.prototype.update = function () {
 
 };
 
+/*/
+   ENEMY MOTHER CLASS !!!
+//*/
+var Enemy = function (state, game, x, y, key, bulletSpeed, power, type, fireProba, value, health, framesAnim, timeAnim) {
+   Phaser.Sprite.call(this, state.game, x, y, key);
 
-var Enemy = {};
+   this.texture.baseTexture.scaleMode = PIXI.scaleModes.NEAREST;
+
+   this.bulletSpeed = bulletSpeed;
+   this.power = power;
+   this.type = type;
+   this.fireProba = fireProba;
+   this.value = value;
+   this.game.physics.arcade.enable(this);
+   this.anchor.setTo(0.5);    
+   this.body.immovable = true;
+   this.state = state;
+   this.health = health;
+
+   this.shots = this.game.add.group(game.world, 'bullet pool', false, true, Phaser.Physics.ARCADE);
+
+   this.animations.add('move', framesAnim, timeAnim, true);
+   this.animations.play('move');
+}
+
+Enemy.prototype = Object.create(Phaser.Sprite.prototype);
+
+Enemy.prototype.livingShots = function() {
+   return this.shots.countLiving();
+}
+
+Enemy.prototype.collide = function(player, shot) {
+   this.state.playerHit(player, shot);
+}
+
+Enemy.prototype.update = function() {
+   this.game.physics.arcade.collide(this.shots, this.state.player, this.collide, function(){return (!this.state.lostAlife && this.state.shield_time == 0);}, this);
+
+   if (this.alive && Math.random() < this.fireProba && this.state.clear_nofiretime == 0) 
+      this.fire();
+}

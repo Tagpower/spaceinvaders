@@ -1,7 +1,4 @@
 ﻿=====TODO LIST=====
-
-- Remettre les tirs spéciaux
-- Réparer le bonus Kill
 - Boss
 - Plus d'armes ?
 - Trouver/composer une musique originale
@@ -14,6 +11,7 @@
 ---MAJEURS---
 - Quand on chope un niveau bonus juste après avoir terminé un niveau, le niveau bonus apparaît en même temps que le niveau suivant
 - fix powerups: clear, kill, orange
+- fix special + normal cooldown
 
 ---MINEURS---
 - Trouver le bug qui déplace les ennemis en boucle

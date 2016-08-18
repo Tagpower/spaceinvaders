@@ -543,48 +543,48 @@ invaders.prototype = {
                      break;
                   case 1: //ORANGE : normal
                      if (difficulty == OHGOD)
-                        self.enemies.add(new Enemy.Green(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new Green(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      else
-                        self.enemies.add(new Enemy.Orange(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new Orange(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 2: //RED : fires multiple shots
                      if (difficulty == OHGOD)
-                        self.enemies.add(new Enemy.Magenta(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new Magenta(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      else
-                        self.enemies.add(new Enemy.Red(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new Red(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 3: //GREEN : fires fast shots
                      if (difficulty == OHGOD)
-                        self.enemies.add(new Enemy.DarkGreen(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new DarkGreen(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      else
-                        self.enemies.add(new Enemy.Green(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new Green(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 4: //PURPLE : fires twice as often
-                     self.enemies.add(new Enemy.Purple(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Purple(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 5: //GRAY : takes 2 hits
-                     self.enemies.add(new Enemy.Gray(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Gray(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 6: //YELLOW : Fires 5 shots when killed
-                     self.enemies.add(new Enemy.Yellow(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Yellow(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 7: //CYAN : fires gravity-affected shots
-                     self.enemies.add(new Enemy.Cyan(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Cyan(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 8: //PINK : takes 3 hits, fires more often
-                     self.enemies.add(new Enemy.Pink(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Pink(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 9: //BLUE : fires in random directions
-                     self.enemies.add(new Enemy.Blue(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Blue(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 10: //BROWN : explodes when killed
-                     self.enemies.add(new Enemy.Brown(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Brown(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 11: //DARK GREEN : Fires REALLY FAST shots
-                     self.enemies.add(new Enemy.DarkGreen(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new DarkGreen(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                   case 12: //MAGENTA : Fires in a circle, takes 2 hits
-                     self.enemies.add(new Enemy.Magenta(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Magenta(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                }
             }
