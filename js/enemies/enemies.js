@@ -125,7 +125,7 @@ Blue.prototype.fire = function () {
    try {
       this.shots.getFirstDead(false).fire(x, y, angle, -speed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(this.game, 'enemyshots', 8, 10), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 8, 10), true);
       this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, angle, -speed, 0, 0);
    }
@@ -152,7 +152,7 @@ Brown.prototype.fire = function () {
    try {
       this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(this.game, 'enemyshots', 9, 10), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 9, 10), true);
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
    }
 }
@@ -190,7 +190,7 @@ Cyan.prototype.fire = function () {
    try {
       this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, gx, 0);
    } catch(err) {
-      this.shots.add(new Shot(this.game, 'enemyshots', 6, 10), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 6, 10), true);
       this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, gx, 0);
    }
@@ -216,7 +216,7 @@ DarkGreen.prototype.fire = function () {
    try {
       this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(this.game, 'enemyshots', 10, 10), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 10, 10), true);
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
    }
 };
@@ -241,7 +241,7 @@ Gray.prototype.fire = function () {
    try {
       this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(this.game, 'enemyshots', 4, 10), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 4, 10), true);
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
    }
 };
@@ -267,7 +267,7 @@ Green.prototype.fire = function () {
    try {
       this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(this.game, 'enemyshots', 2, 10), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 2, 10), true);
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
    }
 };
@@ -296,7 +296,7 @@ Magenta.prototype.fire = function () {
       try {
          this.shots.getFirstDead().fire(x, y, i+rand_offset, -this.bulletSpeed, 0, 0);
       } catch(err) {
-         this.shots.add(new Shot(this.game, 'enemyshots', 11, 10), true);
+         this.shots.add(new Bullet(this.game, 'enemyshots', 11, 10), true);
          this.shots.setAll('tracking', true);
          this.shots.getFirstExists(false).fire(x, y, i+rand_offset, -this.bulletSpeed, 0, 0);
       }
@@ -323,7 +323,7 @@ Orange.prototype.fire = function () {
    try {
       this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(this.game, 'enemyshots', 0, 10), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 0, 10), true);
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
    }
 };
@@ -349,7 +349,7 @@ Pink.prototype.fire = function () {
    try {
       this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(this.game, 'enemyshots', 7, 10), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 7, 10), true);
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
    }
 };
@@ -374,7 +374,7 @@ Purple.prototype.fire = function () {
    try {
       this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(this.game, 'enemyshots', 3, 10), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 3, 10), true);
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
    }
 };
@@ -403,7 +403,7 @@ Red.prototype.fire = function () {
    try {
       this.shots.getFirstDead().fire(x, y, angle, -this.bulletSpeed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(this.game, 'enemyshots', 1, 10), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 1, 10), true);
       this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, angle, -this.bulletSpeed, 0, 0);
    }
@@ -411,7 +411,7 @@ Red.prototype.fire = function () {
    try {
       this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(this.game, 'enemyshots', 1, 10), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 1, 10), true);
       this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
    }
@@ -419,7 +419,7 @@ Red.prototype.fire = function () {
    try {
       this.shots.getFirstDead().fire(x, y, -angle, -this.bulletSpeed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(this.game, 'enemyshots', 1, 10), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 1, 10), true);
       this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, -angle, -this.bulletSpeed, 0, 0);
    }
@@ -451,7 +451,7 @@ Yellow.prototype.fire = function () {
    try {
       this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(this.game, 'enemyshots', 5, 10), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 5, 10), true);
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
    }
 };
@@ -468,7 +468,7 @@ Yellow.prototype.death = function(obj) {
    try {
       this.shots.getFirstDead().fire(x, y,  17.74 , -speed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(this.game, 'enemyshots', 5, 10), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 5, 10), true);
       this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, 17.74 , -speed, 0, 0);
    }
@@ -476,7 +476,7 @@ Yellow.prototype.death = function(obj) {
    try {
       this.shots.getFirstDead().fire(x, y, 9.09, -speed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(this.game, 'enemyshots', 5, 10), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 5, 10), true);
       this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, 9.09 , -speed, 0, 0);
    }
@@ -484,7 +484,7 @@ Yellow.prototype.death = function(obj) {
    try {
       this.shots.getFirstDead().fire(x, y,  0, -speed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(this.game, 'enemyshots', 5, 10), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 5, 10), true);
       this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, 0, -speed, 0, 0);
    }
@@ -492,7 +492,7 @@ Yellow.prototype.death = function(obj) {
    try {
       this.shots.getFirstDead().fire(x, y,  -9.09, -speed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(this.game, 'enemyshots', 5, 10), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 5, 10), true);
       this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, -9.09, -speed, 0, 0);
    }
@@ -500,7 +500,7 @@ Yellow.prototype.death = function(obj) {
    try {
       this.shots.getFirstDead().fire(x, y,  -17.74 , -speed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(this.game, 'enemyshots', 5, 10), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 5, 10), true);
       this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, -17.74 , -speed, 0, 0);
    }

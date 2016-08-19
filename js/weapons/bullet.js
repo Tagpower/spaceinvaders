@@ -1,4 +1,4 @@
-var Bullet = function (game, key, frame, power) {
+var Bullet = function (game, key, frame, power, tracking=false, scaleSpeed=0) {
 
    Phaser.Sprite.call(this, game, 0, 0, key, frame);
 
@@ -10,11 +10,10 @@ var Bullet = function (game, key, frame, power) {
    this.outOfBoundsKill = true;
    this.exists = false;
 
-   this.tracking = false;
-   this.scaleSpeed = 0;
+   this.tracking = tracking;
+   this.scaleSpeed = scaleSpeed;
 
    this.power = power;
-
 };
 
 Bullet.prototype = Object.create(Phaser.Sprite.prototype);
@@ -37,16 +36,16 @@ Bullet.prototype.fire = function (x, y, angle, speed, gx, gy) {
 };
 
 Bullet.prototype.update = function () {
+   if (this.alive) {
+      if (this.tracking)
+      {
+         this.rotation = -Math.atan2(this.body.velocity.x, this.body.velocity.y);
+      }
 
-   if (this.tracking)
-   {
-      this.rotation = -Math.atan2(this.body.velocity.x, this.body.velocity.y);
+      if (this.scaleSpeed > 0)
+      {
+         this.scale.x += this.scaleSpeed;
+         this.scale.y += this.scaleSpeed;
+      }
    }
-
-   if (this.scaleSpeed > 0)
-   {
-      this.scale.x += this.scaleSpeed;
-      this.scale.y += this.scaleSpeed;
-   }
-
 };

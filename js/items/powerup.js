@@ -176,6 +176,8 @@ var Powerup = function (state, x, y, key, frame, collF, isAnim=false, animFrame=
    this.body.mass = 0;
    this.collF = collF;
 
+   this.state.items.add(this);
+
    if (isAnim) {
       this.animations.add('idle', animFrame, animTime, animRepeat);
       this.animations.play('idle');
