@@ -1,5 +1,5 @@
 Magenta = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, state.game, x, y, key, 200, 100, 12, fireProba*0.75, 300, 20, [22, 23], 6);
+   Enemy.call(this, state, state.game, x, y, key, 200, 100, 12, fireProba*0.6, 300, 20, [22, 23], 6);
    this.shots.setAll('tracking', true);
 };
 

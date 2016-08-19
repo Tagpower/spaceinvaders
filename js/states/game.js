@@ -44,7 +44,6 @@ invaders.prototype = {
       self.introduction_sound = true;
       self.music = null;
       self.music_bonus = null;
-      self.music_ohgod = null;
       self.pickup_sd = null;
       self.playerhit_sd = null;
       self.hitenemy_sd = null;
@@ -167,9 +166,14 @@ invaders.prototype = {
       self.text_level.fixedToCamera = true;
       self.text_level.anchor.setTo(0.5);
 
-      self.music = self.game.add.audio('ambient');
+      if (difficulty < OHGOD) {
+         self.music = self.game.add.audio('ambient');
+      } else {
+         self.music = self.game.add.audio('ambient_ohgod');
+      }
       self.music.loop = true;
-      self.music.volume = 1;
+
+
       self.music_bonus = self.game.add.audio('bonus_loop');
       self.music_bonus.loop = true;
 
