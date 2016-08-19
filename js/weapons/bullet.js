@@ -50,35 +50,3 @@ Bullet.prototype.update = function () {
    }
 
 };
-
-
-var Weapon = function(state, bulletSpeed, fireRate, power) {
-   Phaser.Group.call(this, state.game, state.game.world, 'Weapon', false, true, Phaser.Physics.ARCADE);
-
-   this.nextFire = 0;
-   this.bulletSpeed = bulletSpeed;
-   this.fireRate = fireRate;
-   this.power = power;
-   this.state = state;
-
-   this.special = this.game.add.group(state.game.world, 'Special Weapon', false, true, Phaser.Physics.ARCADE);
-}
-
-Weapon.prototype = Object.create(Phaser.Group.prototype);
-
-Weapon.prototype.update = function() {
-   this.game.physics.arcade.collide(this.special, this.state.enemies, this.collide, false, this);
-}
-
-Weapon.prototype.collide = function(shot, enemy) {
-   this.state.hitEnemy(shot, enemy);
-}
-
-Weapon.prototype.makeBullet = function(x, y, angle, speed, gx, gy, key, frame) {
-   try {
-      this.getFirstDead().fire(x, y, angle, speed, gx, gy);
-   } catch(err) {
-      this.add(new Bullet(game, key, frame, this.power), true);
-      this.getFirstExists(false).fire(x, y, angle, speed, gx, gy);
-   }
-}
