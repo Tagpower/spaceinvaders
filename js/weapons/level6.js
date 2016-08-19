@@ -9,13 +9,13 @@ Weapon.Weapon6B = function (state) {
    this.state = state;
 
    for (var i = 0; i < 5; i++) {
-      this.add(new Bullet(this.game, 'shot'), true);
+      this.add(new Bullet(this.game, 'shot', this.power), true);
    }
 
    this.special = this.game.add.group(this.game.world, 'Special Weapon Level 1', false, true, Phaser.Physics.ARCADE);
 
    for (i = 0; i < 100; i++) {
-      this.special.add(new Bullet(this.game, 'shot'), true);
+      this.special.add(new Bullet(this.game, 'shot', this.power), true);
    }
 
    this.special.setAll('tracking', true);
@@ -53,12 +53,12 @@ Weapon.Weapon6B.prototype.fire = function (source) {
       this.getFirstExists(false).fire(x+10, y+5, 0, this.bulletSpeed, 0, 0);
       this.getFirstExists(false).fire(x+15, y+7, 0, this.bulletSpeed, 0, 0);
    } catch(err) {
-      this.add(new Bullet(game, 'shot'), true);
-      this.add(new Bullet(game, 'shot'), true);
-      this.add(new Bullet(game, 'shot'), true);
-      this.add(new Bullet(game, 'shot'), true);
-      this.add(new Bullet(game, 'shot'), true);
-      this.add(new Bullet(game, 'shot'), true);
+      this.add(new Bullet(game, 'shot', this.power), true);
+      this.add(new Bullet(game, 'shot', this.power), true);
+      this.add(new Bullet(game, 'shot', this.power), true);
+      this.add(new Bullet(game, 'shot', this.power), true);
+      this.add(new Bullet(game, 'shot', this.power), true);
+      this.add(new Bullet(game, 'shot', this.power), true);
       this.getFirstExists(false).fire(x-15, y+7, 0, this.bulletSpeed, 0, 0);
       this.getFirstExists(false).fire(x-10, y+5, 0, this.bulletSpeed, 0, 0);
       this.getFirstExists(false).fire(x-5 , y  , 0, this.bulletSpeed, 0, 0);

@@ -16,6 +16,7 @@ gameTitle.prototype = {
 
       var text_title = self.game.add.text(self.game.world.width/2, 200, 'SPACE\nINVADERS', {font: '64px Minecraftia', fill: '#4fccff'});
       text_title.align = 'center';
+      text_title.smoothed = false;
       text_title.fixedToCamera = true;
       text_title.anchor.setTo(0.5);
 
