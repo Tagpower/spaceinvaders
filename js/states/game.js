@@ -44,7 +44,6 @@ invaders.prototype = {
       self.introduction_sound = true;
       self.music = null;
       self.music_bonus = null;
-      self.music_ohgod = null;
       self.pickup_sd = null;
       self.playerhit_sd = null;
       self.hitenemy_sd = null;
@@ -85,6 +84,17 @@ invaders.prototype = {
       self.cooldown_reduction = config.cooldown_reduction;
       self.init_x = config.init_x;
       self.init_y = config.init_y;
+
+      ENEMY_DEFAULT_FIRE_PROBA = 0.004 + difficulty*0.0015;
+      POWERUP_CHANCE = 0.05 - difficulty*0.01;
+      POWERUP_CHANCE_IN_BONUS = 2*POWERUP_CHANCE;
+      MAX_POWER = (difficulty < OHGOD ? 7 : 5);
+
+      console.log("DIFFICULTY = " + difficulty);
+      console.log("FIRE PROBA = " + ENEMY_DEFAULT_FIRE_PROBA);
+      console.log("POWERUP CHANCE = " + POWERUP_CHANCE);
+      console.log("IN BONUS = " + POWERUP_CHANCE_IN_BONUS);
+      console.log("MAX POWER = " + MAX_POWER);
    },
    // }}}
    // {{{ CREATE
@@ -156,9 +166,14 @@ invaders.prototype = {
       self.text_level.fixedToCamera = true;
       self.text_level.anchor.setTo(0.5);
 
-      self.music = self.game.add.audio('ambient');
+      if (difficulty < OHGOD) {
+         self.music = self.game.add.audio('ambient');
+      } else {
+         self.music = self.game.add.audio('ambient_ohgod');
+      }
       self.music.loop = true;
-      self.music.volume = 1;
+
+
       self.music_bonus = self.game.add.audio('bonus_loop');
       self.music_bonus.loop = true;
 
@@ -312,7 +327,9 @@ invaders.prototype = {
          //enemies.setAll('body.velocity.x', 0);
          if (self.lives == 0) {
             if (self.restart_btn.isDown) {
-               self.restart(0);
+               //self.restart(0);
+               self.music.stop();
+               this.game.state.start("GameTitle");
             }
          }
       };

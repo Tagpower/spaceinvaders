@@ -1,5 +1,5 @@
 DarkGreen = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, x, y, key, 600, 100, 11, fireProba*0.75, 400, 10, [20, 21], 6);
+   Enemy.call(this, state, state.game, x, y, key, 600, 100, 11, fireProba, 400, 10, [20, 21], 6);
 };
 
 DarkGreen.prototype = Object.create(Enemy.prototype);

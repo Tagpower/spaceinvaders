@@ -12,7 +12,7 @@ var SPEEDUP_ACCEL = 0.5;
 var PLAYER_SPEED = 150;
 var DEFAULTS = [START_SPEED, SPEEDUP_INIT, SPEEDUP_ACCEL];
 var DEFAULT_FIRE_COOLDOWN = 40;
-var ENEMY_DEFAULT_FIRE_PROBA = 0.004 + difficulty*0.001;
+var ENEMY_DEFAULT_FIRE_PROBA = 0.004 + difficulty*0.0015;
 var POWERUP_CHANCE = 0.05 - difficulty*0.01;
 var POWERUP_CHANCE_IN_BONUS = 2*POWERUP_CHANCE;
 var MAX_POWER = (difficulty < OHGOD ? 7 : 5);
@@ -44,7 +44,8 @@ preload.prototype = {
 
 		//Music
 		this.game.load.audio('ambient', ['assets/audio/e1m1.mp3']);
-		//this.game.load.audio('ambient_ohgod', ['assets/audio/e1m1.mp3']); TODO
+		this.game.load.audio('ambient_ohgod', ['assets/audio/no_remorse.mp3']); //Provisoire
+		this.game.load.audio('title', ['assets/audio/invaders.mp3']);
 		this.game.load.audio('bonus_loop', ['assets/audio/mindlesslittleloop.mp3']);
 
 		//Sounds

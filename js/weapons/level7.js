@@ -1,10 +1,5 @@
 Weapon7B = function (state) {
    Weapon.call(this, state, 400, 3500, 10);
-   for (i = 0; i < 10; i++) {
-      var bullet = new Shot(this.game, 'enemyshots', 2, 100);
-      bullet.events.onKilled.add(this.specialDeath, this);
-      this.special.add(bullet, true);
-   }
 };
 
 Weapon7B.prototype = Object.create(Weapon.prototype);
