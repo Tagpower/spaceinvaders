@@ -120,31 +120,31 @@ Enemy.prototype.dropItem = function(obj) {
       //Bonus roulette
       var roulette = Math.random()*105;
       if (roulette <= 20) {
-         this.state.createItem(x, y, 'power');
+         new Powerup(this.state, x, y, 'powerups', 36, PowerupColl.power, true, [36, 37, 38, 39], 18, true);
       }
       else if (roulette > 20 && roulette <= 40) {
-         this.state.createItem(x, y, 'powerup_cooldown');
+         new Powerup(this.state, x, y, 'powerups', 4, PowerupColl.cooldown, true, [4, 5, 6, 7], 18, true);
       }
       else if (roulette > 40 && roulette <= 60) {
-         this.state.createItem(x, y, 'powerup_special');
+         new Powerup(this.state, x, y, 'powerups', 24, PowerupColl.special, true, [24,25,26,27], 18, true);
       }
       else if (roulette > 60 && roulette <= 75) {
-         this.state.createItem(x, y, 'powerup_clear');
+         new Powerup(this.state, x, y, 'powerups', 0, PowerupColl.clear, true, [0,1,2,3], 18, true);
       }
       else if (roulette > 75 && roulette <= 85) {
-         this.state.createItem(x, y, 'powerup_shield');
+         new Powerup(this.state, x, y, 'powerups', 20, PowerupColl.shield, true, [20, 21, 22, 23], 18, true);
       }
       else if (roulette > 85 && roulette <= 90) {
-         this.state.createItem(x, y, 'powerup_freeze');
+         new Powerup(this.state, x, y, 'powerups', 8, PowerupColl.freeze, true, [8,9,10,11], 18, true);
       }
       else if (roulette > 90 && roulette <= 95) {
-         this.state.createItem(x, y, 'powerup_warp');
+         new Powerup(this.state, x, y, 'powerups', 28, PowerupColl.warp, true, [28,29,30,31], 18, true);
       }
       else if (roulette > 95 && roulette <= 100) {
-         //this.state.createItem(x, y, 'powerup_kill');
+         new Powerup(this.state, x, y, 'powerups', 32, PowerupColl.kill, true, [32,33,34,35], 18, true);
       }
       else if (roulette > 100 && roulette <= 105) {
-         this.state.createItem(x, y, 'extralife');
+         new Powerup(this.state, x, y, 'powerups', 12, PowerupColl.extraLife);
       }
    }
 }
