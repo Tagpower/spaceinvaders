@@ -88,6 +88,17 @@ Enemy.prototype.livingShots = function() {
    return this.shots.countLiving();
 }
 
+Enemy.prototype.killShots = function() {
+   this.shots.removeAll(true);
+}
+
+Enemy.prototype.destroy = function() {
+   this.shots.removeAll(true);
+   this.shots.destroy();
+   this.visible = false;
+   this.exists = false;
+}
+
 Enemy.prototype.collide = function(player, shot) {
    this.state.playerHit(player, shot);
 }
@@ -109,7 +120,7 @@ Enemy.prototype.dropItem = function(obj) {
       //Bonus roulette
       var roulette = Math.random()*105;
       if (roulette <= 20) {
-         this.state.createItem(x, y, 'powerup_power');
+         this.state.createItem(x, y, 'power');
       }
       else if (roulette > 20 && roulette <= 40) {
          this.state.createItem(x, y, 'powerup_cooldown');
@@ -118,7 +129,7 @@ Enemy.prototype.dropItem = function(obj) {
          this.state.createItem(x, y, 'powerup_special');
       }
       else if (roulette > 60 && roulette <= 75) {
-         //this.state.createItem(x, y, 'powerup_clear');
+         this.state.createItem(x, y, 'powerup_clear');
       }
       else if (roulette > 75 && roulette <= 85) {
          this.state.createItem(x, y, 'powerup_shield');

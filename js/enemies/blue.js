@@ -19,7 +19,7 @@ Blue.prototype.fire = function () {
    try {
       this.shots.getFirstDead(false).fire(x, y, angle, -speed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(game, 'enemyshots', 8, 10), true);
+      this.shots.add(new Shot(this.game, 'enemyshots', 8, 10), true);
       this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, angle, -speed, 0, 0);
    }

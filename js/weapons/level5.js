@@ -31,7 +31,7 @@ Weapon5B.prototype.fireSpecial = function () {
 
    var timer = this.game.time.create(true);
    timer.repeat(100, 15,
-    function(speed) {
+    function(speed, power) {
       if (!this.state.mute) {
          self.state.firespecial_sd.play();
       }
@@ -41,9 +41,9 @@ Weapon5B.prototype.fireSpecial = function () {
       try {
          self.special.getFirstDead().fire(self.state.player.x, self.state.player.y-20, 0, speed, gx, -gy);
       } catch(err) {
-         self.special.add(new Bullet(game, 'shot'), true);
+         self.special.add(new Bullet(game, 'shot', 0, power), true);
          self.special.getFirstExists(false).fire(self.state.player.x, self.state.player.y-20, 0, speed, gx, -gy);
       }
-   }, this.game, speed);
+   }, this.game, speed, this.power);
    timer.start();
 };

@@ -18,7 +18,7 @@ Magenta.prototype.fire = function () {
       try {
          this.shots.getFirstDead().fire(x, y, i, -this.bulletSpeed, 0, 0);
       } catch(err) {
-         this.shots.add(new Shot(game, 'enemyshots', 11, 10), true);
+         this.shots.add(new Shot(this.game, 'enemyshots', 11, 10), true);
          this.shots.setAll('tracking', true);
          this.shots.getFirstExists(false).fire(x, y, i, -this.bulletSpeed, 0, 0);
       }

@@ -30,7 +30,7 @@ Weapon3B.prototype.fireSpecial = function () {
 
    var timer = this.game.time.create(true);
    timer.repeat(100, 10,
-    function(speed) {
+    function(speed, power) {
       if (!this.state.mute) {
          self.state.firespecial_sd.play();
       }
@@ -38,7 +38,7 @@ Weapon3B.prototype.fireSpecial = function () {
       try {
          self.special.getFirstDead().fire(self.state.player.x, self.state.player.y-20, 0, speed, -gx, 0);
       } catch(err) {
-         self.special.add(new Bullet(game, 'shot'), true);
+         self.special.add(new Bullet(game, 'shot', 0, power), true);
          self.special.setAll('tracking', true);
          self.special.getFirstExists(false).fire(self.state.player.x, self.state.player.y-20, 0, speed, -gx, 0);
       }
@@ -46,7 +46,7 @@ Weapon3B.prototype.fireSpecial = function () {
       try {
          self.special.getFirstDead().fire(self.state.player.x, self.state.player.y-20, 0, speed, 0, 0);
       } catch(err) {
-         self.special.add(new Bullet(game, 'shot'), true);
+         self.special.add(new Bullet(game, 'shot', 0, power), true);
          self.special.setAll('tracking', true);
          self.special.getFirstExists(false).fire(self.state.player.x, self.state.player.y-20, 0, speed, 0, 0);
       }
@@ -54,10 +54,10 @@ Weapon3B.prototype.fireSpecial = function () {
       try {
          self.special.getFirstDead().fire(self.state.player.x, self.state.player.y-20, 0, speed, gx, 0); 
       } catch(err) {
-         self.special.add(new Bullet(game, 'shot'), true);
+         self.special.add(new Bullet(game, 'shot', 0, power), true);
          self.special.setAll('tracking', true);
          self.special.getFirstExists(false).fire(self.state.player.x, self.state.player.y-20, 0, speed, gx, 0); 
       }
-   }, this.game, speed);
+   }, this.game, speed, this.power);
    timer.start();
 };

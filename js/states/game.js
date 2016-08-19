@@ -329,7 +329,6 @@ invaders.prototype = {
 
       //Move the enemies
       self.enemies.forEachAlive(function(enemy){
-         enemy.animations.play('move');
          if (self.left) {
             self.enemies.setAll('body.velocity.x', -self.speed);   
          } else {
@@ -816,18 +815,7 @@ invaders.prototype = {
             break;
 
             case 'powerup_kill': //Fires a large volley of shots
-               // for (var i = -2; i <= 2; i++) { //Square version
-               //    for (var j = -2; j <= 2; j++) {
-               //       self.createShot(player.body.center.x, player.body.center.y, i*25, -600+(j*25));
-               //    };
-               // };
-               for (var a = -Math.PI/4; a <= Math.PI/4; a += Math.PI/60) { //Arc version
-                  //self.createShot(player.body.center.x, player.body.center.y, 300*Math.sin(a), -500-300*Math.cos(a), 15);
-                  self.createShotPol(player.body.center.x, player.body.center.y, 500, a, 15);
-                  self.createShotPol(player.body.center.x, player.body.center.y, 450, a, 15);
-               }
-               self.score += 750;
-               self.text_ship.text = "KILL 'EM ALL !";
+               self.powerupKill();
             break;
 
             case 'powerup_clear': //Clears the screen of enemy fire and prevents it for a while
@@ -839,35 +827,18 @@ invaders.prototype = {
                if (!self.mute) {
                   self.wave_sd.play();
                }
+
+               self.enemies.forEach(function(e, cpt) {
+                  e.killShots();
+               }, self);
+
                self.score += 300;
                self.clear_nofiretime += 120; //Prevent enemy fire
                self.text_ship.text = "Neutralisation !";
             break;
 
             case 'powerup_orange': //Turn all enemies to default, orange ones
-               var wave = self.game.add.sprite(player.body.center.x, player.body.center.y, 'clear_wave');
-               wave.tint = 0xff7f00;
-               wave.anchor.setTo(0.5, 0.5);
-               wave.smoothed = false;
-               self.game.add.tween(wave).to( { alpha: 0}, 1500, Phaser.Easing.Quintic.Out, true);
-               self.game.add.tween(wave.scale).to( {x: 30, y: 30 }, 1500, Phaser.Easing.Quintic.Out, true);
-               if (!self.mute) {
-                  self.wave_sd.play();
-               }
-               var already_all_orange = true;
-               self.enemies.forEachAlive(function(e){ //Orangify all the enemies
-                  if (e.type != 1) {
-                     already_all_orange = false;
-                  }
-                  e = new Enemy.Orange(self, e.x, e.y, 'enemy', ENEMY_DEFAULT_FIRE_PROBA);
-               });
-               self.score += 500;
-               if (!already_all_orange) {
-                  self.text_ship.text = "Tous oranges !";
-               } else {
-                  self.text_ship.text = "Très utile !";
-               }  
-               
+               self.powerupOrange();               
             break;
 
             case 'powerup_freeze': //Stops the enemies on a dime
@@ -923,6 +894,68 @@ invaders.prototype = {
          }
          item.kill();
       }
+   },
+   // }}}
+
+   // {{{ POWERUP_KILL
+   powerupKill: function() {
+      var self = this;
+
+      self.score += 750;
+      self.text_ship.text = "KILL 'EM ALL !";
+
+      var minX = 0;
+      var maxX = self.game.width;
+
+      var minY = self.enemies.y;
+      var maxY = self.enemies.y + 200;
+
+      var timer = self.game.time.create(true);
+      timer.repeat(300, 10, function(min_x, max_x, min_y, max_y) {
+         var rX = self.game.rnd.between(min_x, max_x);
+         var rY = self.game.rnd.between(min_y, max_y);
+
+         self.createExplosion(rX, rY, 100);
+      }, self, minX, maxX, minY, maxY);
+      timer.start();
+   },
+   // }}}
+
+   // {{{ POWERUP_ORANGE
+   powerupOrange: function() {
+      var self = this;
+      var wave = self.game.add.sprite(self.player.body.center.x, self.player.body.center.y, 'clear_wave');
+      wave.tint = 0xff7f00;
+      wave.anchor.setTo(0.5, 0.5);
+      wave.smoothed = false;
+      self.game.add.tween(wave).to( { alpha: 0}, 1500, Phaser.Easing.Quintic.Out, true);
+      self.game.add.tween(wave.scale).to( {x: 30, y: 30 }, 1500, Phaser.Easing.Quintic.Out, true);
+      if (!self.mute) {
+         self.wave_sd.play();
+      }
+      var already_all_orange = true;
+      var tab = [];
+      var del = [];
+      self.enemies.forEachAlive(function(e, tab, del){ //Orangify all the enemies
+         if (!(e instanceof Orange)) {
+            already_all_orange = false;
+            tab.push(new Orange(self, e.x, e.y, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+            del.push(e);
+         }
+      }, this, tab, del);
+
+      for (var i = 0; i < del.length; i++)
+         self.enemies.remove(del[i]);
+
+      for (var i = 0; i < tab.length; i++)
+         self.enemies.add(tab[i]);
+
+      self.score += 500;
+      if (!already_all_orange) {
+         self.text_ship.text = "Tous oranges !";
+      } else {
+         self.text_ship.text = "Très utile !";
+      }  
    },
    // }}}
 
@@ -1089,35 +1122,6 @@ invaders.prototype = {
          current_bonus_level: 0,
       };
       this.game.state.start("Game", true, false, config);
-   },
-   // }}}
-
-   // {{{ LOADNEXTLEVEL
-   // Load the next level when the current is beaten
-   loadNextLevel: function() {
-      var self = this;
-      self.items.removeAll();
-      self.bonusships.removeAll();
-      self.enemies.removeAll(true);
-      self.player.kill();
-      var config = {
-         is_boss: false,
-         is_bonus: false,
-         score: self.score,
-         lives: self.lives,
-         power: self.power,
-         init_x: self.player.x,
-         init_y: self.player.y,
-         difficulty: self.difficulty,
-         isPlaying: self.music.isPlaying,   
-         special_available: self.special_available,
-         cooldown_reduction: self.cooldown_reduction,
-         current_bonus_level: self.current_bonus_level,
-         current_level: self.just_end_bonus ? self.current_level : self.current_level+1,
-      };
-      if (self.just_end_bonus)
-         self.just_end_bonus = false;
-      self.game.state.start("Game", true, false, config);
    },
    // }}}
 

@@ -21,7 +21,7 @@ Yellow.prototype.fire = function () {
    try {
       this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(game, 'enemyshots', 5, 10), true);
+      this.shots.add(new Shot(this.game, 'enemyshots', 5, 10), true);
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
    }
 };
@@ -38,7 +38,7 @@ Yellow.prototype.death = function(obj) {
    try {
       this.shots.getFirstDead().fire(x, y,  17.74 , -speed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(game, 'enemyshots', 5, 10), true);
+      this.shots.add(new Shot(this.game, 'enemyshots', 5, 10), true);
       this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, 17.74 , -speed, 0, 0);
    }
@@ -46,7 +46,7 @@ Yellow.prototype.death = function(obj) {
    try {
       this.shots.getFirstDead().fire(x, y, 9.09, -speed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(game, 'enemyshots', 5, 10), true);
+      this.shots.add(new Shot(this.game, 'enemyshots', 5, 10), true);
       this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, 9.09 , -speed, 0, 0);
    }
@@ -54,7 +54,7 @@ Yellow.prototype.death = function(obj) {
    try {
       this.shots.getFirstDead().fire(x, y,  0, -speed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(game, 'enemyshots', 5, 10), true);
+      this.shots.add(new Shot(this.game, 'enemyshots', 5, 10), true);
       this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, 0, -speed, 0, 0);
    }
@@ -62,7 +62,7 @@ Yellow.prototype.death = function(obj) {
    try {
       this.shots.getFirstDead().fire(x, y,  -9.09, -speed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(game, 'enemyshots', 5, 10), true);
+      this.shots.add(new Shot(this.game, 'enemyshots', 5, 10), true);
       this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, -9.09, -speed, 0, 0);
    }
@@ -70,7 +70,7 @@ Yellow.prototype.death = function(obj) {
    try {
       this.shots.getFirstDead().fire(x, y,  -17.74 , -speed, 0, 0);
    } catch(err) {
-      this.shots.add(new Shot(game, 'enemyshots', 5, 10), true);
+      this.shots.add(new Shot(this.game, 'enemyshots', 5, 10), true);
       this.shots.setAll('tracking', true);
       this.shots.getFirstExists(false).fire(x, y, -17.74 , -speed, 0, 0);
    }
