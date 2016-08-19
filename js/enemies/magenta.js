@@ -14,13 +14,14 @@ Magenta.prototype.fire = function () {
       this.state.enemyfire_sd.play();
    }
 
-   for (var i = 0; i < 360; i+=10) {   
+   var rand_offset = (Math.random() < 0.5 ? 0 : 11.25);
+   for (var i = 0; i < 360; i+=22.5) {   
       try {
-         this.shots.getFirstDead().fire(x, y, i, -this.bulletSpeed, 0, 0);
+         this.shots.getFirstDead().fire(x, y, i+rand_offset, -this.bulletSpeed, 0, 0);
       } catch(err) {
          this.shots.add(new Shot(game, 'enemyshots', 11, 10), true);
          this.shots.setAll('tracking', true);
-         this.shots.getFirstExists(false).fire(x, y, i, -this.bulletSpeed, 0, 0);
+         this.shots.getFirstExists(false).fire(x, y, i+rand_offset, -this.bulletSpeed, 0, 0);
       }
    }
 };
