@@ -54,6 +54,7 @@ preload.prototype = {
 
 		//Music
 		this.game.load.audio('ambient', ['assets/audio/e1m1.mp3']);
+		this.game.load.audio('title', ['assets/audio/invaders.mp3']);
 		//this.game.load.audio('ambient_ohgod', ['assets/audio/e1m1.mp3']); TODO
 		this.game.load.audio('bonus_loop', ['assets/audio/mindlesslittleloop.mp3']);
 
