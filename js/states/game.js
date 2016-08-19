@@ -8,79 +8,16 @@ invaders.prototype = {
       console.log("Running the game...");
       console.log(self.config);
 
-      // Groups
-      self.player = null;
-      self.enemies = null;
-      self.items = null;
-      self.bonusships = null;
-      self.explosions = null;
-      self.shield = null;
-
-      // Weapons
-      self.weapons = [];
-
-      // Inputs
-      self.cursors = null;
-      self.fire_btn = null;
-      self.special_btn = null;
-      self.mute_btn = null;
-      self.pause_btn = null;
-      self.restart_btn = null;
-
-      // Texts
-      self.text_score = null;
-      self.text_middle = null;
-      self.text_level = null;
-      self.text_ship = null;
-      self.text_pause = null;
-      self.text_score = null;
-
-      // Timers
-      self.timer = null;
-
-      //Audio
-      self.mute = false;
-      self.gameoversound = false;
-      self.introduction_sound = true;
-      self.music = null;
-      self.music_bonus = null;
-      self.pickup_sd = null;
-      self.playerhit_sd = null;
-      self.hitenemy_sd = null;
-      self.killenemy_sd = null;
-      self.abahe_sd = null;
-      self.hellyeah_sd = null;
-      self.fire_sd = null;
-      self.firespecial_sd = null;
-      self.enemyfire_sd = null;
-      self.wave_sd = null;
-      self.intro_sd = null;
-      self.win_sd = null;
-      self.over_sd = null;
-
       // Others
       difficulty = config.difficulty;
       currentDifficulty = config.difficulty;
-      self.left = false;
-      self.lostAlife = false;
-      self.mute_wait = 0;
-      self.speed = null;
-      self.speedup = null;
-      self.accel = null;
       self.current_level = config.current_level;
       self.current_bonus_level = config.current_bonus_level;
       self.in_bonus_level = config.is_bonus;
       self.in_boss_level = config.is_boss;
-      self.just_end_bonus = false;
-      self.wait_next_level = true;
       self.score = config.score;
       self.lives = config.lives;
       self.power = config.power;
-      self.clear_nofiretime = 0;
-      self.shield_time = 0;
-      self.shots_cooldown = 0;
-      self.special_cooldown = 0;
-      self.special_available = 1;
       self.cooldown_reduction = config.cooldown_reduction;
       self.init_x = config.init_x;
       self.init_y = config.init_y;
@@ -108,6 +45,25 @@ invaders.prototype = {
       } else { 
          self.background.tint = 0x3355ee;
       }
+
+       // Weapons
+      self.weapons = [];
+
+      //Audio
+      self.mute = false;
+      self.gameoversound = false;
+      self.introduction_sound = true;
+
+      self.left = false;
+      self.lostAlife = false;
+      self.mute_wait = 0;
+      self.just_end_bonus = false;
+      self.wait_next_level = true;
+      self.clear_nofiretime = 0;
+      self.shield_time = 0;
+      self.shots_cooldown = 0;
+      self.special_cooldown = 0;
+      self.special_available = 1;
 
       self.explosions = self.game.add.group();
       self.explosions.enableBody = true;
