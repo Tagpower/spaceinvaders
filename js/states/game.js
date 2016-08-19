@@ -85,6 +85,17 @@ invaders.prototype = {
       self.cooldown_reduction = config.cooldown_reduction;
       self.init_x = config.init_x;
       self.init_y = config.init_y;
+
+      ENEMY_DEFAULT_FIRE_PROBA = 0.004 + difficulty*0.0015;
+      POWERUP_CHANCE = 0.05 - difficulty*0.01;
+      POWERUP_CHANCE_IN_BONUS = 2*POWERUP_CHANCE;
+      MAX_POWER = (difficulty < OHGOD ? 7 : 5);
+
+      console.log("DIFFICULTY = " + difficulty);
+      console.log("FIRE PROBA = " + ENEMY_DEFAULT_FIRE_PROBA);
+      console.log("POWERUP CHANCE = " + POWERUP_CHANCE);
+      console.log("IN BONUS = " + POWERUP_CHANCE_IN_BONUS);
+      console.log("MAX POWER = " + MAX_POWER);
    },
    // }}}
    // {{{ CREATE
