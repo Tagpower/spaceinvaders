@@ -8,82 +8,44 @@ invaders.prototype = {
       console.log("Running the game...");
       console.log(self.config);
 
-      // Groups
-      self.player = null;
-      self.enemies = null;
-      self.items = null;
-      self.bonusships = null;
-      self.explosions = null;
-      self.shield = null;
-
-      // Weapons
-      self.weapons = [];
-
-      // Inputs
-      self.cursors = null;
-      self.fire_btn = null;
-      self.special_btn = null;
-      self.mute_btn = null;
-      self.pause_btn = null;
-      self.restart_btn = null;
-
-      // Texts
-      self.text_score = null;
-      self.text_middle = null;
-      self.text_level = null;
-      self.text_ship = null;
-      self.text_pause = null;
-      self.text_score = null;
-
-      // Timers
-      self.timer = null;
-
-      //Audio
-      self.mute = false;
-      self.gameoversound = false;
-      self.introduction_sound = true;
-      self.music = null;
-      self.music_bonus = null;
-      self.pickup_sd = null;
-      self.playerhit_sd = null;
-      self.hitenemy_sd = null;
-      self.killenemy_sd = null;
-      self.abahe_sd = null;
-      self.hellyeah_sd = null;
-      self.fire_sd = null;
-      self.firespecial_sd = null;
-      self.enemyfire_sd = null;
-      self.wave_sd = null;
-      self.intro_sd = null;
-      self.win_sd = null;
-      self.over_sd = null;
-
       // Others
       difficulty = config.difficulty;
       currentDifficulty = config.difficulty;
-      self.left = false;
-      self.lostAlife = false;
-      self.mute_wait = 0;
-      self.speed = null;
-      self.speedup = null;
-      self.accel = null;
+
+      $('body, footer, .nav-wrapper, .footer-copyright').removeClass('blue');
+      $('body, footer, .nav-wrapper, .footer-copyright').removeClass('green');
+      $('body, footer, .nav-wrapper, .footer-copyright').removeClass('yellow');
+      $('body, footer, .nav-wrapper, .footer-copyright').removeClass('red');
+      $('body, footer, .nav-wrapper, .footer-copyright').removeClass('black');
+      $('body, footer, .nav-wrapper, .footer-copyright').removeClass('toto');
+
+      switch (difficulty) {
+         case EASY:
+            $('body, footer, .nav-wrapper, .footer-copyright').toggleClass('green');
+            break;
+         case NORMAL:
+            $('body, footer, .nav-wrapper, .footer-copyright').toggleClass('orange');
+            break;
+         case HARD:
+            $('body, footer, .nav-wrapper, .footer-copyright').toggleClass('red');
+            break;
+         case OHGOD:
+            $('body').toggleClass('toto');
+            $('body, footer, .nav-wrapper, .footer-copyright').toggleClass('black');
+            break;
+      }
+
       self.current_level = config.current_level;
       self.current_bonus_level = config.current_bonus_level;
       self.in_bonus_level = config.is_bonus;
       self.in_boss_level = config.is_boss;
-      self.just_end_bonus = false;
-      self.wait_next_level = true;
       self.score = config.score;
       self.lives = config.lives;
       self.power = config.power;
-      self.clear_nofiretime = 0;
-      self.shield_time = 0;
-      self.shots_cooldown = 0;
-      self.special_cooldown = 0;
-      self.special_available = 1;
       self.cooldown_reduction = config.cooldown_reduction;
       self.init_x = config.init_x;
       self.init_y = config.init_y;
+      self.special_available = config.special_available;
 
       ENEMY_DEFAULT_FIRE_PROBA = 0.004 + difficulty*0.0015;
       POWERUP_CHANCE = 0.05 - difficulty*0.01;
@@ -109,6 +71,24 @@ invaders.prototype = {
          self.background.tint = 0x3355ee;
       }
 
+       // Weapons
+      self.weapons = [];
+
+      //Audio
+      self.mute = false;
+      self.gameoversound = false;
+      self.introduction_sound = true;
+
+      self.left = false;
+      self.lostAlife = false;
+      self.mute_wait = 0;
+      self.just_end_bonus = false;
+      self.wait_next_level = true;
+      self.clear_nofiretime = 0;
+      self.shield_time = 0;
+      self.shots_cooldown = 0;
+      self.special_cooldown = 0;
+
       self.explosions = self.game.add.group();
       self.explosions.enableBody = true;
 
@@ -124,13 +104,13 @@ invaders.prototype = {
 
 
       // Weapons
-      self.weapons.push(new Weapon.Weapon1B(self));
-      self.weapons.push(new Weapon.Weapon2B(self));
-      self.weapons.push(new Weapon.Weapon3B(self));
-      self.weapons.push(new Weapon.Weapon4B(self));
-      self.weapons.push(new Weapon.Weapon5B(self));
-      self.weapons.push(new Weapon.Weapon6B(self));
-      self.weapons.push(new Weapon.Weapon7B(self));
+      self.weapons.push(self.game.add.existing(new Weapon1B(self)));
+      self.weapons.push(self.game.add.existing(new Weapon2B(self)));
+      self.weapons.push(self.game.add.existing(new Weapon3B(self)));
+      self.weapons.push(self.game.add.existing(new Weapon4B(self)));
+      self.weapons.push(self.game.add.existing(new Weapon5B(self)));
+      self.weapons.push(self.game.add.existing(new Weapon6B(self)));
+      self.weapons.push(self.game.add.existing(new Weapon7B(self)));
 
       //Create the player's ship
       console.log("\tCreating player...");
@@ -231,12 +211,7 @@ invaders.prototype = {
       }
       //Check collisions for everything
       self.game.physics.arcade.collide(self.weapon, self.enemies, self.hitEnemy, null, self);
-      //self.game.physics.arcade.collide(self.explosions, self.enemies, self.hitEnemy, null, self);
-      self.game.physics.arcade.collide(self.weapon, self.bonusships, self.hitBonusShip, null, self);
-      //game.physics.arcade.collide(player, enemies, levelFailed, null, self)
-      self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, function(){return (!self.lostAlife && self.shield_time == 0);}, self);
-      //self.game.physics.arcade.collide(self.player, self.enemy_shots, self.playerHit, null, self);
-      self.game.physics.arcade.collide(self.player, self.items, self.collectItem, function(){return (!self.lostAlife);}, self);
+      self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, null, self);
 
 
 
@@ -288,10 +263,10 @@ invaders.prototype = {
 
          //Fire super special shots 
          if (self.special_btn.isDown) {
-            if (self.special_available > 0 && self.special_cooldown == 0) {
+            if (self.special_available > 0 && self.special_cooldown === 0) {
                self.weapon.fireSpecial(self.player);
                self.special_available--;
-               self.special_cooldown = DEFAULT_FIRE_COOLDOWN
+               self.special_cooldown = 100;
             }
          }		
 
@@ -346,7 +321,6 @@ invaders.prototype = {
 
       //Move the enemies
       self.enemies.forEachAlive(function(enemy){
-         enemy.animations.play('move');
          if (self.left) {
             self.enemies.setAll('body.velocity.x', -self.speed);   
          } else {
@@ -513,31 +487,19 @@ invaders.prototype = {
    bonusShip: function(delay) {
       var self = this;
       console.log('\tbonus ship dans %.2f s',delay/1000);
+
       self.timer = self.game.time.create(true);
       self.timer.add(delay, function(){
          var bship = self.bonusships.getFirstDead();
-         if(bship === null || bship === undefined) {
-            bship = self.game.add.sprite(-32, 15, 'bonusship', 0); 
-            self.bonusships.add(bship); 
-         }
-         else {
-            bship.touched = false;
-            bship.body.enable = true;
-            bship.revive();
-            bship.reset(-32,15);
-         }
-         bship.checkWorldBounds = true;
-         bship.outOfBoundsKill = true;
-         bship.animations.add('move', [0,1,2,3], 12, true);
-         bship.animations.play('move');
-         bship.value = 1000;  
+         var x = -6;
 
-         self.game.physics.arcade.enable(bship);
-         if (Math.random() < 0.5) {
-            bship.body.velocity.x = 90; 
-         } else {
-            bship.x = self.game.world.width + 10;
-            bship.body.velocity.x = -90;
+         if (bship === null || bship === undefined) {
+            bship = new BonusShip(self, x, 15, 'bonusship', 0, 1000, 10, [0,1,2,3], 12);
+            self.bonusships.add(bship);
+         }
+         else{
+            bship.revive();
+            bship.reset(x, 15);
          }
       });
       self.timer.start();
@@ -629,39 +591,9 @@ invaders.prototype = {
    },
    // }}}
 
-   // {{{ CREATEITEM
-   // Generates a powerup to collect
-   createItem: function(x, y, key) {
-      var self = this;
-      var item = self.game.add.sprite(x, y, key);
-      self.game.physics.arcade.enable(item);
-      switch (key) {
-         case 'powerup_power':
-         case 'powerup_cooldown':
-         case 'powerup_special':
-         case 'powerup_kill':
-         case 'powerup_clear':
-         case 'powerup_orange':
-         case 'powerup_freeze':
-         case 'powerup_shield':
-         case 'powerup_warp':
-               item.animations.add('idle', [0,1,2,3], 18, true);
-               break;
-         case 'bonus_level':
-               item.animations.add('idle', [0,1,2,3,4,5,6,7,8,9,10,11,12,13], 18, true);
-               break;
-         case 'extralife':
-               break;
-      }
-      item.animations.play('idle');
-      item.body.gravity.y = 100;
-      self.items.add(item);
-   },
-   // }}}
-
    // {{{ CREATEEXPLOSION
    // Generates an explosion at the given coordinates
-   createExplosion: function(x,y, pow) {
+   createExplosion: function(x,y, pow, rad=40) {
       var self = this;
       var expl = self.explosions.getFirstDead();
       if (expl === null || expl == undefined) {
@@ -684,11 +616,11 @@ invaders.prototype = {
       if (!self.mute) {
             self.playerhit_sd.play();
       }
-      self.enemies.forEachAlive( function(e) {
-         if (self.game.physics.arcade.distanceBetween(expl, e) < 40) {
+      self.enemies.forEachAlive( function(e, rad) {
+         if (self.game.physics.arcade.distanceBetween(expl, e) < rad) {
             self.hitEnemy(expl, e);
          }
-      });
+      }, self, rad);
       self.game.add.tween(expl).to( { alpha: 0}, 2000, Phaser.Easing.Quintic.Out, true);
       self.game.add.tween(expl.scale).to( {x: 2, y: 2 }, 1500, Phaser.Easing.Quintic.Out, true);
    },
@@ -782,167 +714,6 @@ invaders.prototype = {
    },
    // }}}
 
-   // {{{ COLLECTITEM
-   // When a bonus item is collected
-   collectItem: function(player, item) {
-      var self = this;
-      if (!self.lostAlife) {         
-         switch (item.key) {
-            case 'powerup_power': //Raises the player's firepower
-               if (self.power < MAX_POWER) {
-                  self.power++;
-                  self.weapon = self.weapons[self.power-1];
-                  self.weapon.fireRate -= self.cooldown_reduction*10;
-               }        
-               if (self.power == MAX_POWER) {
-                  self.text_ship.text = "PUISSANCE MAX!";
-               } else {
-                  self.text_ship.text = "Puissance +!";
-               }
-               self.score += 300;
-            break;
-            case 'powerup_cooldown': //Raises the player's rate of fire
-               if (self.cooldown_reduction < MAX_CDR) {
-                  self.cooldown_reduction += 5;
-                  self.weapon.fireRate -= self.cooldown_reduction*10;
-               }
-               if (self.cooldown_reduction >= MAX_CDR) {
-                  self.cooldown_reduction = MAX_CDR;
-                  self.text_ship.text = "VITESSE MAX!";
-               } else {
-                  self.text_ship.text = "Vitesse tir +!";
-               }
-               self.score += 300;
-            break;            
-            case 'powerup_special': //Gives a special shot charge
-               self.special_available++;
-               self.score += 500;
-               self.text_ship.text = "Tir special +1!";
-            break;
-
-            case 'powerup_shield': //Gives a temporary shield
-               player.addChild(self.shield);
-               self.shield.anchor.setTo(0.5, 0.5);
-               self.shield.smoothed = false;
-               self.shield_time += (300 - difficulty * 60);
-               if (!self.mute) {
-                  //shield.play();
-               }
-               self.score += 500;
-               self.text_ship.text = "Bouclier !";
-            break;
-
-            case 'powerup_kill': //Fires a large volley of shots
-               // for (var i = -2; i <= 2; i++) { //Square version
-               //    for (var j = -2; j <= 2; j++) {
-               //       self.createShot(player.body.center.x, player.body.center.y, i*25, -600+(j*25));
-               //    };
-               // };
-               for (var a = -Math.PI/4; a <= Math.PI/4; a += Math.PI/60) { //Arc version
-                  //self.createShot(player.body.center.x, player.body.center.y, 300*Math.sin(a), -500-300*Math.cos(a), 15);
-                  self.createShotPol(player.body.center.x, player.body.center.y, 500, a, 15);
-                  self.createShotPol(player.body.center.x, player.body.center.y, 450, a, 15);
-               }
-               self.score += 750;
-               self.text_ship.text = "KILL 'EM ALL !";
-            break;
-
-            case 'powerup_clear': //Clears the screen of enemy fire and prevents it for a while
-               var wave = self.game.add.sprite(player.body.center.x, player.body.center.y, 'clear_wave');
-               wave.anchor.setTo(0.5, 0.5);
-               wave.smoothed = false;
-               self.game.add.tween(wave).to( { alpha: 0}, 1500, Phaser.Easing.Quintic.Out, true);
-               self.game.add.tween(wave.scale).to( {x: 30, y: 30 }, 1500, Phaser.Easing.Quintic.Out, true);
-               if (!self.mute) {
-                  self.wave_sd.play();
-               }
-               self.score += 300;
-               self.clear_nofiretime += 120; //Prevent enemy fire
-               self.text_ship.text = "Neutralisation !";
-            break;
-
-            case 'powerup_orange': //Turn all enemies to default, orange ones
-               var wave = self.game.add.sprite(player.body.center.x, player.body.center.y, 'clear_wave');
-               wave.tint = 0xff7f00;
-               wave.anchor.setTo(0.5, 0.5);
-               wave.smoothed = false;
-               self.game.add.tween(wave).to( { alpha: 0}, 1500, Phaser.Easing.Quintic.Out, true);
-               self.game.add.tween(wave.scale).to( {x: 30, y: 30 }, 1500, Phaser.Easing.Quintic.Out, true);
-               if (!self.mute) {
-                  self.wave_sd.play();
-               }
-               var already_all_orange = true;
-               self.enemies.forEachAlive(function(e){ //Orangify all the enemies
-                  if (e.type != 1) {
-                     already_all_orange = false;
-                  }
-                  e = new Enemy.Orange(self, e.x, e.y, 'enemy', ENEMY_DEFAULT_FIRE_PROBA);
-               });
-               self.score += 500;
-               if (!already_all_orange) {
-                  self.text_ship.text = "Tous oranges !";
-               } else {
-                  self.text_ship.text = "Très utile !";
-               }  
-               
-            break;
-
-            case 'powerup_freeze': //Stops the enemies on a dime
-               var wave = self.game.add.sprite(player.body.center.x, player.body.center.y, 'clear_wave');
-               wave.tint = 0x007fff;
-               wave.anchor.setTo(0.5, 0.5);
-               wave.smoothed = false;
-               self.game.add.tween(wave).to( { alpha: 0}, 1500, Phaser.Easing.Quintic.Out, true);
-               self.game.add.tween(wave.scale).to( {x: 30, y: 30 }, 1500, Phaser.Easing.Quintic.Out, true);
-               if (!self.mute) {
-                  self.wave_sd.play();
-               }
-               self.speed = 0;
-               self.score += 400;
-               self.text_ship.text = "Stop !";
-            break;
-
-            case 'powerup_warp': //Warps the enemies back to the top of the screen
-               var highest = 1000; 
-               self.enemies.forEachAlive(function(e) {
-                  if (e.y < highest) {
-                     highest = e.y;
-                  }
-               });
-               self.enemies.forEachAlive(function(e) {
-                  game.add.tween(e).to( {y: e.y - (highest-40)}, 1000, Phaser.Easing.Quadratic.Out, true);
-               });
-               self.score += 400;
-               self.text_ship.text = "Retour en haut !";
-            break;
-
-            case 'extralife': //Gives an extra life
-               self.lives++;
-               self.score += 900;
-               self.text_ship.text = "+1 vie !";
-            break;
-
-            case 'bonus_level': //Skips current level and warps the player to a bonus level
-               self.loadBonusLevel();
-               self.score += 3000;
-               self.text_ship.text = "";
-            break;
-         }
-         self.text_ship.alpha = 1;
-         self.text_ship.x = player.body.x;
-         self.text_ship.y = player.body.y - 10;
-         var tween_bonus = self.game.add.tween(self.text_ship).to( { alpha: 0, y: player.body.y-40 }, 1000, Phaser.Easing.Linear.None, true);
-
-         console.log(item.key + ' collected');
-
-         if (!self.mute) {
-            self.pickup_sd.play();
-         }
-         item.kill();
-      }
-   },
-   // }}}
-
    // {{{ LEVELFAILED
    // When the level is failed by letting enemies go too low 
    levelFailed: function() {
@@ -996,54 +767,6 @@ invaders.prototype = {
             self.text_middle.text = 'GAME OVER';
             self.text_level.alpha = 1;
             self.text_level.text = 'Presser R pour recommencer';
-         }
-      }
-   },
-   // }}}
-
-   // {{{ HITBONUSSHIP
-   // When the player successfully hits a bonus ship
-   hitBonusShip: function(shot, bship) {
-      var self = this;
-      shot.kill();
-      if (!bship.touched) {
-         bship.touched = true;
-         bship.animations.stop();
-         bship.body.enable = false;
-         self.score += bship.value;
-         if (!self.mute) {
-            self.killenemy_sd.play();
-         }
-         bship.kill();
-
-         //randomly create a bonus
-         var random = Math.random() * 110;
-         if (random <= 10) {
-            self.createItem(bship.body.center.x, bship.body.center.y, 'extralife');
-         }
-         if (random > 10 && random <= 25) {
-            self.createItem(bship.body.center.x, bship.body.center.y, 'powerup_power');
-         }
-         if (random > 25 && random <= 40) {
-            self.createItem(bship.body.center.x, bship.body.center.y, 'powerup_cooldown');
-         }
-         if (random > 40 && random <= 55) {
-            self.createItem(bship.body.center.x, bship.body.center.y, 'powerup_special');
-         }           
-         if (random > 55 && random <= 70) {
-            self.createItem(bship.body.center.x, bship.body.center.y, 'powerup_freeze');
-         }
-         if (random > 70 && random <= 80) {
-            self.createItem(bship.body.center.x, bship.body.center.y, 'powerup_warp');
-         }           
-         if (random > 80 && random <= 90) {
-            //self.createItem(bship.body.center.x, bship.body.center.y, 'powerup_kill');
-         }           
-         if (random > 90 && random <= 100) {
-            //self.createItem(bship.body.center.x, bship.body.center.y, 'powerup_orange');
-         }
-         if (random > 100 && random <= 110) {
-            self.createItem(bship.body.center.x, bship.body.center.y, 'bonus_level');
          }
       }
    },
@@ -1106,35 +829,6 @@ invaders.prototype = {
          current_bonus_level: 0,
       };
       this.game.state.start("Game", true, false, config);
-   },
-   // }}}
-
-   // {{{ LOADNEXTLEVEL
-   // Load the next level when the current is beaten
-   loadNextLevel: function() {
-      var self = this;
-      self.items.removeAll();
-      self.bonusships.removeAll();
-      self.enemies.removeAll(true);
-      self.player.kill();
-      var config = {
-         is_boss: false,
-         is_bonus: false,
-         score: self.score,
-         lives: self.lives,
-         power: self.power,
-         init_x: self.player.x,
-         init_y: self.player.y,
-         difficulty: self.difficulty,
-         isPlaying: self.music.isPlaying,   
-         special_available: self.special_available,
-         cooldown_reduction: self.cooldown_reduction,
-         current_bonus_level: self.current_bonus_level,
-         current_level: self.just_end_bonus ? self.current_level : self.current_level+1,
-      };
-      if (self.just_end_bonus)
-         self.just_end_bonus = false;
-      self.game.state.start("Game", true, false, config);
    },
    // }}}
 

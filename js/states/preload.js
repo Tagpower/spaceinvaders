@@ -33,23 +33,13 @@ preload.prototype = {
 		this.game.load.image('clear_wave', 'assets/clear.png');
 		this.game.load.image('shield', 'assets/shield_WIP.png');
 		this.game.load.image('space', 'assets/bg.png');
-		this.game.load.image('extralife', 'assets/powerup_life.png');
 
 		//Spritesheets
 		this.game.load.spritesheet('enemyshots', 'assets/enemyshots.png', 4, 8);
 		this.game.load.spritesheet('enemy', 'assets/enemy.png', 16, 16);
 		this.game.load.spritesheet('bonusship', 'assets/bonus_ship.png', 32, 16);
 		this.game.load.spritesheet('ship', 'assets/ship24.png', 24, 28);
-		this.game.load.spritesheet('powerup_power', 'assets/powerup.png', 16, 16);
-		this.game.load.spritesheet('powerup_cooldown', 'assets/powerup_cooldown.png', 16, 16);
-		this.game.load.spritesheet('powerup_special', 'assets/powerup_special.png', 16, 16);
-		this.game.load.spritesheet('powerup_kill', 'assets/powerup_kill.png', 16, 16);
-		this.game.load.spritesheet('powerup_clear', 'assets/powerup_clear.png', 16, 16);
-		this.game.load.spritesheet('powerup_orange', 'assets/powerup_orange.png', 16, 16);
-		this.game.load.spritesheet('powerup_freeze', 'assets/powerup_freeze.png', 16, 16);
-		this.game.load.spritesheet('powerup_warp', 'assets/powerup_warp.png', 16, 16);
-		this.game.load.spritesheet('powerup_shield', 'assets/powerup_shield.png', 16, 16);
-		this.game.load.spritesheet('bonus_level', 'assets/bonus_level.png', 16, 16);
+		this.game.load.spritesheet('powerups', 'assets/powerups.png', 15, 15);
 		this.game.load.spritesheet('menu_buttons', 'assets/menu_buttons.png', 96, 32);
 
 		//Music
