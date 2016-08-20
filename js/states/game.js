@@ -30,7 +30,7 @@ invaders.prototype = {
             $('body, footer, .nav-wrapper, .footer-copyright').toggleClass('red');
             break;
          case OHGOD:
-            $('body').toggleClass('toto');
+            //$('body').toggleClass('toto');
             $('body, footer, .nav-wrapper, .footer-copyright').toggleClass('black');
             break;
       }
@@ -535,7 +535,7 @@ invaders.prototype = {
                      break;
                   case 2: //RED : fires multiple shots
                      if (difficulty == OHGOD)
-                        self.enemies.add(new Magenta(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new DarkRed(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      else
                         self.enemies.add(new Red(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
@@ -569,11 +569,20 @@ invaders.prototype = {
                   case 11: //DARK GREEN : Fires REALLY FAST shots
                      self.enemies.add(new DarkGreen(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
-                  case 12: //MAGENTA : Fires in a circle
-                     self.enemies.add(new Magenta(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                  case 12: //DARK RED : Fires in a circle
+                     self.enemies.add(new DarkRed(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
-                  case 13: //BLACK : Fires growing shots, takes 2 hits
+                  case 13: //BLACK : Sometimes moves down when firing
                      self.enemies.add(new Black(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     break;
+                  case 14: //WHITE : COMING SOON
+                     self.enemies.add(new White(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     break;
+                  case 15: //DARK CYAN : Fires revolving shots
+                     self.enemies.add(new DarkCyan(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     break;
+                  case 16: //MAGENTA : Fires growing shots, takes 2 hits (to be changed)
+                     self.enemies.add(new Magenta(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                }
             }

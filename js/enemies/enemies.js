@@ -323,15 +323,15 @@ Green.prototype.fire = function () {
 
 
 
-Magenta = function (state, x, y, key, fireProba) {
+DarkRed = function (state, x, y, key, fireProba) {
    Enemy.call(this, state, x, y, key, 200, 100, 12, fireProba*0.6, 250, 10, [22, 23], 6);
    this.shots.setAll('tracking', true);
 };
 
-Magenta.prototype = Object.create(Enemy.prototype);
-Magenta.prototype.constructor = Magenta;
+DarkRed.prototype = Object.create(Enemy.prototype);
+DarkRed.prototype.constructor = DarkRed;
 
-Magenta.prototype.fire = function () {
+DarkRed.prototype.fire = function () {
    var x = this.x;
    var y = this.y;
 
@@ -554,8 +554,9 @@ Yellow.prototype.death = function(obj) {
    }
 }
 
+//WIP
 Black = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, x, y, key, 200, 100, 13, fireProba*0.75, 350, 20, [24, 25], 6);
+   Enemy.call(this, state, x, y, key, 200, 100, 13, fireProba, 250, 10, [24, 25], 6);
 };
 
 Black.prototype = Object.create(Enemy.prototype);
@@ -572,7 +573,96 @@ Black.prototype.fire = function () {
    try {
       this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, 0, 0);
    } catch(err) {
-      this.shots.add(new Bullet(this.game, 'enemyshots', 12, 10, false, 0.1), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 12, 10), true);
+      this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
+   }
+
+   if (Math.random() < 0.25) {
+      console.log('iafvaivfiavf');
+      this.game.add.tween(this).to( {y: this.y + Math.random()*25 + 25}, 500, Phaser.Easing.Quadratic.Out, true);
+   }
+};
+
+//TODO
+White = function (state, x, y, key, fireProba) {
+   Enemy.call(this, state, x, y, key, 100, 100, 14, fireProba, 150, 10, [26, 27], 6);
+};
+
+White.prototype = Object.create(Enemy.prototype);
+White.prototype.constructor = White;
+
+White.prototype.fire = function () { //TODO
+   var x = this.x;
+   var y = this.y;
+
+   if (!this.state.mute) {
+      this.state.enemyfire_sd.play();
+   }
+
+   try {
+      this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, 0, 0);
+   } catch(err) {
+      this.shots.add(new Bullet(this.game, 'enemyshots', 13, 10), true);
+      this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
+   }
+};
+
+//WIP
+DarkCyan = function (state, x, y, key, fireProba) {
+   Enemy.call(this, state, x, y, key, 300, 100, 15, fireProba*0.9, 300, 10, [28, 29], 6);
+   this.shots.setAll('tracking', true);
+};
+
+DarkCyan.prototype = Object.create(Enemy.prototype);
+DarkCyan.prototype.constructor = DarkCyan;
+
+DarkCyan.prototype.fire = function () {
+   var x = this.x;
+   var y = this.y;
+
+   var gx = 0;
+   var gy = -100; //FIXME
+   var dg = 0;
+
+   if (!this.state.mute) {
+      this.state.enemyfire_sd.play();
+   }
+
+   // if (this.state.player.x > x)
+   //    gx = dg;
+   // else if (this.state.player.x < x)
+   //    gx = -dg;
+   //gx = this.state.player.x - x;
+
+   try {
+      this.shots.getFirstDead().fire(x, y, Math.atan2((x - this.state.player.x), (y - this.state.player.y)), -this.bulletSpeed, gx, gy);
+   } catch(err) {
+      this.shots.add(new Bullet(this.game, 'enemyshots', 14, 10), true);
+      this.shots.setAll('tracking', true);
+      this.shots.getFirstExists(false).fire(x, y, Math.atan2((x - this.state.player.x), (y - this.state.player.y)), -this.bulletSpeed, gx, gy);
+   }
+};
+
+//WIP
+Magenta = function (state, x, y, key, fireProba) {
+   Enemy.call(this, state, x, y, key, 200, 100, 16, fireProba*0.75, 350, 20, [30, 31], 6);
+};
+
+Magenta.prototype = Object.create(Enemy.prototype);
+Magenta.prototype.constructor = Magenta;
+
+Magenta.prototype.fire = function () {
+   var x = this.x;
+   var y = this.y;
+
+   if (!this.state.mute) {
+      this.state.enemyfire_sd.play();
+   }
+
+   try {
+      this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, 0, 0);
+   } catch(err) {
+      this.shots.add(new Bullet(this.game, 'enemyshots', 15, 10, false, 0.1), true);
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
    }
 };

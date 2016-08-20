@@ -2,16 +2,18 @@
 - Boss
 - Plus d'armes ?
 - Trouver/composer une musique originale
-- Trouver un meilleur moyen de pondérer les drops de bonus
+- Les collisions tirs/vaisseau sont toujours un peu cassées
 - player ==> classe 
+- L'ennemi blanc
 
 =====BUGS=====
 
 ---MAJEURS---
 - Ça crash des fois quand on ramasse un niveau bonus !
 - Quand on chope un niveau bonus juste après avoir terminé un niveau, le niveau bonus apparaît en même temps que le niveau suivant
-- fix special + normal cooldown
+- fix special cooldown
 
 ---MINEURS---
 - Trouver le bug qui déplace les ennemis en boucle
+- Les explosions sont parfois invisibles
 - fix powerups: kill (ajuster minY et maxY)
