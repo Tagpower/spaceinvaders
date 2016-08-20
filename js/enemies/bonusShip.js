@@ -16,6 +16,7 @@ var BonusShip = function (state, x, y, key, frame, value, health, framesAnim, ti
    this.animations.play('move');
 
    if (Math.random() < 0.5) {
+      this.x = -16;
       this.body.velocity.x = 90; 
    } else {
       this.x = this.state.game.world.width + 7;

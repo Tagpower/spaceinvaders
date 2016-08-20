@@ -3,7 +3,7 @@ var PowerupColl = {
       if (powerup.state.power < MAX_POWER) {
          powerup.state.power++;
          powerup.state.weapon = powerup.state.weapons[powerup.state.power-1];
-         powerup.state.weapon.fireRate -= powerup.state.cooldown_reduction*10;
+         powerup.state.weapon.fireRate = powerup.state.weapon.baseFireRate * (1-powerup.state.cooldown_reduction/100.0);
       }        
       if (powerup.state.power == MAX_POWER) {
          powerup.state.text_ship.text = "PUISSANCE MAX!";
@@ -11,12 +11,14 @@ var PowerupColl = {
          powerup.state.text_ship.text = "Puissance +!";
       }
       powerup.state.score += 300;
+      console.log(powerup.state.weapon.baseFireRate);
+      console.log(powerup.state.weapon.fireRate);
    },
 
    cooldown: function(powerup) {
       if (powerup.state.cooldown_reduction < MAX_CDR) {
-         powerup.state.cooldown_reduction += 5;
-         powerup.state.weapon.fireRate -= powerup.state.cooldown_reduction*10;
+         powerup.state.cooldown_reduction += Math.min(5, MAX_CDR - powerup.state.cooldown_reduction);
+         powerup.state.weapon.fireRate = powerup.state.weapon.baseFireRate * (1-powerup.state.cooldown_reduction/100.0);
       }
       if (powerup.state.cooldown_reduction >= MAX_CDR) {
          powerup.state.cooldown_reduction = MAX_CDR;
@@ -25,6 +27,8 @@ var PowerupColl = {
          powerup.state.text_ship.text = "Vitesse tir +!";
       }
       powerup.state.score += 300;
+      console.log(powerup.state.weapon.baseFireRate);
+      console.log(powerup.state.weapon.fireRate);
    },
 
    special: function(powerup) {

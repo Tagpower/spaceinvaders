@@ -1,11 +1,14 @@
-var Weapon = function(state, bulletSpeed, fireRate, power) {
+var Weapon = function(state, bulletSpeed, baseFireRate, power) {
    Phaser.Group.call(this, state.game, state.game.world, 'Weapon', false, true, Phaser.Physics.ARCADE);
 
    this.nextFire = 0;
    this.bulletSpeed = bulletSpeed;
-   this.fireRate = fireRate;
+   this.baseFireRate = baseFireRate;
+   this.fireRate = baseFireRate;
    this.power = power;
    this.state = state;
+   console.log(baseFireRate);
+   console.log(this.baseFireRate);
 
    this.special = this.game.add.group(state.game.world, 'Special Weapon', false, true, Phaser.Physics.ARCADE);
    this.game.add.existing(this);
@@ -43,7 +46,7 @@ Weapon.prototype.makeBullet = function(group, x, y, angle, speed, gx, gy, key, f
 
 
 Weapon1B = function (state) {
-   Weapon.call(this, state, 400, 500, 10);
+   Weapon.call(this, state, 400, 750, 10);
    return this;
 };
 
@@ -71,7 +74,7 @@ Weapon1B.prototype.fireSpecial = function () {
    var self = this;
 
    var timer = this.game.time.create(true);
-   timer.repeat(200, 6,
+   timer.repeat(200, 8,
     function() { 
       if (!self.state.mute) {
          self.state.firespecial_sd.play();
@@ -84,7 +87,7 @@ Weapon1B.prototype.fireSpecial = function () {
 
 
 Weapon2B = function (state) {
-   Weapon.call(this, state, 500, 1000, 10);
+   Weapon.call(this, state, 400, 1000, 10);
    this.special.setAll('tracking', true);
 };
 
@@ -128,7 +131,7 @@ Weapon2B.prototype.fireSpecial = function () {
 
 
 Weapon3B = function (state) {
-   Weapon.call(this, state, 400, 1500, 10);
+   Weapon.call(this, state, 400, 1250, 10);
 };
 
 Weapon3B.prototype = Object.create(Weapon.prototype);
@@ -145,9 +148,9 @@ Weapon3B.prototype.fire = function (source) {
       this.state.fire_sd.play();
    }
 
-   this.makeBullet(this, x-5, y+5, 0, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(this, x-5, y+5, -2, this.bulletSpeed, 0, 0, 'shot', 0);
    this.makeBullet(this, x  , y  , 0, this.bulletSpeed, 0, 0, 'shot', 0);
-   this.makeBullet(this, x+5, y+5, 0, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(this, x+5, y+5, 2, this.bulletSpeed, 0, 0, 'shot', 0);
 
    this.nextFire = this.game.time.time + this.fireRate;
 };
@@ -163,6 +166,7 @@ Weapon3B.prototype.fireSpecial = function () {
          self.state.firespecial_sd.play();
       }
       var gx = 100;
+      var angle = 0;
       self.makeBullet(self.special, self.state.player.x, self.state.player.y-20, angle, speed, -gx, 0, 'shot', 0, true);
       self.makeBullet(self.special, self.state.player.x, self.state.player.y-20, angle, speed,   0, 0, 'shot', 0, true);
       self.makeBullet(self.special, self.state.player.x, self.state.player.y-20, angle, speed,  gx, 0, 'shot', 0, true);
@@ -173,7 +177,7 @@ Weapon3B.prototype.fireSpecial = function () {
 
 
 Weapon4B = function (state) {
-   Weapon.call(this, state, 500, 1000, 10);
+   Weapon.call(this, state, 400, 1500, 10);
 };
 
 Weapon4B.prototype = Object.create(Weapon.prototype);
@@ -189,10 +193,10 @@ Weapon4B.prototype.fire = function (source) {
       this.state.fire_sd.play();
    }
 
-   this.makeBullet(this, x-10, y+5, 0, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(this, x-10, y+5, -2, this.bulletSpeed, 0, 0, 'shot', 0);
    this.makeBullet(this, x-5 , y  , 0, this.bulletSpeed, 0, 0, 'shot', 0);
    this.makeBullet(this, x+5 , y  , 0, this.bulletSpeed, 0, 0, 'shot', 0);
-   this.makeBullet(this, x+10, y+5, 0, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(this, x+10, y+5, 2, this.bulletSpeed, 0, 0, 'shot', 0);
 
    this.nextFire = this.game.time.time + this.fireRate;
 };
@@ -221,7 +225,7 @@ Weapon4B.prototype.fireSpecial = function () {
 
 
 Weapon5B = function (state) {
-   Weapon.call(this, state, 500, 1000, 10);
+   Weapon.call(this, state, 400, 1750, 10);
 };
 
 Weapon5B.prototype = Object.create(Weapon.prototype);
@@ -237,11 +241,11 @@ Weapon5B.prototype.fire = function (source) {
       this.state.fire_sd.play();
    }
 
-   this.makeBullet(this, x-10, y+7, 0, this.bulletSpeed, 0, 0, 'shot', 0);
-   this.makeBullet(this, x-5 , y+5, 0, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(this, x-10, y+7, -4, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(this, x-5 , y+5, -2, this.bulletSpeed, 0, 0, 'shot', 0);
    this.makeBullet(this, x   , y  , 0, this.bulletSpeed, 0, 0, 'shot', 0);
-   this.makeBullet(this, x+5 , y+5, 0, this.bulletSpeed, 0, 0, 'shot', 0);
-   this.makeBullet(this, x+10, y+7, 0, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(this, x+5 , y+5, 2, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(this, x+10, y+7, 4, this.bulletSpeed, 0, 0, 'shot', 0);
 
    this.nextFire = this.game.time.time + this.fireRate;
 };
@@ -267,7 +271,7 @@ Weapon5B.prototype.fireSpecial = function () {
 
 
 Weapon6B = function (state) {
-   Weapon.call(this, state, 500, 1000, 10);
+   Weapon.call(this, state, 400, 2000, 10);
 };
 
 Weapon6B.prototype = Object.create(Weapon.prototype);
@@ -283,12 +287,12 @@ Weapon6B.prototype.fire = function (source) {
       this.state.fire_sd.play();
    }
 
-   this.makeBullet(this, x-15, y+7, 0, this.bulletSpeed, 0, 0, 'shot', 0);
-   this.makeBullet(this, x-10, y+5, 0, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(this, x-15, y+7, -4, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(this, x-10, y+5, -2, this.bulletSpeed, 0, 0, 'shot', 0);
    this.makeBullet(this, x-5 , y  , 0, this.bulletSpeed, 0, 0, 'shot', 0);
    this.makeBullet(this, x+5 , y  , 0, this.bulletSpeed, 0, 0, 'shot', 0);
-   this.makeBullet(this, x+10, y+5, 0, this.bulletSpeed, 0, 0, 'shot', 0);
-   this.makeBullet(this, x+15, y+7, 0, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(this, x+10, y+5, 2, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(this, x+15, y+7, 4, this.bulletSpeed, 0, 0, 'shot', 0);
 
    this.nextFire = this.game.time.time + this.fireRate;
 };
@@ -312,7 +316,7 @@ Weapon6B.prototype.fireSpecial = function () {
 
 
 Weapon7B = function (state) {
-   Weapon.call(this, state, 400, 3500, 10);
+   Weapon.call(this, state, 400, 2250, 10);
 };
 
 Weapon7B.prototype = Object.create(Weapon.prototype);
@@ -328,13 +332,13 @@ Weapon7B.prototype.fire = function (source) {
       this.state.fire_sd.play();
    }
       
-   this.makeBullet(this, x-15, y+9, 0, this.bulletSpeed, 0, 0, 'shot', 0);
-   this.makeBullet(this, x-10, y+7, 0, this.bulletSpeed, 0, 0, 'shot', 0);
-   this.makeBullet(this, x-5 , y+5, 0, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(this, x-15, y+9, -6, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(this, x-10, y+7, -4, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(this, x-5 , y+5, -2, this.bulletSpeed, 0, 0, 'shot', 0);
    this.makeBullet(this, x   , y  , 0, this.bulletSpeed, 0, 0, 'shot', 0);
-   this.makeBullet(this, x+5 , y+5, 0, this.bulletSpeed, 0, 0, 'shot', 0);
-   this.makeBullet(this, x+10, y+7, 0, this.bulletSpeed, 0, 0, 'shot', 0);
-   this.makeBullet(this, x+15, y+9, 0, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(this, x+5 , y+5, 2, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(this, x+10, y+7, 4, this.bulletSpeed, 0, 0, 'shot', 0);
+   this.makeBullet(this, x+15, y+9, 6, this.bulletSpeed, 0, 0, 'shot', 0);
 
    this.nextFire = this.game.time.time + this.fireRate;
 };

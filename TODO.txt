@@ -2,10 +2,8 @@
 - Boss
 - Plus d'armes ?
 - Trouver/composer une musique originale
-- Trouver une autre musique pour le mode OH GOD
-
-- bonus ship ==> classe
-- player ==> classe
+- Trouver un meilleur moyen de pondérer les drops de bonus
+- player ==> classe 
 
 =====BUGS=====
 

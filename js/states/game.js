@@ -66,7 +66,7 @@ invaders.prototype = {
       
       self.background = game.add.tileSprite(0, 0, game.width, game.height, 'space');
       if (difficulty == OHGOD) {
-         self.background.tint = 0xff0000;
+         self.background.tint = 0xff3300;
       } else { 
          self.background.tint = 0x3355ee;
       }
@@ -500,6 +500,13 @@ invaders.prototype = {
          else{
             bship.revive();
             bship.reset(x, 15);
+            if (Math.random() < 0.5) {
+               bship.x = -16;
+               bship.body.velocity.x = 90; 
+            } else {
+               bship.x = game.world.width + 7;
+               bship.body.velocity.x = -90;
+            }
          }
       });
       self.timer.start();
@@ -662,6 +669,7 @@ invaders.prototype = {
             if (self.cooldown_reduction > 0) {
                self.cooldown_reduction /= 2;
                self.cooldown_reduction = Math.floor(self.cooldown_reduction);
+               self.weapon.fireRate = self.weapon.baseFireRate * (1-self.cooldown_reduction/100.0);
             }
             self.special_available = 1;
             self.lives--;
@@ -742,6 +750,7 @@ invaders.prototype = {
          if (self.cooldown_reduction > 0) {
             self.cooldown_reduction /= 2;
             self.cooldown_reduction = Math.floor(self.cooldown_reduction);
+            self.weapon.fireRate = self.weapon.baseFireRate * (1-self.cooldown_reduction/100.0);
          }
          self.special_available = 1;
          self.current_level--;

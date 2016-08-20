@@ -60,9 +60,9 @@ Enemy.prototype.dropItem = function(obj) {
 
    //randomly create a bonus
    var random = Math.random();
-   if (random <= POWERUP_CHANCE || (this.state.in_bonus_level && random <= POWERUP_CHANCE_IN_BONUS)) { //In a bonus level, bonus are 2x as likely to appear
+   if (random <= POWERUP_CHANCE *10 || (this.state.in_bonus_level && random <= POWERUP_CHANCE_IN_BONUS)) { //In a bonus level, bonus are 2x as likely to appear
       //Bonus roulette
-      var roulette = Math.random()*105;
+      var roulette = Math.random()*40;
       if (roulette <= 20) {
          new Powerup(this.state, x, y, 'powerups', 36, PowerupColl.power, true, [36, 37, 38, 39], 18, true);
       }
@@ -199,7 +199,7 @@ Cyan.prototype.fire = function () {
 
 
 DarkGreen = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, state.game, x, y, key, 600, 100, 11, fireProba, 400, 10, [20, 21], 6);
+   Enemy.call(this, state, x, y, key, 600, 100, 11, fireProba, 400, 10, [20, 21], 6);
 };
 
 DarkGreen.prototype = Object.create(Enemy.prototype);
@@ -276,7 +276,7 @@ Green.prototype.fire = function () {
 
 
 Magenta = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, state.game, x, y, key, 200, 100, 12, fireProba*0.6, 300, 20, [22, 23], 6);
+   Enemy.call(this, state, x, y, key, 200, 100, 12, fireProba*0.6, 300, 20, [22, 23], 6);
    this.shots.setAll('tracking', true);
 };
 
