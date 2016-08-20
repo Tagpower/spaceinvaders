@@ -66,7 +66,7 @@ invaders.prototype = {
       
       self.background = game.add.tileSprite(0, 0, game.width, game.height, 'space');
       if (difficulty == OHGOD) {
-         self.background.tint = 0xff3300;
+         self.background.tint = 0xff1111;
       } else { 
          self.background.tint = 0x3355ee;
       }

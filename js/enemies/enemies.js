@@ -60,9 +60,9 @@ Enemy.prototype.dropItem = function(obj) {
 
    //randomly create a bonus
    var random = Math.random();
-   if (random <= POWERUP_CHANCE *10 || (this.state.in_bonus_level && random <= POWERUP_CHANCE_IN_BONUS)) { //In a bonus level, bonus are 2x as likely to appear
+   if (random <= POWERUP_CHANCE || (this.state.in_bonus_level && random <= POWERUP_CHANCE_IN_BONUS)) { //In a bonus level, bonus are 2x as likely to appear
       //Bonus roulette
-      var roulette = Math.random()*40;
+      var roulette = Math.random()*105;
       if (roulette <= 20) {
          new Powerup(this.state, x, y, 'powerups', 36, PowerupColl.power, true, [36, 37, 38, 39], 18, true);
       }
