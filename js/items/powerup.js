@@ -11,8 +11,6 @@ var PowerupColl = {
          powerup.state.text_ship.text = "Puissance +!";
       }
       powerup.state.score += 300;
-      console.log(powerup.state.weapon.baseFireRate);
-      console.log(powerup.state.weapon.fireRate);
    },
 
    cooldown: function(powerup) {
@@ -27,8 +25,6 @@ var PowerupColl = {
          powerup.state.text_ship.text = "Vitesse tir +!";
       }
       powerup.state.score += 300;
-      console.log(powerup.state.weapon.baseFireRate);
-      console.log(powerup.state.weapon.fireRate);
    },
 
    special: function(powerup) {

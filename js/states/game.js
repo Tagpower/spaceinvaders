@@ -373,7 +373,7 @@ invaders.prototype = {
 
       self.explosions.forEachAlive(function(expl) {
          //game.debug.body(expl);
-         if (expl.alpha < 0.1) {
+         if (expl.alpha < 0.2) {
             expl.kill();
          }
       });
@@ -452,9 +452,8 @@ invaders.prototype = {
          });
          self.timer.start();
 
-         //Set a delay for the bonus ship to come (20 to 40 secs)
-         //createEnemies(levels[lvl]); 
-         var delayForBonus = Math.random()*20*1000 + 20000;
+         //Set a delay for the bonus ship to come (15 to 40 secs)
+         var delayForBonus = Math.random()*25*1000 + 15000;
          self.bonusShip(delayForBonus);
       }
 
@@ -570,8 +569,11 @@ invaders.prototype = {
                   case 11: //DARK GREEN : Fires REALLY FAST shots
                      self.enemies.add(new DarkGreen(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
-                  case 12: //MAGENTA : Fires in a circle, takes 2 hits
+                  case 12: //MAGENTA : Fires in a circle
                      self.enemies.add(new Magenta(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     break;
+                  case 13: //BLACK : Fires growing shots, takes 2 hits
+                     self.enemies.add(new Black(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                }
             }

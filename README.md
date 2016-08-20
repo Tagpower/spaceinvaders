@@ -47,5 +47,7 @@ Play it <a href=http://tagpower.github.io/spaceinvaders/>here</a> !
 		- 27/03/2016 : - Difficulté
 					   - Niveau 16
 					   - Nouveau sprite pour le bonus ship
+
+		LOL LA FLEM
 	
 ==============================================================================================================================

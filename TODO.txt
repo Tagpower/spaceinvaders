@@ -8,6 +8,7 @@
 =====BUGS=====
 
 ---MAJEURS---
+- Ça crash des fois quand on ramasse un niveau bonus !
 - Quand on chope un niveau bonus juste après avoir terminé un niveau, le niveau bonus apparaît en même temps que le niveau suivant
 - fix special + normal cooldown
 

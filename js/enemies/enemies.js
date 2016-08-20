@@ -62,7 +62,7 @@ Enemy.prototype.dropItem = function(obj) {
    var random = Math.random();
    if (random <= POWERUP_CHANCE || (this.state.in_bonus_level && random <= POWERUP_CHANCE_IN_BONUS)) { //In a bonus level, bonus are 2x as likely to appear
       //Bonus roulette
-      var roulette = Math.random()*105;
+      /*var roulette = Math.random()*105;
       if (roulette <= 20) {
          new Powerup(this.state, x, y, 'powerups', 36, PowerupColl.power, true, [36, 37, 38, 39], 18, true);
       }
@@ -89,6 +89,54 @@ Enemy.prototype.dropItem = function(obj) {
       }
       else if (roulette > 100 && roulette <= 105) {
          new Powerup(this.state, x, y, 'powerups', 12, PowerupColl.extraLife);
+      } */
+         var roulette = ["power","power","power",
+                         "cooldown","cooldown","cooldown","cooldown",
+                         "special","special","special",
+                         "clear","clear","clear","clear",
+                         "shield","shield","shield",
+                         "freeze","freeze",
+                         "kill","kill",
+                         "warp","warp",
+                         "life"];      
+      
+      var random = roulette[Math.floor(Math.random()*roulette.length)];
+      console.log(random);
+
+      switch (random) {
+         case 'power':
+            new Powerup(obj.state, x, y, 'powerups', 36, PowerupColl.power, true, [36, 37, 38, 39], 18, true);
+         break;
+         case 'cooldown':
+            new Powerup(obj.state, x, y, 'powerups', 4, PowerupColl.cooldown, true, [4, 5, 6, 7], 18, true);
+         break;
+         case 'special':
+            new Powerup(obj.state, x, y, 'powerups', 24, PowerupColl.special, true, [24,25,26,27], 18, true);
+         break;
+         case 'clear':
+            new Powerup(this.state, x, y, 'powerups', 0, PowerupColl.clear, true, [0,1,2,3], 18, true);
+         break;
+         case 'life':
+            new Powerup(obj.state, x, y, 'powerups', 12, PowerupColl.extraLife);
+         break;
+         case 'freeze':
+            new Powerup(obj.state, x, y, 'powerups', 8, PowerupColl.freeze, true, [8,9,10,11], 18, true);
+         break;
+         case 'kill':
+            new Powerup(obj.state, x, y, 'powerups', 32, PowerupColl.kill, true, [32,33,34,35], 18, true);
+         break;
+         case 'warp':
+            new Powerup(obj.state, x, y, 'powerups', 28, PowerupColl.warp, true, [28,29,30,31], 18, true);
+         break;
+         case 'shield':
+            new Powerup(this.state, x, y, 'powerups', 20, PowerupColl.shield, true, [20, 21, 22, 23], 18, true);
+         break;
+         case 'orange':
+            new Powerup(obj.state, x, y, 'powerups', 16, PowerupColl.orange, true, [16,17,18,19], 18, true);
+         break;
+         case 'bonus':
+            new Powerup(obj.state, x, y, 'powerups', 40, PowerupColl.bonusLevel, true, [40,41,42,43,44,45,46,47,48,49,50,51,52,53], 18, true);
+         break;
       }
    }
 }
@@ -276,7 +324,7 @@ Green.prototype.fire = function () {
 
 
 Magenta = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, x, y, key, 200, 100, 12, fireProba*0.6, 300, 20, [22, 23], 6);
+   Enemy.call(this, state, x, y, key, 200, 100, 12, fireProba*0.6, 250, 10, [22, 23], 6);
    this.shots.setAll('tracking', true);
 };
 
@@ -505,3 +553,26 @@ Yellow.prototype.death = function(obj) {
       this.shots.getFirstExists(false).fire(x, y, -17.74 , -speed, 0, 0);
    }
 }
+
+Black = function (state, x, y, key, fireProba) {
+   Enemy.call(this, state, x, y, key, 200, 100, 13, fireProba*0.75, 350, 20, [24, 25], 6);
+};
+
+Black.prototype = Object.create(Enemy.prototype);
+Black.prototype.constructor = Black;
+
+Black.prototype.fire = function () {
+   var x = this.x;
+   var y = this.y;
+
+   if (!this.state.mute) {
+      this.state.enemyfire_sd.play();
+   }
+
+   try {
+      this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, 0, 0);
+   } catch(err) {
+      this.shots.add(new Bullet(this.game, 'enemyshots', 12, 10, false, 0.1), true);
+      this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
+   }
+};
