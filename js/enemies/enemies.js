@@ -61,35 +61,8 @@ Enemy.prototype.dropItem = function(obj) {
    //randomly create a bonus
    var random = Math.random();
    if (random <= POWERUP_CHANCE || (this.state.in_bonus_level && random <= POWERUP_CHANCE_IN_BONUS)) { //In a bonus level, bonus are 2x as likely to appear
+      
       //Bonus roulette
-      /*var roulette = Math.random()*105;
-      if (roulette <= 20) {
-         new Powerup(this.state, x, y, 'powerups', 36, PowerupColl.power, true, [36, 37, 38, 39], 18, true);
-      }
-      else if (roulette > 20 && roulette <= 40) {
-         new Powerup(this.state, x, y, 'powerups', 4, PowerupColl.cooldown, true, [4, 5, 6, 7], 18, true);
-      }
-      else if (roulette > 40 && roulette <= 60) {
-         new Powerup(this.state, x, y, 'powerups', 24, PowerupColl.special, true, [24,25,26,27], 18, true);
-      }
-      else if (roulette > 60 && roulette <= 75) {
-         new Powerup(this.state, x, y, 'powerups', 0, PowerupColl.clear, true, [0,1,2,3], 18, true);
-      }
-      else if (roulette > 75 && roulette <= 85) {
-         new Powerup(this.state, x, y, 'powerups', 20, PowerupColl.shield, true, [20, 21, 22, 23], 18, true);
-      }
-      else if (roulette > 85 && roulette <= 90) {
-         new Powerup(this.state, x, y, 'powerups', 8, PowerupColl.freeze, true, [8,9,10,11], 18, true);
-      }
-      else if (roulette > 90 && roulette <= 95) {
-         new Powerup(this.state, x, y, 'powerups', 28, PowerupColl.warp, true, [28,29,30,31], 18, true);
-      }
-      else if (roulette > 95 && roulette <= 100) {
-         new Powerup(this.state, x, y, 'powerups', 32, PowerupColl.kill, true, [32,33,34,35], 18, true);
-      }
-      else if (roulette > 100 && roulette <= 105) {
-         new Powerup(this.state, x, y, 'powerups', 12, PowerupColl.extraLife);
-      } */
       var roulette = ["power","power","power",
                       "cooldown","cooldown","cooldown","cooldown",
                       "special","special","special",
@@ -577,8 +550,7 @@ Black.prototype.fire = function () {
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
    }
 
-   if (Math.random() < 0.25) {
-      console.log('iafvaivfiavf');
+   if (Math.random() < 0.25 && this.state.speed > 0){
       this.game.add.tween(this).to( {y: this.y + Math.random()*25 + 25}, 500, Phaser.Easing.Quadratic.Out, true);
    }
 };

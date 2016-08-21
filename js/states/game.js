@@ -448,6 +448,7 @@ invaders.prototype = {
             self.game.add.tween(self.text_level).to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
             console.log("\tCreating enemies...");
             self.createEnemies(levels[lvl]); 
+            //self.createEnemies(self.only(13)); 
             console.log("\t-*- Enemies created -*-");
             self.wait_next_level = false;
          });
@@ -857,6 +858,10 @@ invaders.prototype = {
    // Loads the next bonus level
    loadBonusLevel: function() {
       var self = this;
+      if (self.in_bonus_level) {
+         self.current_bonus_level++;
+         self.current_bonus_level %= bonus_levels.length;
+      }
       self.in_bonus_level = true;
       self.music.stop();
       self.music_bonus.play();
