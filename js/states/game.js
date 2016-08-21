@@ -99,6 +99,7 @@ invaders.prototype = {
       self.bonusships.enableBody = true;
 
       self.items = self.game.add.group();
+      self.items.enableBody = true;
 
       self.shield = self.game.add.sprite(0, 0, 'shield');
 
@@ -859,8 +860,11 @@ invaders.prototype = {
       self.in_bonus_level = true;
       self.music.stop();
       self.music_bonus.play();
-      self.items.removeAll();
+      //self.items.removeAll(); //FIXME
       self.bonusships.removeAll();
+      self.enemies.forEach(function(e, cpt) {
+         e.killShots();
+      }, self);
       self.enemies.removeAll(true);
 
       self.text_middle.text = "Niveau bonus !";

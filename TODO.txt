@@ -9,11 +9,12 @@
 =====BUGS=====
 
 ---MAJEURS---
-- Ça crash des fois quand on ramasse un niveau bonus !
+- Ça crash des fois quand on ramasse un niveau bonus ! (WIP)
 - Quand on chope un niveau bonus juste après avoir terminé un niveau, le niveau bonus apparaît en même temps que le niveau suivant
 - fix special cooldown
 
 ---MINEURS---
 - Trouver le bug qui déplace les ennemis en boucle
 - Les explosions sont parfois invisibles
+- Le bonus ship est kill en sortant de l'écran, ce qui donne quand même les points
 - fix powerups: kill (ajuster minY et maxY)

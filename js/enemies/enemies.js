@@ -90,15 +90,15 @@ Enemy.prototype.dropItem = function(obj) {
       else if (roulette > 100 && roulette <= 105) {
          new Powerup(this.state, x, y, 'powerups', 12, PowerupColl.extraLife);
       } */
-         var roulette = ["power","power","power",
-                         "cooldown","cooldown","cooldown","cooldown",
-                         "special","special","special",
-                         "clear","clear","clear","clear",
-                         "shield","shield","shield",
-                         "freeze","freeze",
-                         "kill","kill",
-                         "warp","warp",
-                         "life"];      
+      var roulette = ["power","power","power",
+                      "cooldown","cooldown","cooldown","cooldown",
+                      "special","special","special",
+                      "clear","clear","clear","clear",
+                      "shield","shield","shield",
+                      "freeze","freeze",
+                      "kill","kill",
+                      "warp","warp",
+                      "life"];      
       
       var random = roulette[Math.floor(Math.random()*roulette.length)];
       console.log(random);
