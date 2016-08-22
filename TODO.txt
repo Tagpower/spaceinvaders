@@ -13,6 +13,7 @@
 - fix special cooldown
 
 ---MINEURS---
+- On tue les ennemis à l'impact quand on est en bouclier (pas intentionnel)
 - Trouver le bug qui déplace les ennemis en boucle
 - Les collisions tirs/vaisseau sont toujours un peu cassées
 - Les explosions sont parfois invisibles

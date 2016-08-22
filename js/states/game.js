@@ -24,14 +24,14 @@ invaders.prototype = {
             $('body, footer, .nav-wrapper, .footer-copyright').toggleClass('green');
             break;
          case NORMAL:
-            $('body, footer, .nav-wrapper, .footer-copyright').toggleClass('orange');
+            $('body, footer, .nav-wrapper, .footer-copyright').toggleClass('yellow');
             break;
          case HARD:
-            $('body, footer, .nav-wrapper, .footer-copyright').toggleClass('red');
+            $('body, footer, .nav-wrapper, .footer-copyright').toggleClass('orange');
             break;
          case OHGOD:
             //$('body').toggleClass('toto');
-            $('body, footer, .nav-wrapper, .footer-copyright').toggleClass('black');
+            $('body, footer, .nav-wrapper, .footer-copyright').toggleClass('red');
             break;
       }
 
@@ -621,11 +621,11 @@ invaders.prototype = {
          self.explosions.add(expl);
       }
       else {
-         expl.alpha = 1;
-         expl.scale.setTo(1);
          expl.revive();
          expl.reset(x,y);
       }
+      expl.alpha = 1;
+      expl.scale.setTo(1);
       expl.power = pow;
       self.game.physics.arcade.enable(expl);
       expl.anchor.setTo(0.5);
@@ -692,8 +692,8 @@ invaders.prototype = {
                   player.body.collideWorldBounds = true;
                   //player.y = 550;
                   console.log("replace player");
-                  self.game.add.tween(player.body).to( { y: 700 }, 500, Phaser.Easing.Quadratic.In, true);
-                  self.game.add.tween(player.body).to( { x: 300 }, 500, Phaser.Easing.Quadratic.In, true);
+                  self.game.add.tween(player.body).to( { y: 600 }, 500, Phaser.Easing.Quadratic.In, true);
+                  //self.game.add.tween(player.body).to( { x: 300 }, 500, Phaser.Easing.Quadratic.In, true);
                   self.lostAlife = false;
                   player.alpha = 0.5;
                   self.shield_time = 180;
@@ -717,9 +717,8 @@ invaders.prototype = {
             self.timer = self.game.time.create(true);
             self.timer.add(1500, function(){
                player.body.collideWorldBounds = true;
-               //player.y = 550;
-               self.game.add.tween(player.body).to( { y: 700 }, 500, Phaser.Easing.Quadratic.In, true);
-               self.game.add.tween(player.body).to( { x: 300 }, 500, Phaser.Easing.Quadratic.In, true);
+               self.game.add.tween(player.body).to( { y: 600 }, 500, Phaser.Easing.Quadratic.In, true);
+               //self.game.add.tween(player.body).to( { x: 300 }, 500, Phaser.Easing.Quadratic.In, true);
                self.lostAlife = false;
                player.alpha = 0.5;
                self.enemies.removeAll(true);
@@ -843,7 +842,7 @@ invaders.prototype = {
          lives: 3,
          power: self.difficulty == EASY ? 2 : 1,
          init_x: 300,
-         init_y: 700,
+         init_y: 600,
          difficulty: self.difficulty,
          current_level: 0,
          special_available: 1,
