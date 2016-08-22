@@ -209,11 +209,11 @@ Cyan.prototype.fire = function () {
       gx = -dg;
 
    try {
-      this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, gx, 0);
+      this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, gx, 100);
    } catch(err) {
       this.shots.add(new Bullet(this.game, 'enemyshots', 6, 10), true);
       this.shots.setAll('tracking', true);
-      this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, gx, 0);
+      this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, gx, 100);
    }
 };
 

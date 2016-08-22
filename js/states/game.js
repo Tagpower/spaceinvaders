@@ -200,7 +200,7 @@ invaders.prototype = {
       self.wave_sd = self.game.add.audio('wave');
       self.intro_sd = self.game.add.audio('intro');
       self.win_sd = self.game.add.audio('win');
-      self.over_sd = self.game.add.audio('over');
+      self.gameover_sd = self.game.add.audio('gameover');
 
       self.text_ship = self.game.add.text(self.player.body.x - 20, self.player.body.y-20, '', {font: '16px Minecraftia', fill: '#44ff44'});
       self.text_ship.anchor.setTo(0.5, 0.5);
@@ -738,10 +738,7 @@ invaders.prototype = {
                });
                self.timer.start();
             } else { //GAME OVER
-               self.text_middle.alpha = 1;
-               self.text_middle.text = 'GAME OVER';
-               self.text_level.alpha = 1;
-               self.text_level.text = 'Presser R pour recommencer';
+               self.gameOver();
             }
          } else {
             //If you die in a bonus level, no penalty
@@ -815,14 +812,25 @@ invaders.prototype = {
             });
             self.timer.start();
          } else { //GAME OVER
-            self.text_middle.alpha = 1;
-            self.text_middle.text = 'GAME OVER';
-            self.text_level.alpha = 1;
-            self.text_level.text = 'Presser R pour recommencer';
+            self.gameOver();
          }
       }
    },
    // }}}
+
+   gameOver: function() {
+      var self = this;
+
+      self.text_middle.alpha = 1;
+      self.text_middle.text = 'GAME OVER';
+      self.text_level.alpha = 1;
+      self.text_level.text = 'Presser R pour recommencer';
+      self.music.stop();
+      self.music_bonus.stop();
+      self.gameover_sd.play();
+
+      //this.game.state.start("GameOver");
+   },
 
    // {{{ MUTEGAME
    muteGame: function() {

@@ -59,7 +59,7 @@ preload.prototype = {
 		this.game.load.audio('hitenemy', ['assets/audio/hitenemy.wav']);  
 		this.game.load.audio('killenemy', ['assets/audio/killenemy.mp3']);  
 		this.game.load.audio('win', ['assets/audio/tunak-tunak-tun.mp3']);
-		this.game.load.audio('over', ['assets/audio/gameover.ogg']); 
+		this.game.load.audio('gameover', ['assets/audio/gameover.ogg']); 
 		this.game.load.audio('sax', ['assets/audio/sax.mp3']);
 
 		var loadingBar = this.game.add.sprite(game.world.centerX, 400, "loading");
