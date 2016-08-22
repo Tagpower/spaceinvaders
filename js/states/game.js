@@ -65,11 +65,7 @@ invaders.prototype = {
       //Create the background
       
       self.background = game.add.tileSprite(0, 0, game.width, game.height, 'space');
-      if (difficulty == OHGOD) {
-         self.background.tint = 0xff1111;
-      } else { 
-         self.background.tint = 0x3355ee;
-      }
+      self.background.tint = (difficulty == OHGOD ? 0xff1111 : 0x3355ee);
 
        // Weapons
       self.weapons = [];
@@ -102,6 +98,8 @@ invaders.prototype = {
       self.items.enableBody = true;
 
       self.shield = self.game.add.sprite(0, 0, 'shield');
+      self.shield.anchor.setTo(0.5, 0.5);
+      self.shield.smoothed = false;
 
 
       // Weapons
@@ -118,6 +116,8 @@ invaders.prototype = {
       self.createPlayer();
       console.log("\t-*- Player created -*-");
       self.game.camera.follow(self.player); 
+
+      self.player.addChild(self.shield);
 
       //All inputs
       self.cursors = self.game.input.keyboard.createCursorKeys();
@@ -142,6 +142,27 @@ invaders.prototype = {
 
       self.text_score = self.game.add.text(16, 5, '', {font: '16px Minecraftia', fill: '#00aaff'});
       self.text_score.fixedToCamera = true;
+
+      self.text_lives = self.game.add.text(48, 42, self.lives, {font: '16px Minecraftia', fill: '#00aaff'});
+      self.text_lives.anchor.setTo(0.5);
+      self.text_lives.smoothed = false;
+
+      self.text_power = self.game.add.text(92, 42, self.power, {font: '16px Minecraftia', fill: '#00aaff'});
+      self.text_power.anchor.setTo(0.5);
+      self.text_power.smoothed = false;
+
+      self.text_coold = self.game.add.text(136, 42, self.cooldown_reduction, {font: '16px Minecraftia', fill: '#00aaff'});
+      self.text_coold.anchor.setTo(0.5);
+      self.text_coold.smoothed = false;
+
+      self.text_specs = self.game.add.text(180, 42, self.special_available, {font: '16px Minecraftia', fill: '#00aaff'});
+      self.text_specs.anchor.setTo(0.5);
+      self.text_specs.smoothed = false;
+
+      self.game.add.sprite(20, 29, 'powerups', 12);
+      self.game.add.sprite(64, 29, 'powerups', 39);
+      self.game.add.sprite(108, 29, 'powerups', 7);
+      self.game.add.sprite(152, 29, 'powerups', 27);
 
       self.text_level = self.game.add.text(self.game.world.width/2, game.world.height/2 + 40, '', {font: '16px Minecraftia', fill: '#00aaff'});
       self.text_level.fixedToCamera = true;
@@ -212,11 +233,21 @@ invaders.prototype = {
       }
       //Check collisions for everything
       self.game.physics.arcade.collide(self.weapon, self.enemies, self.hitEnemy, null, self);
-      self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, null, self);
+      self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, function() {return self.shield_time == 0 && !self.lostAlife;}, self);
 
+      self.text_score.text = 'Niveau ' + (self.current_level+1) + '    Score: ' + self.score;
+      
+      //self.text_stats.text = '        ' + self.lives + '        ' + self.power + '        '+ self.cooldown_reduction + '        ' + self.special_available;
+      self.text_lives.text = self.lives;
 
+      self.text_power.text = self.power;
+      self.text_power.fill = (self.power == MAX_POWER ? '#ffff00' : '#00aaff');
 
-      self.text_score.text = 'Niveau ' + (self.current_level+1) + '    Score: ' + self.score + '   Vies: ' + self.lives + '\nPuissance: ' + self.power + ' Vitesse de tir: '+ self.cooldown_reduction +'    Tir spécial: ' + self.special_available;
+      self.text_coold.text = self.cooldown_reduction;
+      self.text_coold.fill = (self.cooldown_reduction == MAX_CDR ? '#ffff00' : '#00aaff');
+
+      self.text_specs.text = self.special_available;
+
       //background.tilePosition.y += current_level/5 + 1;
       self.background.tilePosition.y += 1 + (14*self.in_bonus_level); //FIXME
 

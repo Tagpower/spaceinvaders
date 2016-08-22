@@ -103,7 +103,7 @@ gameTitle.prototype = {
          lives: 3,
          power: power,
          init_x: 300,
-         init_y: 700,
+         init_y: 600,
          difficulty: difficulty,
          current_level: 0,
          special_available: 1,

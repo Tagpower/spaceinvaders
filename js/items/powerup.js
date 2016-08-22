@@ -11,6 +11,10 @@ var PowerupColl = {
          powerup.state.text_ship.text = "Puissance +!";
       }
       powerup.state.score += 300;
+
+      powerup.state.text_power.scale.setTo(1,1);
+      var tween_bonusnumber = game.add.tween(powerup.state.text_power.scale).to( {x: 2, y: 2}, 150, Phaser.Easing.Linear.Out, true);
+      tween_bonusnumber.yoyo(true);
    },
 
    cooldown: function(powerup) {
@@ -25,19 +29,27 @@ var PowerupColl = {
          powerup.state.text_ship.text = "Vitesse tir +!";
       }
       powerup.state.score += 300;
+
+      powerup.state.text_coold.scale.setTo(1,1);
+      var tween_bonusnumber = game.add.tween(powerup.state.text_coold.scale).to( {x: 2, y: 2}, 150, Phaser.Easing.Linear.Out, true);
+      tween_bonusnumber.yoyo(true);
    },
 
    special: function(powerup) {
       powerup.state.special_available++;
       powerup.state.score += 500;
       powerup.state.text_ship.text = "Tir special +1!";
+
+      powerup.state.text_specs.scale.setTo(1,1);
+      var tween_bonusnumber = game.add.tween(powerup.state.text_specs.scale).to( {x: 2, y: 2}, 150, Phaser.Easing.Linear.Out, true);
+      tween_bonusnumber.yoyo(true);
    },
 
    shield: function(powerup) {
-      powerup.state.player.addChild(powerup.state.shield);
-      powerup.state.shield.anchor.setTo(0.5, 0.5);
-      powerup.state.shield.smoothed = false;
       powerup.state.shield_time += (300 - difficulty * 60);
+
+      console.log(difficulty);
+      console.log(powerup.state.shield_time);
       if (!powerup.state.mute) {
          //shield.play();
       }
@@ -152,6 +164,10 @@ var PowerupColl = {
       powerup.state.lives++;
       powerup.state.score += 900;
       powerup.state.text_ship.text = "+1 vie !";
+
+      powerup.state.text_lives.scale.setTo(1,1);
+      var tween_bonusnumber = game.add.tween(powerup.state.text_lives.scale).to( {x: 2, y: 2}, 150, Phaser.Easing.Linear.Out, true);
+      tween_bonusnumber.yoyo(true);
    },
 
    bonusLevel: function(powerup) {
