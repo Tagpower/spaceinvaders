@@ -239,6 +239,7 @@ invaders.prototype = {
       
       //self.text_stats.text = '        ' + self.lives + '        ' + self.power + '        '+ self.cooldown_reduction + '        ' + self.special_available;
       self.text_lives.text = self.lives;
+      self.text_specs.fill = (self.lives > 1 ? '#00aaff' : '#ff0000');
 
       self.text_power.text = self.power;
       self.text_power.fill = (self.power == MAX_POWER ? '#ffff00' : '#00aaff');
@@ -247,6 +248,7 @@ invaders.prototype = {
       self.text_coold.fill = (self.cooldown_reduction == MAX_CDR ? '#ffff00' : '#00aaff');
 
       self.text_specs.text = self.special_available;
+      self.text_specs.fill = (self.special_available > 0 ? '#00aaff' : '#aaaaaa');
 
       //background.tilePosition.y += current_level/5 + 1;
       self.background.tilePosition.y += 1 + (14*self.in_bonus_level); //FIXME
@@ -614,7 +616,7 @@ invaders.prototype = {
                   case 15: //DARK CYAN : Fires revolving shots
                      self.enemies.add(new DarkCyan(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
-                  case 16: //MAGENTA : Fires growing shots, takes 2 hits (to be changed)
+                  case 16: //MAGENTA : Fires growing shots, takes 2 hits
                      self.enemies.add(new Magenta(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
                      break;
                }

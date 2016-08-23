@@ -206,7 +206,7 @@ Weapon4B.prototype.fireSpecial = function () {
    var speed = 300;
 
    var timer = this.game.time.create(true);
-   timer.repeat(500, 5,
+   timer.repeat(250, 7,
     function(speed) {
       if (!self.state.mute) {
          self.state.firespecial_sd.play();
@@ -255,7 +255,7 @@ Weapon5B.prototype.fireSpecial = function () {
    var speed = 100;
 
    var timer = this.game.time.create(true);
-   timer.repeat(100, 15,
+   timer.repeat(100, 30,
     function() {
       if (!self.state.mute) {
          self.state.firespecial_sd.play();
