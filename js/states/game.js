@@ -781,7 +781,7 @@ invaders.prototype = {
          if (difficulty == EASY) {
             if (self.power > 2) {
                self.power /= 2;
-               self.power = Math.ceil(power);
+               self.power = Math.ceil(self.power);
             }
          } else {
             if (self.power > 1) {
