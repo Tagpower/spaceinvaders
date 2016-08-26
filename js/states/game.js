@@ -72,7 +72,6 @@ invaders.prototype = {
       }
 
        // Weapons
-      self.weapons = [];
 
       //Audio
       self.mute = false;
@@ -100,17 +99,7 @@ invaders.prototype = {
 
       self.items = self.game.add.group();
 
-      self.shield = self.game.add.sprite(0, 0, 'shield');
-
-
-      // Weapons
-      self.weapons.push(self.game.add.existing(new Weapon1B(self)));
-      self.weapons.push(self.game.add.existing(new Weapon2B(self)));
-      self.weapons.push(self.game.add.existing(new Weapon3B(self)));
-      self.weapons.push(self.game.add.existing(new Weapon4B(self)));
-      self.weapons.push(self.game.add.existing(new Weapon5B(self)));
-      self.weapons.push(self.game.add.existing(new Weapon6B(self)));
-      self.weapons.push(self.game.add.existing(new Weapon7B(self)));
+      self.shield = self.game.add.sprite(0, 0, 'shield'); 
 
       //Create the player's ship
       console.log("\tCreating player...");
@@ -601,10 +590,10 @@ invaders.prototype = {
          self.explosions.add(expl);
       }
       else {
-         expl.alpha = 1;
-         expl.scale.setTo(1);
          expl.revive();
          expl.reset(x,y);
+         expl.alpha = 1;
+         expl.scale.setTo(1);
       }
       expl.power = pow;
       self.game.physics.arcade.enable(expl);
@@ -631,86 +620,7 @@ invaders.prototype = {
    playerHit: function(player, shot) {
       var self = this;
       shot.kill();
-      if (!self.lostAlife && !player.touched && !self.shield_time) {   
-         console.log("TOUCHÉ !!!");
-         self.playerhit_sd.play();
-         self.lostAlife = true;
-         player.touched = true;
-         player.body.collideWorldBounds = false;
-         player.body.velocity.y = 125;
-         self.createExplosion(player.body.center.x, player.body.center.y, 20);
-         //var tween_death = game.add.tween(player.body).to( { y: game.world.height+10 }, 1000, Phaser.Easing.Linear.None, true);
-
-         if (!self.in_bonus_level) {
-            //Player stats are halved
-            if (difficulty == EASY) {
-               if (self.power > 2) {
-                  self.power /= 2;
-                  self.power = Math.ceil(self.power);
-               }
-               else {
-                  self.power = 2;
-               }
-            } else {
-               if (self.power > 1) {
-                  self.power /= 2;
-                  self.power = Math.floor(self.power);
-               }
-            }
-            self.weapon = self.weapons[self.power-1];
-            
-            if (self.cooldown_reduction > 0) {
-               self.cooldown_reduction /= 2;
-               self.cooldown_reduction = Math.floor(self.cooldown_reduction);
-            }
-            self.special_available = 1;
-            self.lives--;
-            if (self.lives > 0) {
-               self.timer = self.game.time.create(true);
-               self.timer.add(1500, function(){
-                  player.body.collideWorldBounds = true;
-                  //player.y = 550;
-                  console.log("replace player");
-                  self.game.add.tween(player.body).to( { y: 700 }, 500, Phaser.Easing.Quadratic.In, true);
-                  self.game.add.tween(player.body).to( { x: 300 }, 500, Phaser.Easing.Quadratic.In, true);
-                  self.lostAlife = false;
-                  player.alpha = 0.5;
-                  self.shield_time = 180;
-                  player.addChild(self.shield);
-                  self.shield.anchor.setTo(0.5, 0.5);
-                  self.shield.smoothed = false;
-               });
-               self.timer.add(3000, function(){
-                  player.touched = false;
-                  player.alpha = 1;
-               });
-               self.timer.start();
-            } else { //GAME OVER
-               self.text_middle.alpha = 1;
-               self.text_middle.text = 'GAME OVER';
-               self.text_level.alpha = 1;
-               self.text_level.text = 'Presser R pour recommencer';
-            }
-         } else {
-            //If you die in a bonus level, no penalty
-            self.timer = self.game.time.create(true);
-            self.timer.add(1500, function(){
-               player.body.collideWorldBounds = true;
-               //player.y = 550;
-               self.game.add.tween(player.body).to( { y: 700 }, 500, Phaser.Easing.Quadratic.In, true);
-               self.game.add.tween(player.body).to( { x: 300 }, 500, Phaser.Easing.Quadratic.In, true);
-               self.lostAlife = false;
-               player.alpha = 0.5;
-               self.enemies.removeAll(true);
-               self.current_bonus_level--;
-            });
-            self.timer.add(3000, function(){
-               player.touched = false;
-               player.alpha = 1;
-            });
-            self.timer.start();
-         }
-      }
+      
    },
    // }}}
 
