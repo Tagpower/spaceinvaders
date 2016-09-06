@@ -131,31 +131,34 @@ invaders.prototype = {
       self.pause_btn.onDown.add(self.pauseGame, self);
 
       //Ingame Text
-      self.text_middle = self.game.add.text(self.game.world.width/2, self.game.world.height/2, '', {font: '32px Minecraftia', fill: '#ffffff'});
+	var style_white = {font: '32px Minecraftia', fill:'#ffffff'};
+	var style_blue  = {font: '16px Minecraftia', fill:'#00aaff'};
+	
+      self.text_middle = self.game.add.text(self.game.world.width/2, self.game.world.height/2, '', style_white);
       self.text_middle.fixedToCamera = true;
       self.text_middle.anchor.setTo(0.5);
 
-      self.text_pause = self.game.add.text(self.game.world.width/2, self.game.world.height/1.5, 'PAUSE', {font: '32px Minecraftia', fill: '#ffffff'});
+      self.text_pause = self.game.add.text(self.game.world.width/2, self.game.world.height/1.5, 'PAUSE', style_white);
       self.text_pause.fixedToCamera = true;
       self.text_pause.anchor.setTo(0.5);
       self.text_pause.alpha = 0;
 
-      self.text_score = self.game.add.text(16, 5, '', {font: '16px Minecraftia', fill: '#00aaff'});
+      self.text_score = self.game.add.text(16, 5, '', style_blue);
       self.text_score.fixedToCamera = true;
 
-      self.text_lives = self.game.add.text(48, 42, self.lives, {font: '16px Minecraftia', fill: '#00aaff'});
+      self.text_lives = self.game.add.text(48, 42, self.lives, style_blue);
       self.text_lives.anchor.setTo(0.5);
       self.text_lives.smoothed = false;
 
-      self.text_power = self.game.add.text(92, 42, self.power, {font: '16px Minecraftia', fill: '#00aaff'});
+      self.text_power = self.game.add.text(92, 42, self.power, style_blue);
       self.text_power.anchor.setTo(0.5);
       self.text_power.smoothed = false;
 
-      self.text_coold = self.game.add.text(136, 42, self.cooldown_reduction, {font: '16px Minecraftia', fill: '#00aaff'});
+      self.text_coold = self.game.add.text(136, 42, self.cooldown_reduction, style_blue);
       self.text_coold.anchor.setTo(0.5);
       self.text_coold.smoothed = false;
 
-      self.text_specs = self.game.add.text(180, 42, self.special_available, {font: '16px Minecraftia', fill: '#00aaff'});
+      self.text_specs = self.game.add.text(180, 42, self.special_available, style_blue);
       self.text_specs.anchor.setTo(0.5);
       self.text_specs.smoothed = false;
 
@@ -164,7 +167,7 @@ invaders.prototype = {
       self.game.add.sprite(108, 29, 'powerups', 7);
       self.game.add.sprite(152, 29, 'powerups', 27);
 
-      self.text_level = self.game.add.text(self.game.world.width/2, game.world.height/2 + 40, '', {font: '16px Minecraftia', fill: '#00aaff'});
+      self.text_level = self.game.add.text(self.game.world.width/2, game.world.height/2 + 40, '', style_blue);
       self.text_level.fixedToCamera = true;
       self.text_level.anchor.setTo(0.5);
 
@@ -506,6 +509,7 @@ invaders.prototype = {
          if (!self.game.paused) {
             console.log("\tGame paused !");
             self.text_pause.alpha = 1;
+	    console.log(self.text_pause);
             self.game.paused = true;
             self.music.pause();
          } else {
@@ -661,6 +665,7 @@ invaders.prototype = {
          expl.revive();
          expl.reset(x,y);
       }
+      console.log(expl.alpha);
       expl.alpha = 1;
       expl.scale.setTo(1);
       expl.power = pow;
