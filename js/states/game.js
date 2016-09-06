@@ -805,8 +805,6 @@ invaders.prototype = {
             self.timer = self.game.time.create(true);
             self.timer.add(3000, function(){
                self.player.body.collideWorldBounds = true;
-               //player.body.velocity.y = -100;
-               //player.body.position.y = 300; 
                self.enemies.removeAll(true);
                self.lostAlife = false;
                self.player.alpha = 0.5;

@@ -27,6 +27,20 @@ var preload = function(game) {
 
 preload.prototype = {
    preload: function() {
+
+   		var loadingBar = this.game.add.sprite(game.world.centerX, 400, "loading");
+		this.load.setPreloadSprite(loadingBar, 0);
+
+      	var text_loading = self.game.add.text(self.game.world.centerX, 350, '', {font: '16px Minecraftia', fill: '#ffffff', align: 'center'});
+      	text_loading.smoothed = false;
+      	text_loading.anchor.setTo(0.5);
+
+      	var loading_strings = ["Recrutement de fantômes","Finissage des sprites","C'est les musiques qui mettent longtemps","Deux secondes","Auto-réparation du code","Nettoyage du vaisseau","Suppression de commentaires grossiers","Un p'tit verre en attendant ?"];
+      	text_loading.text = loading_strings[this.game.rnd.integerInRange(0, loading_strings.length-1)] + '...';
+
+      	var tween_fade = game.add.tween(text_loading).to( { alpha: 0.2}, 500, Phaser.Easing.Linear.In, true, 0 , -1);
+      	tween_fade.yoyo(true, 0);
+
       //Images
 		this.game.load.image('shot', 'assets/shot.png');
 		this.game.load.image('explosion', 'assets/explosion.png');
@@ -62,9 +76,6 @@ preload.prototype = {
 		this.game.load.audio('gameover', ['assets/audio/gameover.ogg']); 
 		this.game.load.audio('sax', ['assets/audio/sax.mp3']);
 
-		var loadingBar = this.game.add.sprite(game.world.centerX, 400, "loading");
-		//loadingBar.anchor.setTo(0.5);
-		this.load.setPreloadSprite(loadingBar, 0);
    },
    create: function() {
       console.log("-*- Preloaded -*-");
