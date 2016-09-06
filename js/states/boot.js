@@ -1,6 +1,10 @@
 var boot = function(game) {
    console.log("Booting...");
+   Phaser.State.call(this);
 }
+
+boot.prototype = Object.create(Phaser.State);
+boot.prototype.constructor = boot;
 
 boot.prototype = {
    preload: function() {

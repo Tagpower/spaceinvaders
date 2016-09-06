@@ -1,6 +1,10 @@
 var gameTitle = function(game) {
    console.log("Game Title");
+   Phaser.State.call(this);
 }
+
+gameTitle.prototype = Object.create(Phaser.State);
+gameTitle.prototype.constructor = gameTitle;
 
 gameTitle.prototype = {
    preload: function() {

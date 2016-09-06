@@ -23,7 +23,11 @@ var MAX_CDR = 50;
 // State
 var preload = function(game) {
    console.log("Preloading...");
+   Phaser.State.call(this);
 }
+
+preload.prototype = Object.create(Phaser.State);
+preload.prototype.constructor = preload;
 
 preload.prototype = {
    preload: function() {

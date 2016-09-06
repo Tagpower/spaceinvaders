@@ -1,5 +1,9 @@
 var invaders = function(game) { 
+   Phaser.State.call(this);
 }
+
+invaders.prototype = Object.create(Phaser.State);
+invaders.prototype.constructor = invaders;
 
 invaders.prototype = {
    // {{{ INIT
