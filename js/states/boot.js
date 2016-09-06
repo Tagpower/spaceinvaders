@@ -23,7 +23,7 @@ boot.prototype = {
       console.log("-*- Load StateTransition -*-");
       this.game.stateTransition = this.game.plugins.add(Phaser.Plugin.StateTransition);
       this.game.stateTransition.configure({
-         duration: Phaser.Timer.SECOND * 1.5,
+         duration: Phaser.Timer.SECOND * 0.75,
          ease: Phaser.Easing.Exponential.InOut,
          properties: {
             alpha: 0
