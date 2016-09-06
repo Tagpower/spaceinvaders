@@ -17,8 +17,7 @@ gameTitle.prototype = {
       //parameters: difficulty, level, power, firerate, isBonus
 
       this.background = this.game.add.tileSprite(0, 0, game.width, game.height, 'space');
-      console.log(this.background);
-
+      
       var text_title = self.game.add.text(self.game.world.width/2, 200, 'SPACE\nINVADERS', {font: '64px Minecraftia', fill: '#4fccff', align: 'center'});
       text_title.smoothed = false;
       text_title.fixedToCamera = true;
@@ -80,6 +79,7 @@ gameTitle.prototype = {
    },
 
    update: function() {
+      //this.background.tilePosition.y += 1;
    },
 
    easy: function() {
@@ -87,7 +87,6 @@ gameTitle.prototype = {
    },
 
    normal: function() {
-      console.log("connard");
       this.launch(NORMAL, 1);
    },
 

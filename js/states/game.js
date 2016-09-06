@@ -66,7 +66,6 @@ invaders.prototype = {
    // {{{ CREATE
    create: function() {
       var self = this;
-      console.log("connard");
       //Create the background
 
       self.background = game.add.tileSprite(0, 0, game.width, game.height, 'space');
@@ -229,7 +228,7 @@ invaders.prototype = {
       }
       self.enemies.setAll('body.velocity.x', self.speed); 
 
-      self.game.saveCpu.renderOnFPS = 60;
+      self.game.saveCpu.renderOnFPS = 120;
       self.READY = true;
    },
 
@@ -246,11 +245,11 @@ invaders.prototype = {
          self.game.physics.arcade.collide(self.weapon, self.enemies, self.hitEnemy, null, self);
          self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, function() {return self.shield_time == 0 && !self.lostAlife;}, self);
 
-      self.text_score.text = 'Niveau ' + (self.current_level+1) + '    Score: ' + self.score;
-      
-      //self.text_stats.text = '        ' + self.lives + '        ' + self.power + '        '+ self.cooldown_reduction + '        ' + self.special_available;
-      self.text_lives.text = self.lives;
-      self.text_lives.fill = (self.lives > 1 ? '#00aaff' : '#ff0000');
+         self.text_score.text = 'Niveau ' + (self.current_level+1) + '    Score: ' + self.score;
+         
+         //self.text_stats.text = '        ' + self.lives + '        ' + self.power + '        '+ self.cooldown_reduction + '        ' + self.special_available;
+         self.text_lives.text = self.lives;
+         self.text_lives.fill = (self.lives > 1 ? '#00aaff' : '#ff0000');
 
          //self.text_stats.text = '        ' + self.lives + '        ' + self.power + '        '+ self.cooldown_reduction + '        ' + self.special_available;
          self.text_lives.text = self.lives;
@@ -924,7 +923,7 @@ invaders.prototype = {
       self.enemies.removeAll(true);
 
       self.text_middle.text = "Niveau bonus !";
-      self.text_level.text = "YAY ! (il est en travaux btw)";
+      self.text_level.text = "YAY !";
       //text_level.text = level_names_en[lvl];
       self.text_middle.alpha = 0;
       self.text_level.alpha = 0;
