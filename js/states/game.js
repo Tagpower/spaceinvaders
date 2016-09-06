@@ -220,6 +220,10 @@ invaders.prototype = {
          console.log("-*- Bonus level loaded -*-");
       }
       self.enemies.setAll('body.velocity.x', self.speed); 
+
+      console.log(self.game.plugins.plugins);
+      self.saveCpu = self.game.plugins.plugins[0];
+      self.saveCpu.renderOnFPS = 60;
    },
 
    // }}}

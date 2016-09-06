@@ -72,6 +72,9 @@ gameTitle.prototype = {
       self.music.loop = true;
       self.music.volume = 1;
       self.music.play();
+
+      self.saveCpu = self.game.plugins.add(Phaser.Plugin.SaveCPU);
+      self.saveCpu.renderOnFPS = 30;
    },
 
    update: function() {
@@ -105,7 +108,7 @@ gameTitle.prototype = {
          init_x: 300,
          init_y: 600,
          difficulty: difficulty,
-         current_level: 0,
+         current_level: 17,
          special_available: 1,
          cooldown_reduction: 0,
          current_bonus_level: 0,
