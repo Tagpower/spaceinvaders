@@ -12,7 +12,8 @@ gameTitle.prototype = {
       console.log("-*- Launch the game -*-");
       //parameters: difficulty, level, power, firerate, isBonus
 
-      this.background = game.add.tileSprite(0, 0, game.width, game.height, 'space');
+      this.background = this.game.add.tileSprite(0, 0, game.width, game.height, 'space');
+      console.log(this.background);
 
       var text_title = self.game.add.text(self.game.world.width/2, 200, 'SPACE\nINVADERS', {font: '64px Minecraftia', fill: '#4fccff', align: 'center'});
       text_title.smoothed = false;
@@ -43,7 +44,7 @@ gameTitle.prototype = {
       easy_button.events.onInputOver.add(function() {text_info.y = 383; text_info.text = "Pour les joueurs moins\nhabitués aux shoot 'em up.\nPuissance 2 dès le début.\nVitesse un peu plus basse."}, this);
       easy_button.events.onInputOut.add(function() {text_info.text = ""}, this);
 
-      var normal_button = game.add.button(game.world.centerX, 450, 'menu_buttons', this.normal, this, 8,1,15,1);
+      var normal_button = game.add.button(game.world.centerX, 450, 'menu_buttons', self.normal, this, 8,1,15,1);
       normal_button.anchor.setTo(0.5);
       normal_button.events.onInputOver.add(function() {text_info.y = 433; text_info.text = "La difficulté par défaut.\nVitesse et fréquence des\ntirs ennemis normales."}, this);
       normal_button.events.onInputOut.add(function() {text_info.text = ""}, this);
@@ -72,13 +73,9 @@ gameTitle.prototype = {
       self.music.loop = true;
       self.music.volume = 1;
       self.music.play();
-
-      self.saveCpu = self.game.plugins.add(Phaser.Plugin.SaveCPU);
-      self.saveCpu.renderOnFPS = 30;
    },
 
    update: function() {
-      this.background.tilePosition.y += 1
    },
 
    easy: function() {
@@ -86,6 +83,7 @@ gameTitle.prototype = {
    },
 
    normal: function() {
+      console.log("connard");
       this.launch(NORMAL, 1);
    },
 
@@ -114,7 +112,7 @@ gameTitle.prototype = {
          current_bonus_level: 0,
       };
       self.music.stop();
-      this.game.state.start("Game", true, false, config);
+      self.game.stateTransition.to("Game", true, false, config);
    }
 
 }

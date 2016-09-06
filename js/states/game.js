@@ -62,12 +62,13 @@ invaders.prototype = {
    // {{{ CREATE
    create: function() {
       var self = this;
+      console.log("connard");
       //Create the background
-      
+
       self.background = game.add.tileSprite(0, 0, game.width, game.height, 'space');
       self.background.tint = (difficulty == OHGOD ? 0xff1111 : 0x3355ee);
 
-       // Weapons
+      // Weapons
       self.weapons = [];
 
       //Audio
@@ -131,9 +132,9 @@ invaders.prototype = {
       self.pause_btn.onDown.add(self.pauseGame, self);
 
       //Ingame Text
-	var style_white = {font: '32px Minecraftia', fill:'#ffffff'};
-	var style_blue  = {font: '16px Minecraftia', fill:'#00aaff'};
-	
+      var style_white = {font: '32px Minecraftia', fill:'#ffffff'};
+      var style_blue  = {font: '16px Minecraftia', fill:'#00aaff'};
+
       self.text_middle = self.game.add.text(self.game.world.width/2, self.game.world.height/2, '', style_white);
       self.text_middle.fixedToCamera = true;
       self.text_middle.anchor.setTo(0.5);
@@ -224,206 +225,206 @@ invaders.prototype = {
       }
       self.enemies.setAll('body.velocity.x', self.speed); 
 
-      console.log(self.game.plugins.plugins);
-      self.saveCpu = self.game.plugins.plugins[0];
-      self.saveCpu.renderOnFPS = 60;
+      self.game.saveCpu.renderOnFPS = 60;
+      self.READY = true;
    },
 
    // }}}
    // {{{ UPDATE
    update: function() {
       var self = this;
-      
-      if (currentDifficulty != difficulty) {
-         currentDifficulty = difficulty;
-         self.restart(self.current_level);
-      }
-      //Check collisions for everything
-      self.game.physics.arcade.collide(self.weapon, self.enemies, self.hitEnemy, null, self);
-      self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, function() {return self.shield_time == 0 && !self.lostAlife;}, self);
+      if (self.READY) {
+         if (currentDifficulty != difficulty) {
+            currentDifficulty = difficulty;
+            self.restart(self.current_level);
+         }
+         //Check collisions for everything
+         self.game.physics.arcade.collide(self.weapon, self.enemies, self.hitEnemy, null, self);
+         self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, function() {return self.shield_time == 0 && !self.lostAlife;}, self);
 
-      self.text_score.text = 'Niveau ' + (self.current_level+1) + '    Score: ' + self.score;
-      
-      //self.text_stats.text = '        ' + self.lives + '        ' + self.power + '        '+ self.cooldown_reduction + '        ' + self.special_available;
-      self.text_lives.text = self.lives;
-      self.text_specs.fill = (self.lives > 1 ? '#00aaff' : '#ff0000');
+         self.text_score.text = 'Niveau ' + (self.current_level+1) + '    Score: ' + self.score;
 
-      self.text_power.text = self.power;
-      self.text_power.fill = (self.power == MAX_POWER ? '#ffff00' : '#00aaff');
+         //self.text_stats.text = '        ' + self.lives + '        ' + self.power + '        '+ self.cooldown_reduction + '        ' + self.special_available;
+         self.text_lives.text = self.lives;
+         self.text_specs.fill = (self.lives > 1 ? '#00aaff' : '#ff0000');
 
-      self.text_coold.text = self.cooldown_reduction;
-      self.text_coold.fill = (self.cooldown_reduction == MAX_CDR ? '#ffff00' : '#00aaff');
+         self.text_power.text = self.power;
+         self.text_power.fill = (self.power == MAX_POWER ? '#ffff00' : '#00aaff');
 
-      self.text_specs.text = self.special_available;
-      self.text_specs.fill = (self.special_available > 0 ? '#00aaff' : '#aaaaaa');
+         self.text_coold.text = self.cooldown_reduction;
+         self.text_coold.fill = (self.cooldown_reduction == MAX_CDR ? '#ffff00' : '#00aaff');
 
-      //background.tilePosition.y += current_level/5 + 1;
-      self.background.tilePosition.y += 1 + (14*self.in_bonus_level); //FIXME
+         self.text_specs.text = self.special_available;
+         self.text_specs.fill = (self.special_available > 0 ? '#00aaff' : '#aaaaaa');
 
-      //All controls are disabled when the player dies
-      if (!self.lostAlife) {
-         //Mute button
-         if (self.mute_btn.isDown) {
-            if (self.mute_wait == 0) {
-               self.muteGame();
+         //background.tilePosition.y += current_level/5 + 1;
+         self.background.tilePosition.y += 1 + (14*self.in_bonus_level); //FIXME
+
+         //All controls are disabled when the player dies
+         if (!self.lostAlife) {
+            //Mute button
+            if (self.mute_btn.isDown) {
+               if (self.mute_wait == 0) {
+                  self.muteGame();
+               }
+            };
+
+            //Control the player
+            self.player.body.velocity.x = 0;
+            self.player.body.velocity.y = 0;
+            //if (!player.touched) {
+            //player.body.velocity.y = 0; 
+            //};
+            if (self.cursors.up.isDown && difficulty < OHGOD) {
+               self.player.body.velocity.y = -PLAYER_SPEED;
+               self.player.body.velocity.x = 0; 
+               //player.animations.play('left');
+            } else if (self.cursors.down.isDown  && difficulty < OHGOD) {
+               self.player.body.velocity.y = PLAYER_SPEED;
+               self.player.body.velocity.x = 0; 
+               //player.animations.play('right');
+            }
+
+            if (self.cursors.left.isDown) {
+               self.player.body.velocity.x = -PLAYER_SPEED;
+               //player.body.velocity.y = 0; 
+               self.player.animations.play('left');
+            } else if (self.cursors.right.isDown) {
+               self.player.body.velocity.x = PLAYER_SPEED;
+               //player.body.velocity.y = 0; 
+               self.player.animations.play('right');
+            } else if (!self.lostAlife) {
+               self.player.animations.play('idle');
+            }
+
+            //Fire shots
+            if (self.fire_btn.isDown) {
+               self.weapon.fire(self.player);
+            }
+
+            //Fire super special shots 
+            if (self.special_btn.isDown) {
+               if (self.special_available > 0 && self.special_cooldown === 0) {
+                  self.weapon.fireSpecial(self.player);
+                  self.special_available--;
+                  self.special_cooldown = 100;
+               }
+            }		
+
+            //Shield decay over time
+            if (self.shield_time > 0) {
+               self.shield_time--;
+            } else {
+               self.shield_time = 0;
+            }
+            self.shield.alpha = Math.min(self.shield_time/60.0, 0.75); //Fade the shield sprite with time
+
+            //When a clear powerup is collected, enemies can't fire for a while
+            if (self.clear_nofiretime > 0) {
+               self.clear_nofiretime--;
+            } else {
+               self.clear_nofiretime = 0;
+            }
+
+            if (self.shots_cooldown > 0) {
+               self.shots_cooldown--;
+            } else {
+               self.shots_cooldown = 0;
+            }
+
+            if (self.special_cooldown > 0) {
+               self.special_cooldown--;
+            } else {
+               self.special_cooldown = 0;
+            }
+
+
+         } else {
+            //When the player dies
+            //console.log("DEAD ?");
+            self.player.body.velocity.x = 0;
+            self.player.animations.play('dead');
+            //enemies.setAll('body.velocity.x', 0);
+            if (self.lives == 0) {
+               if (self.restart_btn.isDown) {
+                  //self.restart(0);
+                  self.music.stop();
+                  this.game.state.start("GameTitle");
+               }
             }
          };
 
-         //Control the player
-         self.player.body.velocity.x = 0;
-         self.player.body.velocity.y = 0;
-         //if (!player.touched) {
-         //player.body.velocity.y = 0; 
-         //};
-         if (self.cursors.up.isDown && difficulty < OHGOD) {
-            self.player.body.velocity.y = -PLAYER_SPEED;
-            self.player.body.velocity.x = 0; 
-            //player.animations.play('left');
-         } else if (self.cursors.down.isDown  && difficulty < OHGOD) {
-            self.player.body.velocity.y = PLAYER_SPEED;
-            self.player.body.velocity.x = 0; 
-            //player.animations.play('right');
+         if (self.mute_wait > 0) {
+            self.mute_wait--;
+         } else {
+            self.mute_wait = 0;
          }
 
-         if (self.cursors.left.isDown) {
-            self.player.body.velocity.x = -PLAYER_SPEED;
-            //player.body.velocity.y = 0; 
-            self.player.animations.play('left');
-         } else if (self.cursors.right.isDown) {
-            self.player.body.velocity.x = PLAYER_SPEED;
-            //player.body.velocity.y = 0; 
-            self.player.animations.play('right');
-         } else if (!self.lostAlife) {
-            self.player.animations.play('idle');
-         }
-
-         //Fire shots
-         if (self.fire_btn.isDown) {
-            self.weapon.fire(self.player);
-         }
-
-         //Fire super special shots 
-         if (self.special_btn.isDown) {
-            if (self.special_available > 0 && self.special_cooldown === 0) {
-               self.weapon.fireSpecial(self.player);
-               self.special_available--;
-               self.special_cooldown = 100;
+         //Move the enemies
+         self.enemies.forEachAlive(function(enemy){
+            if (self.left) {
+               self.enemies.setAll('body.velocity.x', -self.speed);   
+            } else {
+               self.enemies.setAll('body.velocity.x', self.speed);               
             }
-         }		
-
-         //Shield decay over time
-         if (self.shield_time > 0) {
-            self.shield_time--;
-         } else {
-            self.shield_time = 0;
-         }
-         self.shield.alpha = Math.min(self.shield_time/60.0, 0.75); //Fade the shield sprite with time
-
-         //When a clear powerup is collected, enemies can't fire for a while
-         if (self.clear_nofiretime > 0) {
-            self.clear_nofiretime--;
-         } else {
-            self.clear_nofiretime = 0;
-         }
-
-         if (self.shots_cooldown > 0) {
-            self.shots_cooldown--;
-         } else {
-            self.shots_cooldown = 0;
-         }
-
-         if (self.special_cooldown > 0) {
-            self.special_cooldown--;
-         } else {
-            self.special_cooldown = 0;
-         }
-
-
-      } else {
-         //When the player dies
-         //console.log("DEAD ?");
-         self.player.body.velocity.x = 0;
-         self.player.animations.play('dead');
-         //enemies.setAll('body.velocity.x', 0);
-         if (self.lives == 0) {
-            if (self.restart_btn.isDown) {
-               //self.restart(0);
-               self.music.stop();
-               this.game.state.start("GameTitle");
+            if (enemy.body.position.x < 10) {
+               self.left = false;
+               self.enemies.addAll('body.position.x', 10);        
+               self.enemies.addAll('body.position.y', enemy.body.height);      
+            } else if (enemy.body.position.x >= self.game.world.width - 25) {
+               self.left = true;
+               self.enemies.addAll('body.position.x', -10);
+               self.enemies.addAll('body.position.y', enemy.body.height);
             }
-         }
-      };
-
-      if (self.mute_wait > 0) {
-         self.mute_wait--;
-      } else {
-         self.mute_wait = 0;
-      }
-
-      //Move the enemies
-      self.enemies.forEachAlive(function(enemy){
-         if (self.left) {
-            self.enemies.setAll('body.velocity.x', -self.speed);   
-         } else {
-            self.enemies.setAll('body.velocity.x', self.speed);               
-         }
-         if (enemy.body.position.x < 10) {
-            self.left = false;
-            self.enemies.addAll('body.position.x', 10);        
-            self.enemies.addAll('body.position.y', enemy.body.height);      
-         } else if (enemy.body.position.x >= self.game.world.width - 25) {
-            self.left = true;
-            self.enemies.addAll('body.position.x', -10);
-            self.enemies.addAll('body.position.y', enemy.body.height);
-         }
-         if (enemy.position.y > self.game.world.height) {
-            self.levelFailed();
-         }
-      });
-
-      //When the level is beaten
-      //console.log("is beaten ?")
-
-      self.living_e_shots = 0;
-      self.enemies.forEach(function(e, cpt) {
-         self.living_e_shots += e.livingShots();
-      }, self);
-
-      if (self.enemies.countLiving() == 0 && self.living_e_shots === 0 && self.current_level < levels.length && !self.wait_next_level) {
-         self.bonusships.forEachAlive(function(bship) {
-            if (bship.body.velocity.x == 0) {
-               bship.kill();
-               console.log("bonus ship en attente killé"); //FIXME
+            if (enemy.position.y > self.game.world.height) {
+               self.levelFailed();
             }
          });
-         console.log('level ' + (self.current_level+1) + ' beaten');
-   
-         //timer.start();
-         //console.log(timer.seconds);
-         if (self.in_bonus_level) {
-            self.current_bonus_level++;
-            self.current_bonus_level = self.current_bonus_level % bonus_levels.length;
-            self.in_bonus_level = false;
-            self.just_end_bonus = true;
-            self.music_bonus.stop();
-            self.music.play();
+
+         //When the level is beaten
+         //console.log("is beaten ?")
+
+         self.living_e_shots = 0;
+         self.enemies.forEach(function(e, cpt) {
+            self.living_e_shots += e.livingShots();
+         }, self);
+
+         if (self.enemies.countLiving() == 0 && self.living_e_shots === 0 && self.current_level < levels.length && !self.wait_next_level) {
+            self.bonusships.forEachAlive(function(bship) {
+               if (bship.body.velocity.x == 0) {
+                  bship.kill();
+                  console.log("bonus ship en attente killé"); //FIXME
+               }
+            });
+            console.log('level ' + (self.current_level+1) + ' beaten');
+
+            //timer.start();
+            //console.log(timer.seconds);
+            if (self.in_bonus_level) {
+               self.current_bonus_level++;
+               self.current_bonus_level = self.current_bonus_level % bonus_levels.length;
+               self.in_bonus_level = false;
+               self.just_end_bonus = true;
+               self.music_bonus.stop();
+               self.music.play();
+            }
+
+            self.loadLevel(++self.current_level);
          }
 
-         self.loadLevel(++self.current_level);
+         self.explosions.forEachAlive(function(expl) {
+            //game.debug.body(expl);
+            if (expl.alpha < 0.2) {
+               expl.kill();
+            }
+         });
+
+         self.bonusships.forEachAlive(function(bship) {
+            if (bship.x > self.game.world.height + bship.body.width*2 || bship.x < -bship.body.width*2) {
+               bship.kill();
+            }
+         });
       }
-
-      self.explosions.forEachAlive(function(expl) {
-         //game.debug.body(expl);
-         if (expl.alpha < 0.2) {
-            expl.kill();
-         }
-      });
-
-      self.bonusships.forEachAlive(function(bship) {
-         if (bship.x > self.game.world.height + bship.body.width*2 || bship.x < -bship.body.width*2) {
-            bship.kill();
-         }
-      });
    },
    // }}}
 
@@ -509,7 +510,7 @@ invaders.prototype = {
          if (!self.game.paused) {
             console.log("\tGame paused !");
             self.text_pause.alpha = 1;
-	    console.log(self.text_pause);
+            console.log(self.text_pause);
             self.game.paused = true;
             self.music.pause();
          } else {
@@ -566,7 +567,7 @@ invaders.prototype = {
             if (array[i][j] > 0) {
                var xx = x+j*25;
                var yy = y+i*25;
-               
+
                switch (array[i][j]) {
                   default:
                      break;
@@ -676,7 +677,7 @@ invaders.prototype = {
       expl.checkWorldBounds = true;
       expl.outOfBoundsKill = true;
       if (!self.mute) {
-            self.playerhit_sd.play();
+         self.playerhit_sd.play();
       }
       self.enemies.forEachAlive( function(e, rad) {
          if (self.game.physics.arcade.distanceBetween(expl, e) < rad) {
@@ -720,7 +721,7 @@ invaders.prototype = {
                }
             }
             self.weapon = self.weapons[self.power-1];
-            
+
             if (self.cooldown_reduction > 0) {
                self.cooldown_reduction /= 2;
                self.cooldown_reduction = Math.floor(self.cooldown_reduction);
@@ -847,7 +848,7 @@ invaders.prototype = {
       if (!self.mute) {
          self.mute = true;
          self.music.pause()
-         self.music_bonus.pause();
+            self.music_bonus.pause();
       } else {
          self.mute = false;
          if (self.in_bonus_level) {
@@ -866,9 +867,9 @@ invaders.prototype = {
    // Generates a level with only one type of enemy
    only: function(n) {
       return [[0,0,n,n,n,n,n,n,0,0],
-            [0,n,n,n,n,n,n,n,n,0],
-            [n,n,n,n,n,n,n,n,n,n],
-            [n,n,n,n,n,n,n,n,n,n]];
+      [0,n,n,n,n,n,n,n,n,0],
+      [n,n,n,n,n,n,n,n,n,n],
+      [n,n,n,n,n,n,n,n,n,n]];
 
    },
    // }}}
@@ -933,9 +934,9 @@ invaders.prototype = {
       self.speedup = SPEEDUP_INIT;
       self.accel = SPEEDUP_ACCEL;
       /*timer = new Phaser.Timer(game, false);
-      timer.add(Phaser.Timer.SECOND*2, createEnemies(levels[lvl]), this);
-      timer.start(2000);
-      */
+        timer.add(Phaser.Timer.SECOND*2, createEnemies(levels[lvl]), this);
+        timer.start(2000);
+        */
       self.timer = self.game.time.create(true);
       self.timer.add(3000, function(){
          self.game.add.tween(self.text_middle).to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
