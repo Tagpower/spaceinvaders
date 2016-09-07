@@ -77,9 +77,13 @@ gameTitle.prototype = {
       self.music.loop = true;
       self.music.volume = 1;
       self.music.play();
+      self.READY = true;
    },
 
    update: function() {
+      if (this.READY) {
+         this.background.tilePosition.y += 0.25;
+      }
    },
 
    easy: function() {
