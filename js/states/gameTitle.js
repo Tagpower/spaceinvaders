@@ -111,7 +111,7 @@ gameTitle.prototype = {
          is_boss: false,
          is_bonus: false,
          score: 0,
-         lives: 1,
+         lives: 3,
          power: power,
          init_x: 300,
          init_y: 600,
