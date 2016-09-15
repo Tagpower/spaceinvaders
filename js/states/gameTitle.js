@@ -7,6 +7,10 @@ gameTitle.prototype = Object.create(Phaser.State);
 gameTitle.prototype.constructor = gameTitle;
 
 gameTitle.prototype = {
+   init: function() {
+      this.READY = false;
+   },
+
    preload: function() {
 
    },
@@ -107,7 +111,7 @@ gameTitle.prototype = {
          is_boss: false,
          is_bonus: false,
          score: 0,
-         lives: 3,
+         lives: 1,
          power: power,
          init_x: 300,
          init_y: 600,
