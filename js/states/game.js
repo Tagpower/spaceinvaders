@@ -61,6 +61,8 @@ invaders.prototype = {
       console.log("POWERUP CHANCE = " + POWERUP_CHANCE);
       console.log("IN BONUS = " + POWERUP_CHANCE_IN_BONUS);
       console.log("MAX POWER = " + MAX_POWER);
+
+      self.READY = false;
    },
    // }}}
    // {{{ CREATE
@@ -353,7 +355,8 @@ invaders.prototype = {
                if (self.restart_btn.isDown) {
                   //self.restart(0);
                   self.music.stop();
-                  this.game.state.start("GameTitle");
+                  self.gameover_sd.stop(); // FIXME
+                  this.game.stateTransition.to("GameTitle", true, false);
                }
             }
          };
