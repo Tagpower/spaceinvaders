@@ -51,6 +51,7 @@ preload.prototype = {
       this.game.load.image('clear_wave', 'assets/clear.png');
       this.game.load.image('shield', 'assets/shield_WIP.png');
       this.game.load.image('space', 'assets/bg.png');
+      this.game.load.image('boulimique', 'assets/special.png'); 
 
       //Spritesheets
       this.game.load.spritesheet('enemyshots', 'assets/enemyshots.png', 4, 8);

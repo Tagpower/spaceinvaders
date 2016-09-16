@@ -95,8 +95,7 @@ invaders.prototype = {
       self.explosions = self.game.add.group();
       self.explosions.enableBody = true;
 
-      self.enemies = self.game.add.group();
-      self.enemies.enableBody = true;
+      self.enemies = self.game.add.physicsGroup();
 
       self.bonusships = self.game.add.group();
       self.bonusships.enableBody = true;
@@ -563,7 +562,7 @@ invaders.prototype = {
    },
    // }}}
 
-   // {{{ CREATEENEMIESABS
+   // {{{ CREATEENEMIES
    // Creates an array of enemies at a set position
    createEnemies: function(array) {
       var self = this;
@@ -580,61 +579,64 @@ invaders.prototype = {
                      break;
                   case 1: //ORANGE : normal
                      if (difficulty == OHGOD)
-                        self.enemies.add(new Green(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new Green(self, xx, yy, 'enemy'));
                      else
-                        self.enemies.add(new Orange(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new Orange(self, xx, yy, 'enemy'));
                      break;
                   case 2: //RED : fires multiple shots
                      if (difficulty == OHGOD)
-                        self.enemies.add(new DarkRed(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new DarkRed(self, xx, yy, 'enemy'));
                      else
-                        self.enemies.add(new Red(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new Red(self, xx, yy, 'enemy'));
                      break;
                   case 3: //GREEN : fires fast shots
                      if (difficulty == OHGOD)
-                        self.enemies.add(new DarkGreen(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new DarkGreen(self, xx, yy, 'enemy'));
                      else
-                        self.enemies.add(new Green(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new Green(self, xx, yy, 'enemy'));
                      break;
                   case 4: //PURPLE : fires twice as often
-                     self.enemies.add(new Purple(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Purple(self, xx, yy, 'enemy'));
                      break;
                   case 5: //GRAY : takes 2 hits
-                     self.enemies.add(new Gray(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Gray(self, xx, yy, 'enemy'));
                      break;
                   case 6: //YELLOW : Fires 5 shots when killed
-                     self.enemies.add(new Yellow(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Yellow(self, xx, yy, 'enemy'));
                      break;
                   case 7: //CYAN : fires gravity-affected shots
-                     self.enemies.add(new Cyan(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Cyan(self, xx, yy, 'enemy'));
                      break;
                   case 8: //PINK : takes 3 hits, fires more often
-                     self.enemies.add(new Pink(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Pink(self, xx, yy, 'enemy'));
                      break;
                   case 9: //BLUE : fires in random directions
-                     self.enemies.add(new Blue(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Blue(self, xx, yy, 'enemy'));
                      break;
                   case 10: //BROWN : explodes when killed
-                     self.enemies.add(new Brown(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Brown(self, xx, yy, 'enemy'));
                      break;
                   case 11: //DARK GREEN : Fires REALLY FAST shots
-                     self.enemies.add(new DarkGreen(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new DarkGreen(self, xx, yy, 'enemy'));
                      break;
                   case 12: //DARK RED : Fires in a circle
-                     self.enemies.add(new DarkRed(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new DarkRed(self, xx, yy, 'enemy'));
                      break;
                   case 13: //BLACK : Sometimes moves down when firing
-                     self.enemies.add(new Black(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Black(self, xx, yy, 'enemy'));
                      break;
                   case 14: //WHITE : COMING SOON
-                     self.enemies.add(new White(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new White(self, xx, yy, 'enemy'));
                      break;
                   case 15: //DARK CYAN : Fires revolving shots
-                     self.enemies.add(new DarkCyan(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new DarkCyan(self, xx, yy, 'enemy'));
                      break;
                   case 16: //MAGENTA : Fires growing shots, takes 2 hits
-                     self.enemies.add(new Magenta(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Magenta(self, xx, yy, 'enemy'));
                      break;
+                  case 17: // OTTERFUCKER !!!
+                     self.enemies.add(new Boulimique(self, xx, yy, 'boulimique'));
+                     break
                }
             }
          }
