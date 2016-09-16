@@ -139,6 +139,8 @@ invaders.prototype = {
       //Ingame Text
       var style_white = {font: '32px Minecraftia', fill:'#ffffff'};
       var style_blue  = {font: '16px Minecraftia', fill:'#00aaff'};
+      var style_green  = {font: '16px Minecraftia', fill:'#44ff44'};
+      var style_yellow  = {font: '8px Minecraftia', fill:'#ffee00'};
 
       self.text_middle = self.game.add.text(self.game.world.width/2, self.game.world.height/2, '', style_white);
       self.text_middle.fixedToCamera = true;
@@ -177,6 +179,16 @@ invaders.prototype = {
       self.text_level.fixedToCamera = true;
       self.text_level.anchor.setTo(0.5);
 
+      self.text_ship = self.game.add.text(self.player.body.x - 20, self.player.body.y-20, '', style_green);
+      self.text_ship.anchor.setTo(0.5);
+      self.text_ship.alpha = 0;
+
+      self.text_points = self.game.add.text(self.player.body.x - 20, self.player.body.y-20, '', style_yellow);
+      self.text_points.anchor.setTo(0.5);
+      self.text_points.alpha = 0;
+
+
+
       if (difficulty < OHGOD) {
          self.music = self.game.add.audio('ambient');
       } else {
@@ -184,6 +196,8 @@ invaders.prototype = {
       }
       self.music.loop = true;
 
+      self.music_boss = self.game.add.audio('boss');
+      self.music_boss.loop = true;
 
       self.music_bonus = self.game.add.audio('bonus_loop');
       self.music_bonus.loop = true;
@@ -194,6 +208,9 @@ invaders.prototype = {
 
       //Create all sounds
       self.pickup_sd = self.game.add.audio('pickup');
+      self.pickup_sd.volume = 0.5;
+      self.pickupcoin_sd = self.game.add.audio('pickup_coin');
+      self.pickupcoin_sd.volume = 0.5;
       self.hellyeah_sd = self.game.add.audio('hellyeah');
       self.playerhit_sd = self.game.add.audio('explode');
       self.hitenemy_sd = self.game.add.audio('hitenemy');
@@ -211,9 +228,6 @@ invaders.prototype = {
       self.win_sd = self.game.add.audio('win');
       self.gameover_sd = self.game.add.audio('gameover');
 
-      self.text_ship = self.game.add.text(self.player.body.x - 20, self.player.body.y-20, '', {font: '16px Minecraftia', fill: '#44ff44'});
-      self.text_ship.anchor.setTo(0.5, 0.5);
-      self.text_ship.alpha = 0;
 
       self.speed = START_SPEED;
       self.speedup = SPEEDUP_INIT;
@@ -230,7 +244,7 @@ invaders.prototype = {
       }
       self.enemies.setAll('body.velocity.x', self.speed); 
 
-      self.game.saveCpu.renderOnFPS = 60;
+      //self.game.saveCpu.renderOnFPS = 60;
       self.READY = true;
    },
 
@@ -354,6 +368,7 @@ invaders.prototype = {
                if (self.restart_btn.isDown) {
                   //self.restart(0);
                   self.music.stop();
+                  self.music_boss.stop();
                   self.gameover_sd.stop(); // FIXME
                   this.game.stateTransition.to("GameTitle", true, false);
                }
@@ -392,8 +407,6 @@ invaders.prototype = {
          });
 
          //When the level is beaten
-         //console.log("is beaten ?")
-
          self.living_e_shots = 0;
          self.enemies.forEach(function(e, cpt) {
             self.living_e_shots += e.livingShots();
@@ -408,8 +421,6 @@ invaders.prototype = {
             });
             console.log('level ' + (self.current_level+1) + ' beaten');
 
-            //timer.start();
-            //console.log(timer.seconds);
             if (self.in_bonus_level) {
                self.current_bonus_level++;
                self.current_bonus_level = self.current_bonus_level % bonus_levels.length;
@@ -417,9 +428,14 @@ invaders.prototype = {
                self.just_end_bonus = true;
                self.music_bonus.stop();
                self.music.play();
+            } else if (self.in_boss_level) {
+               self.in_boss_level = false;
+               self.music_boss.stop();
+               self.music.play();
             }
 
-            self.in_boss_level = false;
+
+
             self.loadLevel(++self.current_level);
          }
 
@@ -473,6 +489,12 @@ invaders.prototype = {
          self.text_middle.text = "Niveaux tous finis !\n(pour l'instant)";
          self.text_level.text = "Merci d'avoir essayé !" ;
       } else {
+         if ((lvl+1) % 20 == 0) {
+            self.in_boss_level = true;
+            self.music.stop();
+            self.music_boss.play();
+         }
+
          self.text_middle.text = "Niveau " + (lvl+1);
          self.text_level.text = level_names_fr[lvl];
          //text_level.text = level_names_en[lvl];
@@ -524,12 +546,17 @@ invaders.prototype = {
             console.log(self.text_pause);
             self.game.paused = true;
             self.music.pause();
+            self.music_boss.pause();
          } else {
             console.log("\tGame resumed !");
             self.text_pause.alpha = 0;
             self.game.paused = false;
             if (!self.mute) {
-               self.music.resume();
+               if (self.in_boss_level) {
+                  self.music_boss.resume();
+               } else {
+                  self.music.resume();
+               }
             }
          }
       }   
@@ -641,7 +668,7 @@ invaders.prototype = {
                      break;
                   case 101: // OTTERFUCKER !!! BOSS #1
                      self.enemies.add(new Boulimique(self, xx, yy, 'boulimique'));
-                     self.in_boss_level = true;
+                     //self.in_boss_level = true;
                      break
                }
             }
@@ -852,6 +879,7 @@ invaders.prototype = {
       self.text_level.alpha = 1;
       self.text_level.text = 'Presser R pour recommencer';
       self.music.stop();
+      self.music_boss.stop();
       self.music_bonus.stop();
       self.gameover_sd.play();
 
@@ -898,7 +926,8 @@ invaders.prototype = {
       self.bonusships.removeAll();
       self.enemies.removeAll(true);
       self.player.kill();
-      self.music.stop();
+      self.music.stop();;
+      self.music_boss.stop();
       self.music_bonus.stop();
       var config = {
          is_boss: false,
@@ -937,7 +966,7 @@ invaders.prototype = {
       self.enemies.removeAll(true);
 
       self.text_middle.text = "Niveau bonus !";
-      self.text_level.text = "YAY ! (il est en travaux btw)";
+      self.text_level.text = "YAY !";
       //text_level.text = level_names_en[lvl];
       self.text_middle.alpha = 0;
       self.text_level.alpha = 0;

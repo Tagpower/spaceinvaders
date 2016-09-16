@@ -115,6 +115,9 @@ Enemy.prototype.dropItem = function(obj) {
          case 'bonus':
             new Powerup(obj.state, x, y, 'powerups', 40, PowerupColl.bonusLevel, true, [40,41,42,43,44,45,46,47,48,49,50,51,52,53], 18, true);
          break;
+         case 'coin':
+            new Coin(obj.state, x, y, -30, 5, 'coin', 3); //WIP
+         break;
       }
    }
 }

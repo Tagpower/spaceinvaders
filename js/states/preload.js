@@ -69,16 +69,19 @@ preload.prototype = {
       this.game.load.spritesheet('bonusship', 'assets/bonus_ship.png', 32, 16);
       this.game.load.spritesheet('ship', 'assets/ship24.png', 24, 28);
       this.game.load.spritesheet('powerups', 'assets/powerups.png', 15, 15);
+      this.game.load.spritesheet('coin', 'assets/coin.png', 8, 8);
       this.game.load.spritesheet('menu_buttons', 'assets/menu_buttons.png', 96, 32);
 
       //Music
       this.game.load.audio('ambient', ['assets/audio/e1m1.mp3']);
       this.game.load.audio('ambient_ohgod', ['assets/audio/no_remorse.mp3']); //Provisoire
       this.game.load.audio('title', ['assets/audio/invaders.mp3']);
+      this.game.load.audio('boss', ['assets/audio/boss.mp3']);
       this.game.load.audio('bonus_loop', ['assets/audio/mindlesslittleloop.mp3']);
 
       //Sounds
       this.game.load.audio('pickup', ['assets/audio/pickup.wav']);
+      this.game.load.audio('pickup_coin', ['assets/audio/coin.wav']);
       this.game.load.audio('hellyeah', ['assets/audio/hellyeah.mp3']);
       this.game.load.audio('fire', ['assets/audio/fire.wav']);
       this.game.load.audio('firespecial', ['assets/audio/firespecial.wav']);
