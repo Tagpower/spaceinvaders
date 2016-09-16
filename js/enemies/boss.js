@@ -17,7 +17,6 @@ Boulimique = function (state, x, y, key) {
    self.once = true;
    self.timer = self.game.time.create(true);
    self.fireDelay = 45 - difficulty*5;
-   self.fireDelay =
    self.timer.loop(self.fireDelay, function() {
       self.makeBullet(self.shots, self.x, self.y, self.fireAngle, -self.bulletSpeed, 0, 0, 'enemyshots', 6, true);
       self.fireAngle += self.angleOffset;
