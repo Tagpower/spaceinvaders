@@ -12,12 +12,13 @@ Boss.prototype.constructor = Boss;
 
 Boulimique = function (state, x, y, key) {
    var self = this;
-   Boss.call(self, state, x, y, key, 100, 100, 9, ENEMY_DEFAULT_FIRE_PROBA*10, 150, 50);
+   Boss.call(self, state, x, y, key, 150, 100, 9, ENEMY_DEFAULT_FIRE_PROBA*10, 5000, 500);
    self.fireAngle = 0;
-   self.angleOffset = 20;
+   self.angleOffset = 32;
    self.once = true;
    self.timer = self.game.time.create(true);
-   self.timer.loop(50 - (difficulty*5), function() {
+   self.fireDelay = 60 - difficulty*5;
+   self.timer.loop(self.fireDelay, function() {
       self.makeBullet(self.shots, self.x, self.y, self.fireAngle, -self.bulletSpeed, 0, 0, 'enemyshots', 6, true);
       self.fireAngle += self.angleOffset;
       self.fireAngle %= 360;
@@ -44,5 +45,6 @@ Boulimique.prototype.fire = function () {
 Boulimique.prototype.death = function () { //TODO: Faire un effet de disparition trop trop classe
    var self = this;
    console.log("BOSS BATTU");
-   self.timer.stop()
+   //TODO: Transformer tous les tirs ennemis en pièces qui donnent des points ^^
+   self.timer.stop();
 };

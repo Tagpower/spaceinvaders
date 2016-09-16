@@ -39,7 +39,17 @@ preload.prototype = {
       text_loading.smoothed = false;
       text_loading.anchor.setTo(0.5);
 
-      var loading_strings = ["Recrutement de fantômes","Finissage des sprites","C'est les musiques qui mettent longtemps","Deux secondes","Auto-réparation du code","Nettoyage du vaisseau","Suppression de commentaires grossiers","Un p'tit verre en attendant ?"];
+      var loading_strings = ["Recrutement de fantômes",
+                             "Finissage des sprites",
+                             "C'est les musiques qui mettent longtemps",
+                             "Deux secondes",
+                             "Auto-réparation du code",
+                             "Nettoyage du vaisseau",
+                             "Suppression de commentaires grossiers",
+                             "Un p'tit verre en attendant ?",
+                             "Trainage sur reddit",
+                             "OH MON DIEU UN JOUEUR VITE GROUILLE-TOI DE CHARGER !"];
+
       text_loading.text = loading_strings[this.game.rnd.integerInRange(0, loading_strings.length-1)] + '...';
 
       var tween_fade = game.add.tween(text_loading).to( { alpha: 0.2}, 500, Phaser.Easing.Linear.In, true, 0 , -1);

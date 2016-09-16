@@ -1,5 +1,5 @@
 ﻿=====TODO LIST=====
-- Boss
+- Boss (WIP)
 - Plus d'armes ?
 - Trouver/composer une musique originale
 - player ==> classe 
@@ -8,7 +8,6 @@
 =====BUGS=====
 
 ---MAJEURS---
-- Ça crash des fois quand on ramasse un niveau bonus ! (WIP)
 - Quand on chope un niveau bonus juste après avoir terminé un niveau, le niveau bonus apparaît en même temps que le niveau suivant
 - fix special cooldown
 
@@ -18,4 +17,4 @@
 - Les explosions sont parfois invisibles
 - Le bonus ship est kill en sortant de l'écran, ce qui donne quand même les points
 - fix powerups: kill (ajuster minY et maxY)
-- Le texte PAUSE s'affiche plus (Linux)
+- Le texte PAUSE s'affiche plus
