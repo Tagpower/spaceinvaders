@@ -11,15 +11,26 @@ Boss.prototype.constructor = Boss;
 
 
 Boulimique = function (state, x, y, key) {
-   Boss.call(this, state, x, y, key, 100, 100, 9, ENEMY_DEFAULT_FIRE_PROBA*10, 150, 50);
-   this.fireAngle = 0;
-   this.angleOffset = 20;
-   this.once = true;
-   this.fire();
+   var self = this;
+   Boss.call(self, state, x, y, key, 100, 100, 9, ENEMY_DEFAULT_FIRE_PROBA*10, 150, 50);
+   self.fireAngle = 0;
+   self.angleOffset = 20;
+   self.once = true;
+   self.timer = self.game.time.create(true);
+   self.timer.loop(50 - (difficulty*5), function() {
+      self.makeBullet(self.shots, self.x, self.y, self.fireAngle, -self.bulletSpeed, 0, 0, 'enemyshots', 6, true);
+      self.fireAngle += self.angleOffset;
+      self.fireAngle %= 360;
+      if (!self.state.mute) {
+         self.state.enemyfire_sd.play();
+      }
+   }, self);
+   self.events.onKilled.add(self.death, this); //FIXME
+   self.fire();
 };
 
 Boulimique.prototype = Object.create(Enemy.prototype);
-Boulimique.prototype.constructor = Boulimique;
+Boulimique.prototype.constructor = Boulimique; 
 
 Boulimique.prototype.update = function() {
    this.setupCollision();
@@ -27,23 +38,11 @@ Boulimique.prototype.update = function() {
 
 Boulimique.prototype.fire = function () {
    var self = this;
-   var timer = this.game.time.create(true);
-   timer.loop(20, function() {
-      self.makeBullet(self.shots, self.x, self.y, self.fireAngle, -self.bulletSpeed, 0, 0, 'enemy', 5, true);
-      self.fireAngle += self.angleOffset;
-      if (self.fireAngle >= 360) {
-         if (!self.once) {  
-            self.fireAngle = 10;
-            self.once = true;
-         }
-         else {
-            self.fireAngle = 0;
-            self.once = false;
-         }
-      }
-      if (!self.state.mute) {
-         self.state.enemyfire_sd.play();
-      }
-   }, self);
-   timer.start();
+   self.timer.start();
+};
+
+Boulimique.prototype.death = function () { //TODO: Faire un effet de disparition trop trop classe
+   var self = this;
+   console.log("BOSS BATTU");
+   self.timer.stop()
 };

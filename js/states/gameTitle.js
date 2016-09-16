@@ -95,7 +95,6 @@ gameTitle.prototype = {
    },
 
    normal: function() {
-      console.log("connard");
       this.launch(NORMAL, 1);
    },
 
@@ -113,7 +112,7 @@ gameTitle.prototype = {
          is_boss: false,
          is_bonus: false,
          score: 0,
-         lives: 1,
+         lives: 9,
          power: power,
          init_x: 300,
          init_y: 600,

@@ -375,12 +375,16 @@ invaders.prototype = {
             }
             if (enemy.body.position.x < 10) {
                self.left = false;
-               self.enemies.addAll('body.position.x', 10);        
-               self.enemies.addAll('body.position.y', enemy.body.height);      
+               if (!self.in_boss_level) {
+                  self.enemies.addAll('body.position.x', 10);        
+                  self.enemies.addAll('body.position.y', enemy.body.height);      
+               }
             } else if (enemy.body.position.x >= self.game.world.width - 25) {
                self.left = true;
-               self.enemies.addAll('body.position.x', -10);
-               self.enemies.addAll('body.position.y', enemy.body.height);
+               if (!self.in_boss_level) {
+                  self.enemies.addAll('body.position.x', -10);
+                  self.enemies.addAll('body.position.y', enemy.body.height);
+               }
             }
             if (enemy.position.y > self.game.world.height) {
                self.levelFailed();
@@ -415,6 +419,7 @@ invaders.prototype = {
                self.music.play();
             }
 
+            self.in_boss_level = false;
             self.loadLevel(++self.current_level);
          }
 
@@ -634,8 +639,9 @@ invaders.prototype = {
                   case 16: //MAGENTA : Fires growing shots, takes 2 hits
                      self.enemies.add(new Magenta(self, xx, yy, 'enemy'));
                      break;
-                  case 17: // OTTERFUCKER !!!
+                  case 101: // OTTERFUCKER !!! BOSS #1
                      self.enemies.add(new Boulimique(self, xx, yy, 'boulimique'));
+                     self.in_boss_level = true;
                      break
                }
             }
