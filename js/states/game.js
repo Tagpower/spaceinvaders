@@ -647,6 +647,7 @@ invaders.prototype = {
             }
          }
       }   
+      self.game.world.bringToTop(self.enemies);
    },
    // }}}
 
