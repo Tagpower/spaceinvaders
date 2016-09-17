@@ -68,7 +68,6 @@ invaders.prototype = {
    // {{{ CREATE
    create: function() {
       var self = this;
-      console.log("connard");
       //Create the background
 
       self.background = game.add.tileSprite(0, 0, game.width, game.height, 'space');
@@ -491,11 +490,15 @@ invaders.prototype = {
       } else {
          if ((lvl+1) % 20 == 0) {
             self.in_boss_level = true;
+            self.text_level.fill = '#ff2222';
+            self.text_middle.text = "BOSS";
             self.music.stop();
             self.music_boss.play();
+         } else {
+            self.text_level.fill = '#00aaff';
+            self.text_middle.text = "Niveau " + (lvl+1);
          }
 
-         self.text_middle.text = "Niveau " + (lvl+1);
          self.text_level.text = level_names_fr[lvl];
          //text_level.text = level_names_en[lvl];
          self.text_middle.alpha = 0;
@@ -522,15 +525,17 @@ invaders.prototype = {
             self.game.add.tween(self.text_level).to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
             console.log("\tCreating enemies...");
             self.createEnemies(levels[lvl]); 
-            //self.createEnemies(self.only(13)); 
+            //self.createEnemies(self.only(101)); //DO NOT UNCOMMENT THIS I BEG YOU
             console.log("\t-*- Enemies created -*-");
             self.wait_next_level = false;
          });
          self.timer.start();
 
          //Set a delay for the bonus ship to come (15 to 40 secs)
-         var delayForBonus = Math.random()*25*1000 + 15000;
-         self.bonusShip(delayForBonus);
+         if (!self.in_boss_level) {
+            var delayForBonus = Math.random()*25*1000 + 15000;
+            self.bonusShip(delayForBonus);
+         }
       }
 
    },

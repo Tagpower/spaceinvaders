@@ -97,6 +97,7 @@ var PowerupColl = {
    },
 
    orange: function(powerup) {
+      if(self.state.in_boss_level) return;
       var wave = powerup.state.game.add.sprite(powerup.state.player.body.center.x, powerup.state.player.body.center.y, 'clear_wave');
       wave.tint = 0xff7f00;
       wave.anchor.setTo(0.5, 0.5);

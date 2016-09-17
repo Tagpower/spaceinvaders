@@ -2,14 +2,14 @@
 var level_names_en = ["Orange is the new ghost", "Cross the line", "Death from above", "Still not bullet hell", "Encapsulated",
    "Stand behind me", "Banzai", "Target almost locked", "Well Played", "Rainbow",
    "Eleven","Deadly checkers", "To the top with you", "Not based on opinion", "Thanks for the gold",
-   "Hard core", "Caution : unstable", "Getting tougher", "All over the place", "BOSS (COMING SOON)",
+   "Hard core", "Caution : unstable", "Getting tougher", "All over the place", "Cyano the Sprinkling Photon",
    "Attack of the ninjas", "Twenty two", "Looks simple ?..."
 ];
 
 var level_names_fr = ["Alerte orange", "La ligne rouge", "La mort vient d'en haut", "Ceci n'est pas un bullet hell", "Capsule",
     "Reste derrière moi", "Banzai", "Cible presque verrouillée", "Bien joué", "Arc-en-ciel",
     "Onze","Échiquier fatal", "Au top", "Pas basé sur l'opinion", "Merci pour l'or",
-    "Noyau dur", "Danger : instable", "Ça se complique", "Y en a partout", "BOSS (BIENTÔT)",
+    "Noyau dur", "Danger : instable", "Ça se complique", "Y en a partout", "Cyano le Photon Arroseur",
     "L'attaque des ninjas", "Vingt-deux", "Trop facile ?..."
 ];
 

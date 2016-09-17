@@ -11,7 +11,7 @@ Boss.prototype.constructor = Boss;
 
 Boulimique = function (state, x, y, key) {
    var self = this;
-   Boss.call(self, state, x, y, key, 150, 100, 9, ENEMY_DEFAULT_FIRE_PROBA*10, 5000, 10);
+   Boss.call(self, state, x, y, key, 150, 100, 9, ENEMY_DEFAULT_FIRE_PROBA*10, 5000, 300);
    self.fireAngle = 0;
    self.angleOffset = 32;
    self.once = true;
@@ -33,6 +33,7 @@ Boulimique.prototype.constructor = Boulimique;
 
 Boulimique.prototype.update = function() {
    this.setupCollision();
+   this.tint = 0xff7777 + (this.health/300 * 0x007777); //WIP
 }
 
 Boulimique.prototype.fire = function () {
@@ -40,27 +41,32 @@ Boulimique.prototype.fire = function () {
    self.timer.start();
 };
 
-Boulimique.prototype.kill = function() {
+Boulimique.prototype.kill = function() { //WIP
    var self = this;
    console.log("BOSS BATTU");
-   //TODO: Transformer tous les tirs ennemis en pièces qui donnent des points ^^
    self.timer.stop();
    self.game.time.events.repeat(125, 20, function() {
       self.state.createExplosion(this.x + self.state.game.rnd.between(-20,20), this.y + self.state.game.rnd.between(-20,20), 0);
    }, self);
-   self.shots.forEach(function(s){
-      new Coin(self.state, s.x, s.y, self.game.rnd.between(-50,50), self.game.rnd.between(-100,0), 100);
-      s.kill();
-   });
-   self.alive = false;
-   self.visible = false;
-   self.exists = false;
-   //this.body.velocity.setTo(0,0);
-   //this.animations.stop();
-   //this.animations.play('die');
-   if (self.events) {
-       self.events.onKilled$dispatch(self);
-   }
+   //self.timer_death = game.time.create(true);
+   //self.timer_death.add(2000, function(){
+      self.shots.forEach(function(s){
+         new Coin(self.state, s.x, s.y, self.game.rnd.between(-50,50), self.game.rnd.between(-100,0), 100);
+         s.kill();
+      });
+      new Powerup(self.state, self.x, self.y, 'powerups', 12, PowerupColl.extraLife);
+      self.alive = false;
+      self.visible = false;
+      self.exists = false;
+      //this.body.velocity.setTo(0,0);
+      //this.animations.stop();
+      //this.animations.play('die');
+      if (self.events) {
+          self.events.onKilled$dispatch(self);
+      }
+   //});
+   //self.timer_death.start();
+   
 
     return self;
 };
