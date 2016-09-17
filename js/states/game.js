@@ -714,7 +714,6 @@ invaders.prototype = {
          expl.revive();
          expl.reset(x,y);
       }
-      console.log(expl.alpha);
       expl.alpha = 1;
       expl.scale.setTo(1);
       expl.power = pow;

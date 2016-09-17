@@ -17,14 +17,6 @@ Boulimique = function (state, x, y, key) {
    self.once = true;
    self.timer = self.game.time.create(true);
    self.fireDelay = 45 - difficulty*5;
-   self.timer.loop(self.fireDelay, function() {
-      self.makeBullet(self.shots, self.x, self.y, self.fireAngle, -self.bulletSpeed, 0, 0, 'enemyshots', 6, true);
-      self.fireAngle += self.angleOffset;
-      self.fireAngle %= 360;
-      if (!self.state.mute) {
-         self.state.enemyfire_sd.play();
-      }
-   }, self);
    self.fire();
 };
 
@@ -38,35 +30,41 @@ Boulimique.prototype.update = function() {
 
 Boulimique.prototype.fire = function () {
    var self = this;
+   self.timer.loop(self.fireDelay, function() {
+      self.makeBullet(self.shots, self.x, self.y, self.fireAngle, -self.bulletSpeed, 0, 0, 'enemyshots', 6, true);
+      self.fireAngle += self.angleOffset;
+      self.fireAngle %= 360;
+      if (!self.state.mute) {
+         self.state.enemyfire_sd.play();
+      }
+   }, self);
    self.timer.start();
 };
 
-Boulimique.prototype.kill = function() { //WIP
+Boulimique.prototype.damage = function(amount) { //WIP
    var self = this;
    console.log("BOSS BATTU");
-   self.timer.stop();
-   self.game.time.events.repeat(125, 20, function() {
-      self.state.createExplosion(this.x + self.state.game.rnd.between(-20,20), this.y + self.state.game.rnd.between(-20,20), 0);
-   }, self);
-   //self.timer_death = game.time.create(true);
-   //self.timer_death.add(2000, function(){
-      self.shots.forEach(function(s){
-         new Coin(self.state, s.x, s.y, self.game.rnd.between(-50,50), self.game.rnd.between(-100,0), 100);
-         s.kill();
-      });
-      new Powerup(self.state, self.x, self.y, 'powerups', 12, PowerupColl.extraLife);
-      self.alive = false;
-      self.visible = false;
-      self.exists = false;
-      //this.body.velocity.setTo(0,0);
-      //this.animations.stop();
-      //this.animations.play('die');
-      if (self.events) {
-          self.events.onKilled$dispatch(self);
-      }
-   //});
-   //self.timer_death.start();
-   
+   self.health -= amount;
 
-    return self;
+   if (self.alive && self.health <= 0) {
+      self.alive = false;
+      self.timer.stop();
+      var delay = 125;
+      var occurs = 20;
+      var duration = delay * occurs;
+      self.game.time.events.repeat(delay, occurs, function() {
+         self.state.createExplosion(this.x + self.state.game.rnd.between(-20,20), this.y + self.state.game.rnd.between(-20,20), 0);
+      }, self);
+
+      var tween = self.game.add.tween(self);
+      tween.to({"alpha": 0, "body.velocity.x": 0}, duration, "Linear", true);
+      tween.onComplete.add(function() {
+         self.shots.forEachAlive(function(s){
+            new Coin(self.state, s.x, s.y, self.game.rnd.between(-50,50), self.game.rnd.between(-100,0), 100);
+            s.kill();
+         });
+         new Powerup(self.state, self.x, self.y, 'powerups', 12, PowerupColl.extraLife);
+         self.kill();
+      }, self);
+   }
 };
