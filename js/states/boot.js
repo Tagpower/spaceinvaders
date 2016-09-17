@@ -30,7 +30,7 @@ boot.prototype = {
          }
       });
 
-      this.game.saveCpu = this.game.plugins.add(Phaser.Plugin.SaveCPU);
+      //this.game.saveCpu = this.game.plugins.add(Phaser.Plugin.SaveCPU);
 
       console.log("-*- Booted -*-");
       this.game.state.start("Preload");

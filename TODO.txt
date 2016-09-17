@@ -1,5 +1,5 @@
 ﻿=====TODO LIST=====
-- Boss
+- Boss (WIP)
 - Plus d'armes ?
 - Trouver/composer une musique originale
 - player ==> classe 
@@ -8,7 +8,6 @@
 =====BUGS=====
 
 ---MAJEURS---
-- CRASH QUAND ON RESTART APRÈS GAME OVER
 - Quand on chope un niveau bonus juste après avoir terminé un niveau, le niveau bonus apparaît en même temps que le niveau suivant
 - fix special cooldown
 

@@ -97,72 +97,88 @@ var PowerupColl = {
    },
 
    orange: function(powerup) {
-      var wave = powerup.state.game.add.sprite(powerup.state.player.body.center.x, powerup.state.player.body.center.y, 'clear_wave');
-      wave.tint = 0xff7f00;
-      wave.anchor.setTo(0.5, 0.5);
-      wave.smoothed = false;
-      powerup.state.game.add.tween(wave).to( { alpha: 0}, 1500, Phaser.Easing.Quintic.Out, true);
-      powerup.state.game.add.tween(wave.scale).to( {x: 30, y: 30 }, 1500, Phaser.Easing.Quintic.Out, true);
-      if (!powerup.state.mute) {
-         powerup.state.wave_sd.play();
-      }
-      var already_all_orange = true;
-      var tab = [];
-      var del = [];
-      powerup.state.enemies.forEachAlive(function(e, tab, del){ //Orangify all the enemies
-         if (!(e instanceof Orange)) {
-            already_all_orange = false;
-            tab.push(new Orange(powerup.state, e.x, e.y, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
-            del.push(e);
+      if(!powerup.state.in_boss_level) {
+         var wave = powerup.state.game.add.sprite(powerup.state.player.body.center.x, powerup.state.player.body.center.y, 'clear_wave');
+         wave.tint = 0xff7f00;
+         wave.anchor.setTo(0.5, 0.5);
+         wave.smoothed = false;
+         powerup.state.game.add.tween(wave).to( { alpha: 0}, 1500, Phaser.Easing.Quintic.Out, true);
+         powerup.state.game.add.tween(wave.scale).to( {x: 30, y: 30 }, 1500, Phaser.Easing.Quintic.Out, true);
+         if (!powerup.state.mute) {
+            powerup.state.wave_sd.play();
          }
-      }, this, tab, del);
+         var already_all_orange = true;
+         var tab = [];
+         var del = [];
+         powerup.state.enemies.forEachAlive(function(e, tab, del){ //Orangify all the enemies
+            if (!(e instanceof Orange)) {
+               already_all_orange = false;
+               tab.push(new Orange(powerup.state, e.x, e.y, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+               del.push(e);
+            }
+         }, this, tab, del);
 
-      for (var i = 0; i < del.length; i++)
-         powerup.state.enemies.remove(del[i]);
+         for (var i = 0; i < del.length; i++)
+            powerup.state.enemies.remove(del[i]);
 
-      for (var i = 0; i < tab.length; i++)
-         powerup.state.enemies.add(tab[i]);
+         for (var i = 0; i < tab.length; i++)
+            powerup.state.enemies.add(tab[i]);
 
-      powerup.state.score += 500;
-      if (!already_all_orange) {
-         powerup.state.text_ship.text = "Tous oranges !";
+         if (!already_all_orange) {
+            powerup.state.text_ship.text = "Tous oranges !";
+         } else {
+            powerup.state.text_ship.text = "Très utile !";
+         }
       } else {
-         powerup.state.text_ship.text = "Très utile !";
+         powerup.state.text_ship.text = "nope.";
       }
+      powerup.state.score += 500;
+      
    },
 
    freeze: function(powerup) {
-      var wave = powerup.state.game.add.sprite(powerup.state.player.body.center.x, powerup.state.player.body.center.y, 'clear_wave');
-      wave.tint = 0x007fff;
-      wave.anchor.setTo(0.5, 0.5);
-      wave.smoothed = false;
-      powerup.state.game.add.tween(wave).to( { alpha: 0}, 1500, Phaser.Easing.Quintic.Out, true);
-      powerup.state.game.add.tween(wave.scale).to( {x: 30, y: 30 }, 1500, Phaser.Easing.Quintic.Out, true);
-      if (!powerup.state.mute) {
-         powerup.state.wave_sd.play();
+      if (!powerup.state.in_boss_level) {
+         var wave = powerup.state.game.add.sprite(powerup.state.player.body.center.x, powerup.state.player.body.center.y, 'clear_wave');
+         wave.tint = 0x007fff;
+         wave.anchor.setTo(0.5, 0.5);
+         wave.smoothed = false;
+         powerup.state.game.add.tween(wave).to( { alpha: 0}, 1500, Phaser.Easing.Quintic.Out, true);
+         powerup.state.game.add.tween(wave.scale).to( {x: 30, y: 30 }, 1500, Phaser.Easing.Quintic.Out, true);
+         if (!powerup.state.mute) {
+            powerup.state.wave_sd.play();
+         }
+         powerup.state.speed = 0;
+         powerup.state.text_ship.text = "Stop !";
+      } else {
+         powerup.state.text_ship.text = "nope.";
       }
-      powerup.state.speed = 0;
       powerup.state.score += 400;
-      powerup.state.text_ship.text = "Stop !";
+      
    },
 
    warp: function(powerup) {
-      var highest = 1000; 
-      powerup.state.enemies.forEachAlive(function(e) {
-         if (e.y < highest) {
-            highest = e.y;
-         }
-      });
-      powerup.state.enemies.forEachAlive(function(e) {
-         game.add.tween(e).to( {y: e.y - (highest-40)}, 1000, Phaser.Easing.Quadratic.Out, true);
-      });
+      if (!powerup.state.in_boss_level) {
+         var highest = 1000; 
+         powerup.state.enemies.forEachAlive(function(e) {
+            if (e.y < highest) {
+               highest = e.y;
+            }
+         });
+         powerup.state.enemies.forEachAlive(function(e) {
+            game.add.tween(e).to( {y: e.y - (highest-40)}, 1000, Phaser.Easing.Quadratic.Out, true);
+         });
+         powerup.state.text_ship.text = "Retour en haut !";
+      } else {
+         powerup.state.text_ship.text = "nope.";
+      }
       powerup.state.score += 400;
-      powerup.state.text_ship.text = "Retour en haut !";
+
    },
 
    extraLife: function(powerup) {
       powerup.state.lives++;
       powerup.state.score += 900;
+      powerup.state.shield_time += 120;
       powerup.state.text_ship.text = "+1 vie !";
 
       powerup.state.text_lives.scale.setTo(1,1);

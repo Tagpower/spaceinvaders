@@ -19,9 +19,10 @@ var Enemy = function (state, x, y, key, bulletSpeed, power, type, fireProba, val
 
    this.shots = this.game.add.group(game.world, 'bullet pool', false, true, Phaser.Physics.ARCADE);
 
-   this.animations.add('move', framesAnim, timeAnim, true);
-   this.animations.play('move');
-
+   if (framesAnim) {
+      this.animations.add('move', framesAnim, timeAnim, true);
+      this.animations.play('move');
+   }
    this.events.onKilled.add(this.dropItem, this);
    this.events.onKilled.add(this.enemyDeath, this);
 }
@@ -47,8 +48,12 @@ Enemy.prototype.collide = function(player, shot) {
    this.state.playerHit(player, shot);
 }
 
-Enemy.prototype.update = function() {
+Enemy.prototype.setupCollision = function() {
    this.game.physics.arcade.collide(this.shots, this.state.player, this.collide, function(){return (!this.state.lostAlife && this.state.shield_time == 0);}, this);
+}
+
+Enemy.prototype.update = function() {
+   this.setupCollision();
 
    if (this.alive && Math.random() < this.fireProba && this.state.clear_nofiretime == 0) 
       this.fire();
@@ -110,6 +115,9 @@ Enemy.prototype.dropItem = function(obj) {
          case 'bonus':
             new Powerup(obj.state, x, y, 'powerups', 40, PowerupColl.bonusLevel, true, [40,41,42,43,44,45,46,47,48,49,50,51,52,53], 18, true);
          break;
+         case 'coin':
+            new Coin(obj.state, x, y, -30, 5, 'coin', 3); //WIP
+         break;
       }
    }
 }
@@ -123,10 +131,21 @@ Enemy.prototype.enemyDeath = function(obj) {
    }
 }
 
+Enemy.prototype.makeBullet = function(group, x, y, angle, speed, gx, gy, key, frame, tracking=false, scaleSpeed=0, power=undefined) {
+   if (power === undefined)
+      power = this.power;
+   try {
+      group.getFirstDead().fire(x, y, angle, speed, gx, gy);
+   } catch(err) {
+      group.add(new Bullet(this.state.game, key, frame, power, tracking, scaleSpeed), true);
+      group.getFirstExists(false).fire(x, y, angle, speed, gx, gy);
+   }
+}
 
 
-Blue = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, x, y, key, 100, 100, 9, fireProba*1.5, 150, 10, [16, 17], 6);
+
+Blue = function (state, x, y, key) {
+   Enemy.call(this, state, x, y, key, 100, 100, 9, ENEMY_DEFAULT_FIRE_PROBA*1.5, 150, 10, [16, 17], 6);
 };
 
 Blue.prototype = Object.create(Enemy.prototype);
@@ -154,8 +173,8 @@ Blue.prototype.fire = function () {
 
 
 
-Brown = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, x, y, key, 100, 100, 10, fireProba*0.75, 100, 10, [18, 19], 6);
+Brown = function (state, x, y, key) {
+   Enemy.call(this, state, x, y, key, 100, 100, 10, ENEMY_DEFAULT_FIRE_PROBA*0.75, 100, 10, [18, 19], 6);
    this.events.onKilled.add(this.death, this);
 };
 
@@ -184,8 +203,8 @@ Brown.prototype.death = function(obj) {
 
 
 
-Cyan = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, x, y, key, 100, 100, 7, fireProba*1.2, 200, 10, [12, 13], 6);
+Cyan = function (state, x, y, key) {
+   Enemy.call(this, state, x, y, key, 100, 100, 7, ENEMY_DEFAULT_FIRE_PROBA*1.2, 200, 10, [12, 13], 6);
    this.shots.setAll('tracking', true);
 };
 
@@ -219,8 +238,8 @@ Cyan.prototype.fire = function () {
 
 
 
-DarkGreen = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, x, y, key, 600, 100, 11, fireProba, 400, 10, [20, 21], 6);
+DarkGreen = function (state, x, y, key) {
+   Enemy.call(this, state, x, y, key, 600, 100, 11, ENEMY_DEFAULT_FIRE_PROBA, 400, 10, [20, 21], 6);
 };
 
 DarkGreen.prototype = Object.create(Enemy.prototype);
@@ -244,8 +263,8 @@ DarkGreen.prototype.fire = function () {
 
 
 
-Gray = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, x, y, key, 100, 100, 5, fireProba, 250, 20, [8, 9], 6);
+Gray = function (state, x, y, key) {
+   Enemy.call(this, state, x, y, key, 100, 100, 5, ENEMY_DEFAULT_FIRE_PROBA, 250, 20, [8, 9], 6);
 };
 
 Gray.prototype = Object.create(Enemy.prototype);
@@ -270,8 +289,8 @@ Gray.prototype.fire = function () {
 
 
 
-Green = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, x, y, key, 300, 100, 3, fireProba, 200, 10, [4, 5], 6);
+Green = function (state, x, y, key) {
+   Enemy.call(this, state, x, y, key, 300, 100, 3, ENEMY_DEFAULT_FIRE_PROBA, 200, 10, [4, 5], 6);
 };
 
 Green.prototype = Object.create(Enemy.prototype);
@@ -296,8 +315,8 @@ Green.prototype.fire = function () {
 
 
 
-DarkRed = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, x, y, key, 200, 100, 12, fireProba*0.6, 250, 10, [22, 23], 6);
+DarkRed = function (state, x, y, key) {
+   Enemy.call(this, state, x, y, key, 200, 100, 12, ENEMY_DEFAULT_FIRE_PROBA*0.6, 250, 10, [22, 23], 6);
    this.shots.setAll('tracking', true);
 };
 
@@ -326,8 +345,8 @@ DarkRed.prototype.fire = function () {
 
 
 
-Orange = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, x, y, key, 100, 100, 1, fireProba, 100, 10, [0, 1], 6);
+Orange = function (state, x, y, key) {
+   Enemy.call(this, state, x, y, key, 100, 100, 1, ENEMY_DEFAULT_FIRE_PROBA, 100, 10, [0, 1], 6);
 };
 
 Orange.prototype = Object.create(Enemy.prototype);
@@ -352,8 +371,8 @@ Orange.prototype.fire = function () {
 
 
 
-Pink = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, x, y, key, 100, 100, 8, fireProba*1.5, 400, 30, [14, 15], 6);
+Pink = function (state, x, y, key) {
+   Enemy.call(this, state, x, y, key, 100, 100, 8, ENEMY_DEFAULT_FIRE_PROBA*1.5, 400, 30, [14, 15], 6);
 };
 
 Pink.prototype = Object.create(Enemy.prototype);
@@ -377,8 +396,8 @@ Pink.prototype.fire = function () {
 
 
 
-Purple = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, x, y, key, 100, 100, 4, fireProba*2, 150, 10, [6, 7], 6);
+Purple = function (state, x, y, key) {
+   Enemy.call(this, state, x, y, key, 100, 100, 4, ENEMY_DEFAULT_FIRE_PROBA*2, 150, 10, [6, 7], 6);
 };
 
 Purple.prototype = Object.create(Enemy.prototype);
@@ -403,8 +422,8 @@ Purple.prototype.fire = function () {
 
 
 
-Red = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, x, y, key, 100, 100, 2, fireProba*0.8, 200, 10, [2, 3], 6);
+Red = function (state, x, y, key) {
+   Enemy.call(this, state, x, y, key, 100, 100, 2, ENEMY_DEFAULT_FIRE_PROBA*0.8, 200, 10, [2, 3], 6);
    this.shots.setAll('tracking', true);
 };
 
@@ -449,8 +468,8 @@ Red.prototype.fire = function () {
 
 
 
-Yellow = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, x, y, key, 100, 100, 6, fireProba*0.5, 100, 10, [10, 11], 6);
+Yellow = function (state, x, y, key) {
+   Enemy.call(this, state, x, y, key, 100, 100, 6, ENEMY_DEFAULT_FIRE_PROBA*0.5, 100, 10, [10, 11], 6);
    this.events.onKilled.add(this.death, this);
 };
 
@@ -528,8 +547,8 @@ Yellow.prototype.death = function(obj) {
 }
 
 //WIP
-Black = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, x, y, key, 200, 100, 13, fireProba, 250, 10, [24, 25], 6);
+Black = function (state, x, y, key) {
+   Enemy.call(this, state, x, y, key, 200, 100, 13, ENEMY_DEFAULT_FIRE_PROBA, 250, 10, [24, 25], 6);
 };
 
 Black.prototype = Object.create(Enemy.prototype);
@@ -556,8 +575,8 @@ Black.prototype.fire = function () {
 };
 
 //TODO
-White = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, x, y, key, 100, 100, 14, fireProba, 150, 10, [26, 27], 6);
+White = function (state, x, y, key) {
+   Enemy.call(this, state, x, y, key, 100, 100, 14, ENEMY_DEFAULT_FIRE_PROBA, 150, 10, [26, 27], 6);
 };
 
 White.prototype = Object.create(Enemy.prototype);
@@ -580,8 +599,8 @@ White.prototype.fire = function () { //TODO
 };
 
 //WIP
-DarkCyan = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, x, y, key, 300, 100, 15, fireProba*0.9, 300, 10, [28, 29], 6);
+DarkCyan = function (state, x, y, key) {
+   Enemy.call(this, state, x, y, key, 300, 100, 15, ENEMY_DEFAULT_FIRE_PROBA*0.9, 300, 10, [28, 29], 6);
    this.shots.setAll('tracking', true);
 };
 
@@ -616,8 +635,8 @@ DarkCyan.prototype.fire = function () {
 };
 
 //WIP
-Magenta = function (state, x, y, key, fireProba) {
-   Enemy.call(this, state, x, y, key, 200, 100, 16, fireProba*0.75, 350, 20, [30, 31], 6);
+Magenta = function (state, x, y, key) {
+   Enemy.call(this, state, x, y, key, 200, 100, 16, ENEMY_DEFAULT_FIRE_PROBA*0.75, 350, 20, [30, 31], 6);
 };
 
 Magenta.prototype = Object.create(Enemy.prototype);

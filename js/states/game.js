@@ -94,8 +94,7 @@ invaders.prototype = {
       self.explosions = self.game.add.group();
       self.explosions.enableBody = true;
 
-      self.enemies = self.game.add.group();
-      self.enemies.enableBody = true;
+      self.enemies = self.game.add.physicsGroup();
 
       self.bonusships = self.game.add.group();
       self.bonusships.enableBody = true;
@@ -139,7 +138,9 @@ invaders.prototype = {
       //Ingame Text
       var style_white = {font: '32px Minecraftia', fill:'#ffffff'};
       var style_blue  = {font: '16px Minecraftia', fill:'#00aaff'};
-	
+      var style_green  = {font: '16px Minecraftia', fill:'#44ff44'};
+      var style_yellow  = {font: '8px Minecraftia', fill:'#ffee00'};
+
       self.text_middle = self.game.add.text(self.game.world.width/2, self.game.world.height/2, '', style_white);
       self.text_middle.fixedToCamera = true;
       self.text_middle.anchor.setTo(0.5);
@@ -177,6 +178,16 @@ invaders.prototype = {
       self.text_level.fixedToCamera = true;
       self.text_level.anchor.setTo(0.5);
 
+      self.text_ship = self.game.add.text(self.player.body.x - 20, self.player.body.y-20, '', style_green);
+      self.text_ship.anchor.setTo(0.5);
+      self.text_ship.alpha = 0;
+
+      self.text_points = self.game.add.text(self.player.body.x - 20, self.player.body.y-20, '', style_yellow);
+      self.text_points.anchor.setTo(0.5);
+      self.text_points.alpha = 0;
+
+
+
       if (difficulty < OHGOD) {
          self.music = self.game.add.audio('ambient');
       } else {
@@ -184,6 +195,8 @@ invaders.prototype = {
       }
       self.music.loop = true;
 
+      self.music_boss = self.game.add.audio('boss');
+      self.music_boss.loop = true;
 
       self.music_bonus = self.game.add.audio('bonus_loop');
       self.music_bonus.loop = true;
@@ -194,6 +207,9 @@ invaders.prototype = {
 
       //Create all sounds
       self.pickup_sd = self.game.add.audio('pickup');
+      self.pickup_sd.volume = 0.5;
+      self.pickupcoin_sd = self.game.add.audio('pickup_coin');
+      self.pickupcoin_sd.volume = 0.5;
       self.hellyeah_sd = self.game.add.audio('hellyeah');
       self.playerhit_sd = self.game.add.audio('explode');
       self.hitenemy_sd = self.game.add.audio('hitenemy');
@@ -211,9 +227,6 @@ invaders.prototype = {
       self.win_sd = self.game.add.audio('win');
       self.gameover_sd = self.game.add.audio('gameover');
 
-      self.text_ship = self.game.add.text(self.player.body.x - 20, self.player.body.y-20, '', {font: '16px Minecraftia', fill: '#44ff44'});
-      self.text_ship.anchor.setTo(0.5, 0.5);
-      self.text_ship.alpha = 0;
 
       self.speed = START_SPEED;
       self.speedup = SPEEDUP_INIT;
@@ -230,7 +243,7 @@ invaders.prototype = {
       }
       self.enemies.setAll('body.velocity.x', self.speed); 
 
-      self.game.saveCpu.renderOnFPS = 120;
+      //self.game.saveCpu.renderOnFPS = 60;
       self.READY = true;
    },
 
@@ -358,6 +371,7 @@ invaders.prototype = {
                if (self.restart_btn.isDown) {
                   //self.restart(0);
                   self.music.stop();
+                  self.music_boss.stop();
                   self.gameover_sd.stop(); // FIXME
                   this.game.stateTransition.to("GameTitle", true, false);
                }
@@ -379,12 +393,16 @@ invaders.prototype = {
             }
             if (enemy.body.position.x < 10) {
                self.left = false;
-               self.enemies.addAll('body.position.x', 10);        
-               self.enemies.addAll('body.position.y', enemy.body.height);      
+               if (!self.in_boss_level) {
+                  self.enemies.addAll('body.position.x', 10);        
+                  self.enemies.addAll('body.position.y', enemy.body.height);      
+               }
             } else if (enemy.body.position.x >= self.game.world.width - 25) {
                self.left = true;
-               self.enemies.addAll('body.position.x', -10);
-               self.enemies.addAll('body.position.y', enemy.body.height);
+               if (!self.in_boss_level) {
+                  self.enemies.addAll('body.position.x', -10);
+                  self.enemies.addAll('body.position.y', enemy.body.height);
+               }
             }
             if (enemy.position.y > self.game.world.height) {
                self.levelFailed();
@@ -392,8 +410,6 @@ invaders.prototype = {
          });
 
          //When the level is beaten
-         //console.log("is beaten ?")
-
          self.living_e_shots = 0;
          self.enemies.forEach(function(e, cpt) {
             self.living_e_shots += e.livingShots();
@@ -408,8 +424,6 @@ invaders.prototype = {
             });
             console.log('level ' + (self.current_level+1) + ' beaten');
 
-            //timer.start();
-            //console.log(timer.seconds);
             if (self.in_bonus_level) {
                self.current_bonus_level++;
                self.current_bonus_level = self.current_bonus_level % bonus_levels.length;
@@ -417,7 +431,13 @@ invaders.prototype = {
                self.just_end_bonus = true;
                self.music_bonus.stop();
                self.music.play();
+            } else if (self.in_boss_level) {
+               self.in_boss_level = false;
+               self.music_boss.stop();
+               self.music.play();
             }
+
+
 
             self.loadLevel(++self.current_level);
          }
@@ -472,7 +492,17 @@ invaders.prototype = {
          self.text_middle.text = "Niveaux tous finis !\n(pour l'instant)";
          self.text_level.text = "Merci d'avoir essayé !" ;
       } else {
-         self.text_middle.text = "Niveau " + (lvl+1);
+         if ((lvl+1) % 20 == 0) {
+            self.in_boss_level = true;
+            self.text_level.fill = '#ff2222';
+            self.text_middle.text = "BOSS";
+            self.music.stop();
+            self.music_boss.play();
+         } else {
+            self.text_level.fill = '#00aaff';
+            self.text_middle.text = "Niveau " + (lvl+1);
+         }
+
          self.text_level.text = level_names_fr[lvl];
          //text_level.text = level_names_en[lvl];
          self.text_middle.alpha = 0;
@@ -499,15 +529,17 @@ invaders.prototype = {
             self.game.add.tween(self.text_level).to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
             console.log("\tCreating enemies...");
             self.createEnemies(levels[lvl]); 
-            //self.createEnemies(self.only(13)); 
+            //self.createEnemies(self.only(101)); //DO NOT UNCOMMENT THIS I BEG YOU
             console.log("\t-*- Enemies created -*-");
             self.wait_next_level = false;
          });
          self.timer.start();
 
          //Set a delay for the bonus ship to come (15 to 40 secs)
-         var delayForBonus = Math.random()*25*1000 + 15000;
-         self.bonusShip(delayForBonus);
+         //if (!self.in_boss_level) {
+            var delayForBonus = Math.random()*25*1000 + 15000;
+            self.bonusShip(delayForBonus);
+         //}
       }
 
    },
@@ -523,13 +555,18 @@ invaders.prototype = {
             self.text_pause.text = "PAUSE";
             self.game.paused = true;
             self.music.pause();
+            self.music_boss.pause();
          } else {
             console.log("\tGame resumed !");
             self.text_pause.alpha = 0;
             self.text_pause.text = "";
             self.game.paused = false;
             if (!self.mute) {
-               self.music.resume();
+               if (self.in_boss_level) {
+                  self.music_boss.resume();
+               } else {
+                  self.music.resume();
+               }
             }
          }
       }   
@@ -567,7 +604,7 @@ invaders.prototype = {
    },
    // }}}
 
-   // {{{ CREATEENEMIESABS
+   // {{{ CREATEENEMIES
    // Creates an array of enemies at a set position
    createEnemies: function(array) {
       var self = this;
@@ -584,65 +621,70 @@ invaders.prototype = {
                      break;
                   case 1: //ORANGE : normal
                      if (difficulty == OHGOD)
-                        self.enemies.add(new Green(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new Green(self, xx, yy, 'enemy'));
                      else
-                        self.enemies.add(new Orange(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new Orange(self, xx, yy, 'enemy'));
                      break;
                   case 2: //RED : fires multiple shots
                      if (difficulty == OHGOD)
-                        self.enemies.add(new DarkRed(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new DarkRed(self, xx, yy, 'enemy'));
                      else
-                        self.enemies.add(new Red(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new Red(self, xx, yy, 'enemy'));
                      break;
                   case 3: //GREEN : fires fast shots
                      if (difficulty == OHGOD)
-                        self.enemies.add(new DarkGreen(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new DarkGreen(self, xx, yy, 'enemy'));
                      else
-                        self.enemies.add(new Green(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                        self.enemies.add(new Green(self, xx, yy, 'enemy'));
                      break;
                   case 4: //PURPLE : fires twice as often
-                     self.enemies.add(new Purple(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Purple(self, xx, yy, 'enemy'));
                      break;
                   case 5: //GRAY : takes 2 hits
-                     self.enemies.add(new Gray(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Gray(self, xx, yy, 'enemy'));
                      break;
                   case 6: //YELLOW : Fires 5 shots when killed
-                     self.enemies.add(new Yellow(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Yellow(self, xx, yy, 'enemy'));
                      break;
                   case 7: //CYAN : fires gravity-affected shots
-                     self.enemies.add(new Cyan(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Cyan(self, xx, yy, 'enemy'));
                      break;
                   case 8: //PINK : takes 3 hits, fires more often
-                     self.enemies.add(new Pink(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Pink(self, xx, yy, 'enemy'));
                      break;
                   case 9: //BLUE : fires in random directions
-                     self.enemies.add(new Blue(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Blue(self, xx, yy, 'enemy'));
                      break;
                   case 10: //BROWN : explodes when killed
-                     self.enemies.add(new Brown(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Brown(self, xx, yy, 'enemy'));
                      break;
                   case 11: //DARK GREEN : Fires REALLY FAST shots
-                     self.enemies.add(new DarkGreen(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new DarkGreen(self, xx, yy, 'enemy'));
                      break;
                   case 12: //DARK RED : Fires in a circle
-                     self.enemies.add(new DarkRed(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new DarkRed(self, xx, yy, 'enemy'));
                      break;
                   case 13: //BLACK : Sometimes moves down when firing
-                     self.enemies.add(new Black(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Black(self, xx, yy, 'enemy'));
                      break;
                   case 14: //WHITE : COMING SOON
-                     self.enemies.add(new White(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new White(self, xx, yy, 'enemy'));
                      break;
                   case 15: //DARK CYAN : Fires revolving shots
-                     self.enemies.add(new DarkCyan(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new DarkCyan(self, xx, yy, 'enemy'));
                      break;
                   case 16: //MAGENTA : Fires growing shots, takes 2 hits
-                     self.enemies.add(new Magenta(self, xx, yy, 'enemy', ENEMY_DEFAULT_FIRE_PROBA));
+                     self.enemies.add(new Magenta(self, xx, yy, 'enemy'));
                      break;
+                  case 101: // OTTERFUCKER !!! BOSS #1
+                     self.enemies.add(new Boulimique(self, xx, yy, 'boulimique'));
+                     //self.in_boss_level = true;
+                     break
                }
             }
          }
       }   
+      self.game.world.bringToTop(self.enemies);
    },
    // }}}
 
@@ -677,7 +719,6 @@ invaders.prototype = {
          expl.revive();
          expl.reset(x,y);
       }
-      console.log(expl.alpha);
       expl.alpha = 1;
       expl.scale.setTo(1);
       expl.power = pow;
@@ -841,6 +882,7 @@ invaders.prototype = {
       self.text_level.alpha = 1;
       self.text_level.text = 'Presser R pour recommencer';
       self.music.stop();
+      self.music_boss.stop();
       self.music_bonus.stop();
       self.gameover_sd.play();
 
@@ -887,7 +929,8 @@ invaders.prototype = {
       self.bonusships.removeAll();
       self.enemies.removeAll(true);
       self.player.kill();
-      self.music.stop();
+      self.music.stop();;
+      self.music_boss.stop();
       self.music_bonus.stop();
       var config = {
          is_boss: false,
