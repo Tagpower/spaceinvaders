@@ -55,14 +55,14 @@ Boulimique.prototype.damage = function(amount) { //WIP
       self.game.time.events.repeat(delay, occurs, function() {
          self.state.createExplosion(this.x + self.state.game.rnd.between(-20,20), this.y + self.state.game.rnd.between(-20,20), 0);
       }, self);
+      self.shots.forEachAlive(function(s){
+         new Coin(self.state, s.x, s.y, self.game.rnd.between(-50,50), self.game.rnd.between(-100,0), 100);
+         s.kill();
+      });
 
       var tween = self.game.add.tween(self);
       tween.to({"alpha": 0, "body.velocity.x": 0}, duration, "Linear", true);
       tween.onComplete.add(function() {
-         self.shots.forEachAlive(function(s){
-            new Coin(self.state, s.x, s.y, self.game.rnd.between(-50,50), self.game.rnd.between(-100,0), 100);
-            s.kill();
-         });
          new Powerup(self.state, self.x, self.y, 'powerups', 12, PowerupColl.extraLife);
          self.kill();
       }, self);

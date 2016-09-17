@@ -532,10 +532,10 @@ invaders.prototype = {
          self.timer.start();
 
          //Set a delay for the bonus ship to come (15 to 40 secs)
-         if (!self.in_boss_level) {
+         //if (!self.in_boss_level) {
             var delayForBonus = Math.random()*25*1000 + 15000;
             self.bonusShip(delayForBonus);
-         }
+         //}
       }
 
    },
