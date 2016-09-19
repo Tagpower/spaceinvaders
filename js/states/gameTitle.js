@@ -117,7 +117,7 @@ gameTitle.prototype = {
          init_x: 300,
          init_y: 600,
          difficulty: difficulty,
-         current_level: 0,
+         current_level: 19,
          special_available: 1,
          cooldown_reduction: 0,
          current_bonus_level: 0,

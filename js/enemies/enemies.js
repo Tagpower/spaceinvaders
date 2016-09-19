@@ -569,7 +569,7 @@ Black.prototype.fire = function () {
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
    }
 
-   if (Math.random() < 0.25 && this.state.speed > 0){
+   if (Math.random() < 0.20 && this.state.speed > 0){
       this.game.add.tween(this).to( {y: this.y + Math.random()*25 + 25}, 500, Phaser.Easing.Quadratic.Out, true);
    }
 };

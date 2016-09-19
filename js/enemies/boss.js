@@ -32,6 +32,9 @@ Boulimique.prototype.fire = function () {
    var self = this;
    self.timer.loop(self.fireDelay, function() {
       self.makeBullet(self.shots, self.x, self.y, self.fireAngle, -self.bulletSpeed, 0, 0, 'enemyshots', 6, true);
+      if (difficulty == OHGOD) {
+         self.makeBullet(self.shots, self.x, self.y, self.fireAngle+6, -self.bulletSpeed, 0, 0, 'enemyshots', 6, true);
+      }
       self.fireAngle += self.angleOffset;
       self.fireAngle %= 360;
       if (!self.state.mute) {
@@ -43,7 +46,6 @@ Boulimique.prototype.fire = function () {
 
 Boulimique.prototype.damage = function(amount) { //WIP
    var self = this;
-   console.log("BOSS BATTU");
    self.health -= amount;
 
    if (self.alive && self.health <= 0) {
@@ -59,9 +61,10 @@ Boulimique.prototype.damage = function(amount) { //WIP
          new Coin(self.state, s.x, s.y, self.game.rnd.between(-50,50), self.game.rnd.between(-100,0), 100);
          s.kill();
       });
-
+      self.body.collideWorldBounds = true;
+      self.body.velocity.setTo(0);
       var tween = self.game.add.tween(self);
-      tween.to({"alpha": 0, "body.velocity.x": 0}, duration, "Linear", true);
+      tween.to({"alpha": 0}, duration, "Linear", true);
       tween.onComplete.add(function() {
          new Powerup(self.state, self.x, self.y, 'powerups', 12, PowerupColl.extraLife);
          self.kill();

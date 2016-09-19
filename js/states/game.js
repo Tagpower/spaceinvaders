@@ -260,7 +260,7 @@ invaders.prototype = {
          self.game.physics.arcade.collide(self.weapon, self.enemies, self.hitEnemy, null, self);
          self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, function() {return self.shield_time == 0 && !self.lostAlife;}, self);
 
-         self.text_score.text = 'Niveau ' + (self.current_level+1) + '    Score: ' + self.score;
+         self.text_score.text = 'Niveau ' + (self.current_level+1) + '    Score: ' + Math.round(self.score);
 
          //self.text_stats.text = '        ' + self.lives + '        ' + self.power + '        '+ self.cooldown_reduction + '        ' + self.special_available;
          self.text_lives.text = self.lives;
@@ -400,7 +400,7 @@ invaders.prototype = {
                   self.enemies.addAll('body.position.y', enemy.body.height);
                }
             }
-            if (enemy.position.y > self.game.world.height) {
+            if (enemy.position.y > self.game.world.height && !self.in_boss_level) {
                self.levelFailed();
             }
          });
@@ -412,12 +412,6 @@ invaders.prototype = {
          }, self);
 
          if (self.enemies.countLiving() == 0 && self.living_e_shots === 0 && self.current_level < levels.length && !self.wait_next_level) {
-            self.bonusships.forEachAlive(function(bship) {
-               if (bship.body.velocity.x == 0) {
-                  bship.kill();
-                  console.log("bonus ship en attente killé"); //FIXME
-               }
-            });
             console.log('level ' + (self.current_level+1) + ' beaten');
 
             if (self.in_bonus_level) {
@@ -447,6 +441,7 @@ invaders.prototype = {
 
          self.bonusships.forEachAlive(function(bship) {
             if (bship.x > self.game.world.height + bship.body.width*2 || bship.x < -bship.body.width*2) {
+               bship.outOfBounds = true;
                bship.kill();
             }
          });
@@ -547,8 +542,10 @@ invaders.prototype = {
       if (self.lives > 0) {
          if (!self.game.paused) {
             console.log("\tGame paused !");
+            if (!self.mute) {
+               self.pickupcoin_sd.play();
+            }
             self.text_pause.alpha = 1;
-            console.log(self.text_pause);
             self.game.paused = true;
             self.music.pause();
             self.music_boss.pause();
@@ -557,6 +554,7 @@ invaders.prototype = {
             self.text_pause.alpha = 0;
             self.game.paused = false;
             if (!self.mute) {
+               self.pickupcoin_sd.play();
                if (self.in_boss_level) {
                   self.music_boss.resume();
                } else {
@@ -585,6 +583,7 @@ invaders.prototype = {
          }
          else{
             bship.revive();
+            bship.outOfBounds = false;
             bship.reset(x, 15);
             if (Math.random() < 0.5) {
                bship.x = -16;
@@ -998,5 +997,11 @@ invaders.prototype = {
       self.wait_next_level = false;
    },
    // }}}
+
+   givePoints: function(amount) { //GROS WIP
+      var self = this;
+      var score_to = score + amount;
+      self.game.add.tween(self).to( { score: score_to }, 500, Phaser.Easing.Quadratic.Out, true);
+   }
 }
 

@@ -10,7 +10,8 @@ var BonusShip = function (state, x, y, key, frame, value, health, framesAnim, ti
    this.state = state;
    this.health = health;
    this.checkWorldBounds = true;
-   this.outOfBoundsKill = true;
+   //this.outOfBoundsKill = true;
+   this.outOfBounds = false;
 
    this.animations.add('move', framesAnim, timeAnim, true);
    this.animations.play('move');
@@ -30,6 +31,7 @@ BonusShip.prototype = Object.create(Phaser.Sprite.prototype);
 BonusShip.prototype.constructor = BonusShip;
 
 BonusShip.prototype.dropItem = function(obj) {
+  if (!this.outOfBounds) {
    var x = obj.body.center.x;
    var y = obj.body.center.y;
 
@@ -87,4 +89,5 @@ BonusShip.prototype.dropItem = function(obj) {
          new Powerup(obj.state, x, y, 'powerups', 40, PowerupColl.bonusLevel, true, [40,41,42,43,44,45,46,47,48,49,50,51,52,53], 18, true);
       break;
    }
+ }
 }
