@@ -106,6 +106,15 @@ invaders.prototype = {
       self.shield.anchor.setTo(0.5, 0.5);
       self.shield.smoothed = false;
 
+      self.scorePool = 0;
+      self.game.scorePoolTimer = self.game.time.events;
+      self.game.scorePoolTimer.loop(10, function() {
+         self.scorePoolNotRunning = false;
+         self.scorePool--;
+         self.score++;
+      }, self);
+      self.game.scorePoolTimer.stop(false);
+      self.scorePoolNotRunning = true;
 
       // Weapons
       self.weapons.push(self.game.add.existing(new Weapon1B(self)));
@@ -252,15 +261,24 @@ invaders.prototype = {
    update: function() {
       var self = this;
       if (self.READY) {
+         console.log(self.scorePool);
          if (currentDifficulty != difficulty) {
             currentDifficulty = difficulty;
             self.restart(self.current_level);
          }
+
+         if (self.scorePool > 0 && self.scorePoolNotRunning)
+            self.game.scorePoolTimer.start(1);
+         else if (self.scorePool == 0) {
+            self.game.scorePoolTimer.stop(false);
+            self.scorePoolNotRunning = true;
+         }
+
          //Check collisions for everything
          self.game.physics.arcade.collide(self.weapon, self.enemies, self.hitEnemy, null, self);
          self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, function() {return self.shield_time == 0 && !self.lostAlife;}, self);
 
-         self.text_score.text = 'Niveau ' + (self.current_level+1) + '    Score: ' + Math.round(self.score);
+         self.text_score.text = 'Niveau ' + (self.current_level+1) + '    Score: ' + ('000000000' + Math.round(self.score)).slice(-10);
 
          //self.text_stats.text = '        ' + self.lives + '        ' + self.power + '        '+ self.cooldown_reduction + '        ' + self.special_available;
          self.text_lives.text = self.lives;
@@ -1000,8 +1018,7 @@ invaders.prototype = {
 
    givePoints: function(amount) { //GROS WIP
       var self = this;
-      var score_to = score + amount;
-      self.game.add.tween(self).to( { score: score_to }, 500, Phaser.Easing.Quadratic.Out, true);
+      self.scorePool += amount;
    }
 }
 

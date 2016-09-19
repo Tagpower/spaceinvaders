@@ -125,7 +125,7 @@ Enemy.prototype.dropItem = function(obj) {
 Enemy.prototype.enemyDeath = function(obj) {
    this.state.speed += this.state.speedup;
    this.state.speedup += this.state.accel;
-   this.state.score += this.value;
+   this.state.scorePool += this.value;
    if (!this.state.mute) {
       this.state.killenemy_sd.play();
    }
