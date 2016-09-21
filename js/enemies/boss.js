@@ -54,9 +54,11 @@ Boulimique.prototype.damage = function(amount) { //WIP
       var delay = 125;
       var occurs = 20;
       var duration = delay * occurs;
-      self.game.time.events.repeat(delay, occurs, function() {
+      var timer = self.game.time.events;
+      timer.repeat(delay, occurs, function() {
          self.state.createExplosion(this.x + self.state.game.rnd.between(-20,20), this.y + self.state.game.rnd.between(-20,20), 0);
       }, self);
+      timer.start();
       self.shots.forEachAlive(function(s){
          new Coin(self.state, s.x, s.y, self.game.rnd.between(-50,50), self.game.rnd.between(-100,0), 100);
          s.kill();
