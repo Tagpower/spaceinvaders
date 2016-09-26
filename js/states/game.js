@@ -110,8 +110,8 @@ invaders.prototype = {
       self.game.scorePoolTimer = self.game.time.events;
       self.game.scorePoolTimer.loop(10, function() {
          self.scorePoolNotRunning = false;
-         self.scorePool--;
-         self.score++;
+         self.scorePool -= 25;
+         self.score += 25;
       }, self);
       self.game.scorePoolTimer.stop(false);
       self.scorePoolNotRunning = true;
@@ -261,7 +261,6 @@ invaders.prototype = {
    update: function() {
       var self = this;
       if (self.READY) {
-         console.log(self.scorePool);
          if (currentDifficulty != difficulty) {
             currentDifficulty = difficulty;
             self.restart(self.current_level);
@@ -690,7 +689,9 @@ invaders.prototype = {
                      break;
                   case 101: // OTTERFUCKER !!! BOSS #1
                      self.enemies.add(new Boulimique(self, xx, yy, 'boulimique'));
-                     //self.in_boss_level = true;
+                     break;
+                  case 102: // OTTERFUCKER !!! BOSS #2
+                     self.enemies.add(new GrosSac(self, xx, yy, 'boulimique'));
                      break
                }
             }
