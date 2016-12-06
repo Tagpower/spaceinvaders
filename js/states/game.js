@@ -106,6 +106,15 @@ invaders.prototype = {
       self.shield.anchor.setTo(0.5, 0.5);
       self.shield.smoothed = false;
 
+      self.scorePool = 0;
+      self.game.scorePoolTimer = self.game.time.events;
+      self.game.scorePoolTimer.loop(10, function() {
+         self.scorePoolNotRunning = false;
+         self.scorePool -= 25;
+         self.score += 25;
+      }, self);
+      self.game.scorePoolTimer.stop(false);
+      self.scorePoolNotRunning = true;
 
       // Weapons
       self.weapons.push(self.game.add.existing(new Weapon1B(self)));
@@ -256,15 +265,19 @@ invaders.prototype = {
             currentDifficulty = difficulty;
             self.restart(self.current_level);
          }
+
+         if (self.scorePool > 0 && self.scorePoolNotRunning)
+            self.game.scorePoolTimer.start(1);
+         else if (self.scorePool == 0) {
+            self.game.scorePoolTimer.stop(false);
+            self.scorePoolNotRunning = true;
+         }
+
          //Check collisions for everything
          self.game.physics.arcade.collide(self.weapon, self.enemies, self.hitEnemy, null, self);
          self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, function() {return self.shield_time == 0 && !self.lostAlife;}, self);
 
-         self.text_score.text = 'Niveau ' + (self.current_level+1) + '    Score: ' + self.score;
-         
-         //self.text_stats.text = '        ' + self.lives + '        ' + self.power + '        '+ self.cooldown_reduction + '        ' + self.special_available;
-         self.text_lives.text = self.lives;
-         self.text_lives.fill = (self.lives > 1 ? '#00aaff' : '#ff0000');
+         self.text_score.text = 'Niveau ' + (self.current_level+1) + '    Score: ' + ('000000000' + Math.round(self.score)).slice(-10);
 
          //self.text_stats.text = '        ' + self.lives + '        ' + self.power + '        '+ self.cooldown_reduction + '        ' + self.special_available;
          self.text_lives.text = self.lives;
@@ -404,7 +417,7 @@ invaders.prototype = {
                   self.enemies.addAll('body.position.y', enemy.body.height);
                }
             }
-            if (enemy.position.y > self.game.world.height) {
+            if (enemy.position.y > self.game.world.height && !self.in_boss_level) {
                self.levelFailed();
             }
          });
@@ -416,12 +429,6 @@ invaders.prototype = {
          }, self);
 
          if (self.enemies.countLiving() == 0 && self.living_e_shots === 0 && self.current_level < levels.length && !self.wait_next_level) {
-            self.bonusships.forEachAlive(function(bship) {
-               if (bship.body.velocity.x == 0) {
-                  bship.kill();
-                  console.log("bonus ship en attente killé"); //FIXME
-               }
-            });
             console.log('level ' + (self.current_level+1) + ' beaten');
 
             if (self.in_bonus_level) {
@@ -451,6 +458,7 @@ invaders.prototype = {
 
          self.bonusships.forEachAlive(function(bship) {
             if (bship.x > self.game.world.height + bship.body.width*2 || bship.x < -bship.body.width*2) {
+               bship.outOfBounds = true;
                bship.kill();
             }
          });
@@ -551,6 +559,9 @@ invaders.prototype = {
       if (self.lives > 0) {
          if (!self.game.paused) {
             console.log("\tGame paused !");
+            if (!self.mute) {
+               self.pickupcoin_sd.play();
+            }
             self.text_pause.alpha = 1;
             self.text_pause.text = "PAUSE";
             self.game.paused = true;
@@ -562,6 +573,7 @@ invaders.prototype = {
             self.text_pause.text = "";
             self.game.paused = false;
             if (!self.mute) {
+               self.pickupcoin_sd.play();
                if (self.in_boss_level) {
                   self.music_boss.resume();
                } else {
@@ -590,6 +602,7 @@ invaders.prototype = {
          }
          else{
             bship.revive();
+            bship.outOfBounds = false;
             bship.reset(x, 15);
             if (Math.random() < 0.5) {
                bship.x = -16;
@@ -678,7 +691,9 @@ invaders.prototype = {
                      break;
                   case 101: // OTTERFUCKER !!! BOSS #1
                      self.enemies.add(new Boulimique(self, xx, yy, 'boulimique'));
-                     //self.in_boss_level = true;
+                     break;
+                  case 102: // OTTERFUCKER !!! BOSS #2
+                     self.enemies.add(new GrosSac(self, xx, yy, 'boulimique'));
                      break
                }
             }
@@ -997,5 +1012,10 @@ invaders.prototype = {
       self.wait_next_level = false;
    },
    // }}}
+
+   givePoints: function(amount) { //GROS WIP
+      var self = this;
+      self.scorePool += amount;
+   }
 }
 

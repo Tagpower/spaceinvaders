@@ -14,6 +14,5 @@
 ---MINEURS---
 - Les collisions tirs/vaisseau sont toujours un peu cassées
 - Les explosions sont parfois invisibles
-- Le bonus ship est kill en sortant de l'écran, ce qui donne quand même les points
 - fix powerups: kill (ajuster minY et maxY)
 - Le texte PAUSE s'affiche plus

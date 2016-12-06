@@ -116,18 +116,20 @@ Enemy.prototype.dropItem = function(obj) {
             new Powerup(obj.state, x, y, 'powerups', 40, PowerupColl.bonusLevel, true, [40,41,42,43,44,45,46,47,48,49,50,51,52,53], 18, true);
          break;
          case 'coin':
-            new Coin(obj.state, x, y, -30, 5, 'coin', 3); //WIP
+            new Coin(obj.state, x, y, -30, 5, 'coin', game.rnd.between(0,3)); //WIP
          break;
       }
    }
 }
 
 Enemy.prototype.enemyDeath = function(obj) {
-   this.state.speed += this.state.speedup;
-   this.state.speedup += this.state.accel;
-   this.state.score += this.value;
-   if (!this.state.mute) {
-      this.state.killenemy_sd.play();
+   var self = this;
+   self.state.speed += self.state.speedup;
+   self.state.speedup += self.state.accel;
+   self.state.scorePool += self.value;
+   if (!self.state.mute) {
+      console.log(self.state.killenemy_sd);
+      self.state.killenemy_sd.play();
    }
 }
 
@@ -569,7 +571,7 @@ Black.prototype.fire = function () {
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
    }
 
-   if (Math.random() < 0.25 && this.state.speed > 0){
+   if (Math.random() < 0.20 && this.state.speed > 0){
       this.game.add.tween(this).to( {y: this.y + Math.random()*25 + 25}, 500, Phaser.Easing.Quadratic.Out, true);
    }
 };
