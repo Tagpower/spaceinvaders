@@ -21,8 +21,7 @@ gameTitle.prototype = {
       //parameters: difficulty, level, power, firerate, isBonus
 
       this.background = this.game.add.tileSprite(0, 0, game.width, game.height, 'space');
-      console.log(this.background);
-
+      
       var text_title = self.game.add.text(self.game.world.width/2, 200, 'SPACE\nINVADERS', {font: '64px Minecraftia', fill: '#4fccff', align: 'center'});
       text_title.smoothed = false;
       text_title.fixedToCamera = true;
@@ -112,12 +111,12 @@ gameTitle.prototype = {
          is_boss: false,
          is_bonus: false,
          score: 0,
-         lives: 9,
+         lives: 3,
          power: power,
          init_x: 300,
          init_y: 600,
          difficulty: difficulty,
-         current_level: 18,
+         current_level: 0,
          special_available: 1,
          cooldown_reduction: 0,
          current_bonus_level: 0,

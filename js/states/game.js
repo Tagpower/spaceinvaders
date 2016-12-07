@@ -78,7 +78,7 @@ invaders.prototype = {
 
       //Audio
       self.mute = false;
-      self.gameoversound = false;
+      self.gameoversound = true;
       self.introduction_sound = true;
 
       self.left = false;
@@ -154,10 +154,10 @@ invaders.prototype = {
       self.text_middle.fixedToCamera = true;
       self.text_middle.anchor.setTo(0.5);
 
-      self.text_pause = self.game.add.text(self.game.world.width/2, self.game.world.height/1.5, 'PAUSE', style_white);
+      self.text_pause = self.game.add.text(self.game.world.width/2, self.game.world.height/1.5, '', style_white);
       self.text_pause.fixedToCamera = true;
       self.text_pause.anchor.setTo(0.5);
-      self.text_pause.alpha = 0;
+      //self.text_pause.alpha = 0;
 
       self.text_score = self.game.add.text(16, 5, '', style_blue);
       self.text_score.fixedToCamera = true;
@@ -563,12 +563,14 @@ invaders.prototype = {
                self.pickupcoin_sd.play();
             }
             self.text_pause.alpha = 1;
+            self.text_pause.text = "PAUSE";
             self.game.paused = true;
             self.music.pause();
             self.music_boss.pause();
          } else {
             console.log("\tGame resumed !");
             self.text_pause.alpha = 0;
+            self.text_pause.text = "";
             self.game.paused = false;
             if (!self.mute) {
                self.pickupcoin_sd.play();
@@ -801,9 +803,7 @@ invaders.prototype = {
                   //player.y = 550;
                   console.log("replace player");
                   self.game.add.tween(player.body).to( { y: 600 }, 500, Phaser.Easing.Quadratic.In, true);
-                  //self.game.add.tween(player.body).to( { x: 300 }, 500, Phaser.Easing.Quadratic.In, true);
                   self.lostAlife = false;
-                  player.alpha = 0.5;
                   self.shield_time = 180;
                   player.addChild(self.shield);
                   self.shield.anchor.setTo(0.5, 0.5);
@@ -811,7 +811,6 @@ invaders.prototype = {
                });
                self.timer.add(3000, function(){
                   player.touched = false;
-                  player.alpha = 1;
                });
                self.timer.start();
             } else { //GAME OVER
@@ -823,15 +822,12 @@ invaders.prototype = {
             self.timer.add(1500, function(){
                player.body.collideWorldBounds = true;
                self.game.add.tween(player.body).to( { y: 600 }, 500, Phaser.Easing.Quadratic.In, true);
-               //self.game.add.tween(player.body).to( { x: 300 }, 500, Phaser.Easing.Quadratic.In, true);
                self.lostAlife = false;
-               player.alpha = 0.5;
                self.enemies.removeAll(true);
                self.current_bonus_level--;
             });
             self.timer.add(3000, function(){
                player.touched = false;
-               player.alpha = 1;
             });
             self.timer.start();
          }

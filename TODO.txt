@@ -15,4 +15,4 @@
 - Les collisions tirs/vaisseau sont toujours un peu cassées
 - Les explosions sont parfois invisibles
 - fix powerups: kill (ajuster minY et maxY)
-- Le texte PAUSE s'affiche plus (Linux)
+- Le texte PAUSE s'affiche plus
