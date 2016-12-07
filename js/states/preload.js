@@ -48,7 +48,9 @@ preload.prototype = {
                              "Suppression de commentaires grossiers",
                              "Un p'tit verre en attendant ?",
                              "Trainage sur reddit",
-                             "OH MON DIEU UN JOUEUR VITE GROUILLE-TOI DE CHARGER !"];
+                             "OH MON DIEU UN JOUEUR VITE GROUILLE-TOI DE CHARGER !",
+                             "Obtention d'un Master",
+                             "Ne jouez pas à ça en amphi les enfants"];
 
       text_loading.text = loading_strings[this.game.rnd.integerInRange(0, loading_strings.length-1)] + '...';
 
@@ -74,7 +76,7 @@ preload.prototype = {
 
       //Music
       this.game.load.audio('ambient', ['assets/audio/e1m1.mp3']);
-      this.game.load.audio('ambient_ohgod', ['assets/audio/no_remorse.mp3']); //Provisoire
+      this.game.load.audio('ambient_ohgod', ['assets/audio/no_remorse.mp3']);
       this.game.load.audio('title', ['assets/audio/invaders.mp3']);
       this.game.load.audio('boss', ['assets/audio/boss.mp3']);
       this.game.load.audio('bonus_loop', ['assets/audio/mindlesslittleloop.mp3']);

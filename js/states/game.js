@@ -147,6 +147,7 @@ invaders.prototype = {
       //Ingame Text
       var style_white = {font: '32px Minecraftia', fill:'#ffffff'};
       var style_blue  = {font: '16px Minecraftia', fill:'#00aaff'};
+      var style_blue_small  = {font: '12px Minecraftia', fill:'#00aaff'};
       var style_green  = {font: '16px Minecraftia', fill:'#44ff44'};
       var style_yellow  = {font: '8px Minecraftia', fill:'#ffee00'};
 
@@ -158,6 +159,11 @@ invaders.prototype = {
       self.text_pause.fixedToCamera = true;
       self.text_pause.anchor.setTo(0.5);
       //self.text_pause.alpha = 0;
+
+      self.text_hint = self.game.add.text(self.game.world.width/2, self.game.world.height - 100, '', style_blue_small);
+      self.text_hint.fixedToCamera = true;
+      self.text_hint.anchor.setTo(0.5);
+      self.text_hint.alpha = 0;
 
       self.text_score = self.game.add.text(16, 5, '', style_blue);
       self.text_score.fixedToCamera = true;
@@ -513,12 +519,15 @@ invaders.prototype = {
 
          self.text_level.text = level_names_fr[lvl];
          //text_level.text = level_names_en[lvl];
+         if (lvl % 5 == 0) {
+            self.text_hint.text = "Astuce : " + hints_fr[lvl/5];
+            self.game.add.tween(self.text_hint).to( { alpha: 1 }, 1000, Phaser.Easing.Quadratic.In, true);
+         }
          self.text_middle.alpha = 0;
          self.text_level.alpha = 0;
 
          self.game.add.tween(self.text_middle).to( { alpha: 1 }, 1000, Phaser.Easing.Quadratic.In, true);
          self.game.add.tween(self.text_level).to( { alpha: 1 }, 1000, Phaser.Easing.Quadratic.In, true);
-
 
          if(speed_values[lvl]) {
             self.speed = speed_values[lvl][0]*(1+difficulty*0.15);
@@ -535,6 +544,7 @@ invaders.prototype = {
          self.timer.add(3000, function(){
             self.game.add.tween(self.text_middle).to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
             self.game.add.tween(self.text_level).to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
+            self.game.add.tween(self.text_hint).to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.In, true);
             console.log("\tCreating enemies...");
             self.createEnemies(levels[lvl]); 
             //self.createEnemies(self.only(101)); //DO NOT UNCOMMENT THIS I BEG YOU

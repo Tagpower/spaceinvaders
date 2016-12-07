@@ -128,7 +128,6 @@ Enemy.prototype.enemyDeath = function(obj) {
    self.state.speedup += self.state.accel;
    self.state.scorePool += self.value;
    if (!self.state.mute) {
-      console.log(self.state.killenemy_sd);
       self.state.killenemy_sd.play();
    }
 }
