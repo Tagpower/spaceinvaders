@@ -13,6 +13,8 @@ var PLAYER_SPEED = 150;
 var DEFAULTS = [START_SPEED, SPEEDUP_INIT, SPEEDUP_ACCEL];
 var DEFAULT_FIRE_COOLDOWN = 40;
 var ENEMY_DEFAULT_FIRE_PROBA = 0.004 + difficulty*0.0015;
+var COIN_CHANCE = 0.25;
+var COIN_CHANCE_IN_BONUS = 0.75;
 var POWERUP_CHANCE = 0.05 - difficulty*0.01;
 var POWERUP_CHANCE_IN_BONUS = 2*POWERUP_CHANCE;
 var MAX_POWER = (difficulty < OHGOD ? 7 : 5);
@@ -47,10 +49,12 @@ preload.prototype = {
                              "Nettoyage du vaisseau",
                              "Suppression de commentaires grossiers",
                              "Un p'tit verre en attendant ?",
-                             "Trainage sur reddit",
+                             "Traînage sur reddit",
                              "OH MON DIEU UN JOUEUR VITE GROUILLE-TOI DE CHARGER !",
                              "Obtention d'un Master",
-                             "Ne jouez pas à ça en amphi les enfants"];
+                             "Ne jouez pas à ça en amphi les enfants",
+                             "Écriture d'un algo génétique",
+                             "Apprentissage du Javascript"];
 
       text_loading.text = loading_strings[this.game.rnd.integerInRange(0, loading_strings.length-1)] + '...';
 

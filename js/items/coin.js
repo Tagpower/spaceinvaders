@@ -44,5 +44,11 @@ Coin.prototype.collide = function(coin, player) {
       if (!self.state.mute) {
          self.state.pickupcoin_sd.play();
       }
+
+      if (++self.state.coins >= 5) { //WIP
+         //self.state.special_available++;
+         PowerupColl.special(self);
+         self.state.coins %= 5;
+      }
    }
 }

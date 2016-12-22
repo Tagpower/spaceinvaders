@@ -45,6 +45,7 @@ invaders.prototype = {
       self.in_boss_level = config.is_boss;
       self.score = config.score;
       self.lives = config.lives;
+      self.coins = 0;
       self.power = config.power;
       self.cooldown_reduction = config.cooldown_reduction;
       self.init_x = config.init_x;

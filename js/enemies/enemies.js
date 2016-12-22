@@ -60,6 +60,7 @@ Enemy.prototype.update = function() {
 }
 
 Enemy.prototype.dropItem = function(obj) {
+   var self = this;
    var x = obj.body.center.x;
    var y = obj.body.center.y;
 
@@ -115,12 +116,24 @@ Enemy.prototype.dropItem = function(obj) {
          case 'bonus':
             new Powerup(obj.state, x, y, 'powerups', 40, PowerupColl.bonusLevel, true, [40,41,42,43,44,45,46,47,48,49,50,51,52,53], 18, true);
          break;
-         case 'coin':
-            new Coin(obj.state, x, y, -30, 5, 'coin', game.rnd.between(0,3)); //WIP
-         break;
       }
    }
+
+   Enemy.prototype.dropCoin = function(proba) {
+      new Coin(self.state, x, y, game.rnd.between(-30,30), game.rnd.between(-15,15), 100, 'coin', game.rnd.between(0,3)); //WIP
+      if (Math.random() < proba) {
+         self.dropCoin(proba/2);
+      }
+   }
+
+   var proba = (self.state.in_bonus_level ? COIN_CHANCE_IN_BONUS : COIN_CHANCE);
+   if (Math.random() < proba) {
+      self.dropCoin(proba);
+   }
+
 }
+
+
 
 Enemy.prototype.enemyDeath = function(obj) {
    var self = this;
