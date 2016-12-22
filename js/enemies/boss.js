@@ -103,8 +103,8 @@ GrosSac.prototype.update = function() {
 GrosSac.prototype.fire = function () {
    var self = this;
    self.timer.loop(self.fireDelay, function() {
-      self.state.enemies.add(new Green(self, self.x, self.y +50, 'enemy'));
-      self.state.enemies.add(new Green(self, self.x, self.y +80, 'enemy'));
+      //self.state.enemies.add(new Green(self, self.x, self.y +50, 'enemy'));
+      //self.state.enemies.add(new Green(self, self.x, self.y +80, 'enemy'));
       // if (difficulty == OHGOD) {
       //    self.makeBullet(self.shots, self.x, self.y, self.fireAngle+6, -self.bulletSpeed, 0, 0, 'enemyshots', 6, true);
       // }

@@ -45,6 +45,7 @@ invaders.prototype = {
       self.in_boss_level = config.is_boss;
       self.score = config.score;
       self.lives = config.lives;
+      self.coins = 0;
       self.power = config.power;
       self.cooldown_reduction = config.cooldown_reduction;
       self.init_x = config.init_x;
@@ -54,12 +55,16 @@ invaders.prototype = {
       ENEMY_DEFAULT_FIRE_PROBA = 0.004 + difficulty*0.0015;
       POWERUP_CHANCE = 0.05 - difficulty*0.01;
       POWERUP_CHANCE_IN_BONUS = 2*POWERUP_CHANCE;
+      COINS_FOR_POWERUP = 50 + difficulty*25;
       MAX_POWER = (difficulty < OHGOD ? 7 : 5);
 
       console.log("DIFFICULTY = " + difficulty);
       console.log("FIRE PROBA = " + ENEMY_DEFAULT_FIRE_PROBA);
       console.log("POWERUP CHANCE = " + POWERUP_CHANCE);
       console.log("IN BONUS = " + POWERUP_CHANCE_IN_BONUS);
+      console.log("COIN CHANCE = " + COIN_CHANCE);
+      console.log("IN BONUS = " + COIN_CHANCE_IN_BONUS);
+      console.log("COINS FOR BONUS = " + COINS_FOR_POWERUP);
       console.log("MAX POWER = " + MAX_POWER);
 
       self.READY = false;
@@ -147,8 +152,9 @@ invaders.prototype = {
       //Ingame Text
       var style_white = {font: '32px Minecraftia', fill:'#ffffff'};
       var style_blue  = {font: '16px Minecraftia', fill:'#00aaff'};
+      var style_blue_small  = {font: '12px Minecraftia', fill:'#00aaff'};
       var style_green  = {font: '16px Minecraftia', fill:'#44ff44'};
-      var style_yellow  = {font: '8px Minecraftia', fill:'#ffee00'};
+      var style_yellow  = {font: '16px Minecraftia', fill:'#ffee00'};
 
       self.text_middle = self.game.add.text(self.game.world.width/2, self.game.world.height/2, '', style_white);
       self.text_middle.fixedToCamera = true;
@@ -158,6 +164,11 @@ invaders.prototype = {
       self.text_pause.fixedToCamera = true;
       self.text_pause.anchor.setTo(0.5);
       //self.text_pause.alpha = 0;
+
+      self.text_hint = self.game.add.text(self.game.world.width/2, self.game.world.height - 100, '', style_blue_small);
+      self.text_hint.fixedToCamera = true;
+      self.text_hint.anchor.setTo(0.5);
+      self.text_hint.alpha = 0;
 
       self.text_score = self.game.add.text(16, 5, '', style_blue);
       self.text_score.fixedToCamera = true;
@@ -191,9 +202,9 @@ invaders.prototype = {
       self.text_ship.anchor.setTo(0.5);
       self.text_ship.alpha = 0;
 
-      self.text_points = self.game.add.text(self.player.body.x - 20, self.player.body.y-20, '', style_yellow);
-      self.text_points.anchor.setTo(0.5);
-      self.text_points.alpha = 0;
+      self.text_coin = self.game.add.text(self.player.body.x, self.player.body.y-20, '', style_yellow);
+      self.text_coin.anchor.setTo(0.5);
+      self.text_coin.alpha = 0;
 
 
 
@@ -513,12 +524,15 @@ invaders.prototype = {
 
          self.text_level.text = level_names_fr[lvl];
          //text_level.text = level_names_en[lvl];
+         if (hints_fr.get(lvl)) {
+            self.text_hint.text = "Astuce : " + hints_fr.get(lvl);
+            self.game.add.tween(self.text_hint).to( { alpha: 1 }, 1000, Phaser.Easing.Quadratic.In, true);
+         }
          self.text_middle.alpha = 0;
          self.text_level.alpha = 0;
 
          self.game.add.tween(self.text_middle).to( { alpha: 1 }, 1000, Phaser.Easing.Quadratic.In, true);
          self.game.add.tween(self.text_level).to( { alpha: 1 }, 1000, Phaser.Easing.Quadratic.In, true);
-
 
          if(speed_values[lvl]) {
             self.speed = speed_values[lvl][0]*(1+difficulty*0.15);
@@ -535,6 +549,7 @@ invaders.prototype = {
          self.timer.add(3000, function(){
             self.game.add.tween(self.text_middle).to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
             self.game.add.tween(self.text_level).to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.Out, true);
+            self.game.add.tween(self.text_hint).to( { alpha: 0 }, 1000, Phaser.Easing.Quadratic.In, true);
             console.log("\tCreating enemies...");
             self.createEnemies(levels[lvl]); 
             //self.createEnemies(self.only(101)); //DO NOT UNCOMMENT THIS I BEG YOU

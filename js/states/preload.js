@@ -13,6 +13,9 @@ var PLAYER_SPEED = 150;
 var DEFAULTS = [START_SPEED, SPEEDUP_INIT, SPEEDUP_ACCEL];
 var DEFAULT_FIRE_COOLDOWN = 40;
 var ENEMY_DEFAULT_FIRE_PROBA = 0.004 + difficulty*0.0015;
+var COIN_CHANCE = 0.25;
+var COIN_CHANCE_IN_BONUS = 0.75;
+var COINS_FOR_POWERUP = 50 + difficulty*25
 var POWERUP_CHANCE = 0.05 - difficulty*0.01;
 var POWERUP_CHANCE_IN_BONUS = 2*POWERUP_CHANCE;
 var MAX_POWER = (difficulty < OHGOD ? 7 : 5);
@@ -47,8 +50,12 @@ preload.prototype = {
                              "Nettoyage du vaisseau",
                              "Suppression de commentaires grossiers",
                              "Un p'tit verre en attendant ?",
-                             "Trainage sur reddit",
-                             "OH MON DIEU UN JOUEUR VITE GROUILLE-TOI DE CHARGER !"];
+                             "Traînage sur reddit",
+                             "OH MON DIEU UN JOUEUR VITE GROUILLE-TOI DE CHARGER !",
+                             "Obtention d'un Master",
+                             "Ne jouez pas à ça en amphi les enfants",
+                             "Écriture d'un algo génétique",
+                             "Apprentissage du Javascript"];
 
       text_loading.text = loading_strings[this.game.rnd.integerInRange(0, loading_strings.length-1)] + '...';
 
@@ -74,7 +81,7 @@ preload.prototype = {
 
       //Music
       this.game.load.audio('ambient', ['assets/audio/e1m1.mp3']);
-      this.game.load.audio('ambient_ohgod', ['assets/audio/no_remorse.mp3']); //Provisoire
+      this.game.load.audio('ambient_ohgod', ['assets/audio/no_remorse.mp3']);
       this.game.load.audio('title', ['assets/audio/invaders.mp3']);
       this.game.load.audio('boss', ['assets/audio/boss.mp3']);
       this.game.load.audio('bonus_loop', ['assets/audio/mindlesslittleloop.mp3']);
