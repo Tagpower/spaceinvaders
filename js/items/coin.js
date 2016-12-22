@@ -34,21 +34,22 @@ Coin.prototype.collide = function(coin, player) {
    var self = this;
    coin.destroy();
    if (!self.state.lostAlife) {
+      self.state.coins++;
       self.state.score += coin.value;
-      self.state.text_points.text = coin.value;
-      self.state.text_points.alpha = 1;
-      self.state.text_points.x = player.body.x;
-      self.state.text_points.y = player.body.y - 10;
-      var tween_points = self.state.game.add.tween(self.state.text_points).to( { alpha: 0, y: player.body.y-40 }, 1000, Phaser.Easing.Linear.None, true);
+      self.state.text_coin.text = self.state.coins;
+      self.state.text_coin.alpha = 1;
+      self.state.text_coin.x = this.state.player.body.x + 16;
+      self.state.text_coin.y = this.state.player.body.y - 10;
+      var tween_points = self.state.game.add.tween(self.state.text_coin).to( { alpha: 0, y: player.body.y-40 }, 1000, Phaser.Easing.Linear.None, true);
 
       if (!self.state.mute) {
          self.state.pickupcoin_sd.play();
       }
 
-      if (++self.state.coins >= 5) { //WIP
+      if (self.state.coins >= COINS_FOR_POWERUP) { //WIP
          //self.state.special_available++;
-         PowerupColl.special(self);
-         self.state.coins %= 5;
+         new Powerup(self.state, 160, 37, 'powerups', 24, PowerupColl.special, true, [24,25,26,27], 18, true);
+         self.state.coins %= COINS_FOR_POWERUP;
       }
    }
 }

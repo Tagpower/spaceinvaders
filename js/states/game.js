@@ -55,12 +55,16 @@ invaders.prototype = {
       ENEMY_DEFAULT_FIRE_PROBA = 0.004 + difficulty*0.0015;
       POWERUP_CHANCE = 0.05 - difficulty*0.01;
       POWERUP_CHANCE_IN_BONUS = 2*POWERUP_CHANCE;
+      COINS_FOR_POWERUP = 50 + difficulty*25;
       MAX_POWER = (difficulty < OHGOD ? 7 : 5);
 
       console.log("DIFFICULTY = " + difficulty);
       console.log("FIRE PROBA = " + ENEMY_DEFAULT_FIRE_PROBA);
       console.log("POWERUP CHANCE = " + POWERUP_CHANCE);
       console.log("IN BONUS = " + POWERUP_CHANCE_IN_BONUS);
+      console.log("COIN CHANCE = " + COIN_CHANCE);
+      console.log("IN BONUS = " + COIN_CHANCE_IN_BONUS);
+      console.log("COINS FOR BONUS = " + COINS_FOR_POWERUP);
       console.log("MAX POWER = " + MAX_POWER);
 
       self.READY = false;
@@ -150,7 +154,7 @@ invaders.prototype = {
       var style_blue  = {font: '16px Minecraftia', fill:'#00aaff'};
       var style_blue_small  = {font: '12px Minecraftia', fill:'#00aaff'};
       var style_green  = {font: '16px Minecraftia', fill:'#44ff44'};
-      var style_yellow  = {font: '8px Minecraftia', fill:'#ffee00'};
+      var style_yellow  = {font: '16px Minecraftia', fill:'#ffee00'};
 
       self.text_middle = self.game.add.text(self.game.world.width/2, self.game.world.height/2, '', style_white);
       self.text_middle.fixedToCamera = true;
@@ -198,9 +202,9 @@ invaders.prototype = {
       self.text_ship.anchor.setTo(0.5);
       self.text_ship.alpha = 0;
 
-      self.text_points = self.game.add.text(self.player.body.x - 20, self.player.body.y-20, '', style_yellow);
-      self.text_points.anchor.setTo(0.5);
-      self.text_points.alpha = 0;
+      self.text_coin = self.game.add.text(self.player.body.x, self.player.body.y-20, '', style_yellow);
+      self.text_coin.anchor.setTo(0.5);
+      self.text_coin.alpha = 0;
 
 
 
@@ -520,8 +524,8 @@ invaders.prototype = {
 
          self.text_level.text = level_names_fr[lvl];
          //text_level.text = level_names_en[lvl];
-         if (lvl % 5 == 0) {
-            self.text_hint.text = "Astuce : " + hints_fr[lvl/5];
+         if (hints_fr.get(lvl)) {
+            self.text_hint.text = "Astuce : " + hints_fr.get(lvl);
             self.game.add.tween(self.text_hint).to( { alpha: 1 }, 1000, Phaser.Easing.Quadratic.In, true);
          }
          self.text_middle.alpha = 0;

@@ -7,8 +7,8 @@ var Weapon = function(state, bulletSpeed, baseFireRate, power) {
    this.fireRate = baseFireRate;
    this.power = power;
    this.state = state;
-   console.log(baseFireRate);
-   console.log(this.baseFireRate);
+   //console.log(baseFireRate);
+   //console.log(this.baseFireRate);
 
    this.special = this.game.add.group(state.game.world, 'Special Weapon', false, true, Phaser.Physics.ARCADE);
    this.game.add.existing(this);

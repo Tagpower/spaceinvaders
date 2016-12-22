@@ -13,7 +13,12 @@ var level_names_fr = ["Alerte orange", "La ligne rouge", "La mort vient d'en hau
     "L'attaque des ninjas", "Vingt-deux", "Trop facile ?...", "Reste derrière moi II"
 ];
 
-var hints_fr = ["Appuyez sur MAJ pour lancer un tir spécial. Vous en avez un par vie.", "Chaque niveau de puissance possède un tir spécial différent.", ];
+//var hints_fr = ["Appuyez sur MAJ pour lancer un tir spécial. Vous en avez un par vie.", "Chaque niveau de puissance possède un tir spécial différent.", "Ramassez des pièces pour gagner des tirs spéciaux !"];
+var hints_fr = new Map();
+    hints_fr.set(1, "Appuyez sur MAJ pour lancer un tir spécial. Vous en avez un par vie.");
+    hints_fr.set(5, "Chaque niveau de puissance possède un tir spécial différent.");
+    hints_fr.set(9, "Ramassez des pièces pour gagner des tirs spéciaux !");
+    hints_fr.set(18, "Le prochain niveau est un boss !");
 
 //Speed values for each level : Start speed, speedup each time an enemy is killed, acceleration of the speedup
 var speed_values = [[20,4,0.25], [20,5,0.25], [20,4,0.25], [20,5,0.5], [10,5,0.5], //5
