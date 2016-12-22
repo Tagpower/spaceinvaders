@@ -38,17 +38,6 @@ Commandes :
 					   - Petit nerf des tirs ennemis
 					   - Nouveaux niveaux bonus
 
-		- 16/03/2016 : - Powerup bouclier ajouté (WIP)
-					   - Powerup kill updaté
-					   
-		- 26/03/2016 : - Update bouclier
-					   - Début des travaux sur les niveaux de difficulté
-					   - Bouton restart
-
-		- 27/03/2016 : - Difficulté
-					   - Niveau 16
-					   - Nouveau sprite pour le bonus ship
-
-		LOL LA FLEM
+		LOL LA FLEM, LISEZ PLUTÔT LES COMMITS
 	
 ==============================================================================================================================

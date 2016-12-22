@@ -1,15 +1,15 @@
 ﻿=====TODO LIST=====
-- Boss (WIP)
+- Boss 2, qui pop des fantômes
 - Plus d'armes ?
 - Trouver/composer une musique originale
 - player ==> classe 
 - L'ennemi blanc
+- Les pièces sont facilement confondues avec des tirs
 
 =====BUGS=====
 
 ---MAJEURS---
 - Quand on chope un niveau bonus juste après avoir terminé un niveau, le niveau bonus apparaît en même temps que le niveau suivant
-- fix special cooldown
 
 ---MINEURS---
 - Les collisions tirs/vaisseau sont toujours un peu cassées

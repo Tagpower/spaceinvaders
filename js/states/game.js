@@ -810,7 +810,10 @@ invaders.prototype = {
                self.weapon.fireRate = self.weapon.baseFireRate * (1-self.cooldown_reduction/100.0);
             }
             self.special_available = 1;
+            self.coins /= 2;
+            self.coins = Math.floor(self.coins);
             self.lives--;
+
             if (self.lives > 0) {
                self.timer = self.game.time.create(true);
                self.timer.add(1500, function(){
@@ -881,6 +884,8 @@ invaders.prototype = {
             self.weapon.fireRate = self.weapon.baseFireRate * (1-self.cooldown_reduction/100.0);
          }
          self.special_available = 1;
+         self.coins /= 2;
+         self.coins = Math.floor(self.coins);
          self.current_level--;
 
          if (self.lives > 0) {
