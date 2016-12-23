@@ -1,5 +1,6 @@
 // Levels
-var levels = [[[0,0,1,1,1,1,1,1,0,0], //Level 1
+var levels = [
+    [[0,0,1,1,1,1,1,1,0,0], //Level 1
     [0,1,1,1,1,1,1,1,1,0], //Orange is the new ghost
     [1,1,1,1,1,1,1,1,1,1], //Alerte Orange
     [1,1,1,1,1,1,1,1,1,1]],

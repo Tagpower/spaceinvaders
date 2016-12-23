@@ -1,5 +1,5 @@
 ﻿=====TODO LIST=====
-- Boss 2, qui pop des fantômes
+- Boss 2, un gros fantôme qui pop des fantômes
 - Plus d'armes ?
 - Trouver/composer une musique originale
 - player ==> classe 

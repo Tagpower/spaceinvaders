@@ -590,26 +590,52 @@ Black.prototype.fire = function () {
 
 //TODO
 White = function (state, x, y, key) {
-   Enemy.call(this, state, x, y, key, 100, 100, 14, ENEMY_DEFAULT_FIRE_PROBA, 150, 10, [26, 27], 6);
+   Enemy.call(this, state, x, y, key, 200, 100, 14, ENEMY_DEFAULT_FIRE_PROBA*1, 150, 10, [26, 27], 6);
+   self.alreadyFiring = false;
 };
 
 White.prototype = Object.create(Enemy.prototype);
 White.prototype.constructor = White;
 
+
 White.prototype.fire = function () { //TODO
-   var x = this.x;
-   var y = this.y;
+   var self = this;
+   var x = self.x;
+   var y = self.y;
 
-   if (!this.state.mute) {
-      this.state.enemyfire_sd.play();
-   }
+   console.log(self.alreadyFiring);
+   var timer = this.game.time.create(true);
 
-   try {
-      this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, 0, 0);
-   } catch(err) {
-      this.shots.add(new Bullet(this.game, 'enemyshots', 13, 10), true);
-      this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
-   }
+   timer.repeat(100, 5+difficulty,
+   function() {
+      if (self.alive) {
+         self.alreadyFiring = true;
+         x = self.x;
+         y = self.y;
+         if (!self.state.mute) {
+            self.state.enemyfire_sd.play();
+         }
+         try {
+            var tir = self.shots.getFirstExists(false);
+            //self.shots.getFirstExists(false).fire(x, y, Math.atan2((x - self.state.player.x), (y - self.state.player.y)), -self.bulletSpeed, 0, 0);
+            tir.fire(x, y, (180/Math.PI)*Math.atan2((y - self.state.player.y), (x - self.state.player.x))-270, -self.bulletSpeed, 0, 0);
+         } catch(err) {
+            self.shots.add(new Bullet(self.game, 'enemyshots', 13, 10), true);
+            self.shots.setAll('tracking', true);
+            var tir = self.shots.getFirstExists(false);
+            tir.fire(x, y, (180/Math.PI)*Math.atan2((y - self.state.player.y), (x - self.state.player.x))-270, -self.bulletSpeed, 0, 0);
+         }
+      }
+   }, self.game); 
+
+   timer.onComplete.add(function() {
+      console.log("AAAAA");
+      self.alreadyFiring = false;
+   }, self.game);
+
+   timer.start();
+
+
 };
 
 //WIP
@@ -667,7 +693,7 @@ Magenta.prototype.fire = function () {
    try {
       this.shots.getFirstDead().fire(x, y, 0, -this.bulletSpeed, 0, 0);
    } catch(err) {
-      this.shots.add(new Bullet(this.game, 'enemyshots', 15, 10, false, 0.1), true);
+      this.shots.add(new Bullet(this.game, 'enemyshots', 15, 10, false, 0.075), true);
       this.shots.getFirstExists(false).fire(x, y, 0, -this.bulletSpeed, 0, 0);
    }
 };
