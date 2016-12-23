@@ -591,51 +591,44 @@ Black.prototype.fire = function () {
 //TODO
 White = function (state, x, y, key) {
    Enemy.call(this, state, x, y, key, 200, 100, 14, ENEMY_DEFAULT_FIRE_PROBA*1, 150, 10, [26, 27], 6);
-   self.alreadyFiring = false;
+   this.fireTimer = this.game.time.create(false);
+   this.fireDelay = 3000;
+   this.fireTimer.loop(this.fireDelay, this.fire, this);
+   this.fireTimer.start();
+   this.power = 10;
+   var self = this;
+   this.events.onKilled.add(function() { 
+      self.fireTimer.stop();
+      self.fireTimer.destroy();
+   }, this);
 };
 
 White.prototype = Object.create(Enemy.prototype);
 White.prototype.constructor = White;
 
+White.prototype.update = function() {
+   this.setupCollision();
+}
 
 White.prototype.fire = function () { //TODO
    var self = this;
-   var x = self.x;
-   var y = self.y;
 
-   console.log(self.alreadyFiring);
    var timer = this.game.time.create(true);
 
-   timer.repeat(100, 5+difficulty,
-   function() {
-      if (self.alive) {
-         self.alreadyFiring = true;
-         x = self.x;
-         y = self.y;
-         if (!self.state.mute) {
-            self.state.enemyfire_sd.play();
-         }
-         try {
-            var tir = self.shots.getFirstExists(false);
-            //self.shots.getFirstExists(false).fire(x, y, Math.atan2((x - self.state.player.x), (y - self.state.player.y)), -self.bulletSpeed, 0, 0);
-            tir.fire(x, y, (180/Math.PI)*Math.atan2((y - self.state.player.y), (x - self.state.player.x))-270, -self.bulletSpeed, 0, 0);
-         } catch(err) {
-            self.shots.add(new Bullet(self.game, 'enemyshots', 13, 10), true);
-            self.shots.setAll('tracking', true);
-            var tir = self.shots.getFirstExists(false);
-            tir.fire(x, y, (180/Math.PI)*Math.atan2((y - self.state.player.y), (x - self.state.player.x))-270, -self.bulletSpeed, 0, 0);
-         }
-      }
-   }, self.game); 
-
-   timer.onComplete.add(function() {
-      console.log("AAAAA");
-      self.alreadyFiring = false;
-   }, self.game);
-
+   timer.repeat(this.fireDelay/10, 5+difficulty,
+         function() {
+            var x = self.x;
+            var y = self.y;
+            x = self.x;
+            y = self.y;
+            if (!self.state.mute) {
+               self.state.enemyfire_sd.play();
+            }
+            self.makeBullet(self.shots, x, y, 
+                     self.game.math.radToDeg(Math.atan2((y - self.state.player.y), (x - self.state.player.x)))-270,
+                  -self.bulletSpeed, 0, 0, 'enemyshots', 13, true);
+         }, self); 
    timer.start();
-
-
 };
 
 //WIP
