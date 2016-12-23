@@ -659,11 +659,11 @@ DarkCyan.prototype.fire = function () {
    //gx = this.state.player.x - x;
 
    try {
-      this.shots.getFirstDead().fire(x, y, Math.atan2((x - this.state.player.x), (y - this.state.player.y)), -this.bulletSpeed, gx, gy);
+      this.shots.getFirstDead().fire(x, y, (180/Math.PI)*Math.atan2((y - this.state.player.y), (x - this.state.player.x))-90, this.bulletSpeed, gx, gy);
    } catch(err) {
       this.shots.add(new Bullet(this.game, 'enemyshots', 14, 10), true);
       this.shots.setAll('tracking', true);
-      this.shots.getFirstExists(false).fire(x, y, Math.atan2((x - this.state.player.x), (y - this.state.player.y)), -this.bulletSpeed, gx, gy);
+      this.shots.getFirstExists(false).fire(x, y, (180/Math.PI)*Math.atan2((y - this.state.player.y), (y - this.state.player.x))-90, this.bulletSpeed, gx, gy);
    }
 };
 
