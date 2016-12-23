@@ -5,15 +5,16 @@ Play it <a href=http://tagpower.github.io/spaceinvaders/>here</a> !
 
 <h2>SPACE INVADERS DU PAUVRE</h2>
 
-	Créé par Clément Bauchet en août 2015, en vacances en Espagne à côté de la piscine entre deux apéros.
-	Grandement inspiré du déja culte "Gregre" par Alexandre Pais Gomes, de Chicken Invaders, et de Mini-Wave sur feu Frutiparc.fr (RIP)
+Créé par Clément Bauchet en août 2015, en vacances en Espagne à côté de la piscine entre deux apéros.<br>
+Amélioré <i>régulièrement</i> par Clément Bauchet et <a href=https://github.com/codeOverFlow>Adrien Bodineau</a> (énorme merci à lui)</br>
+Grandement inspiré du déja culte "Gregre" par Alexandre Pais Gomes, de Chicken Invaders, et de Mini-Wave sur feu Frutiparc.fr (RIP)
 
-	Commandes :
-		- Gauche / Droite / Haut / Bas : Mouvement
-		- Espace : Tir
-		- Maj : Tir spécial
-		- M : Muet
-		- P : Pause
+Commandes :
+	- Gauche / Droite / Haut / Bas : Mouvement
+	- Espace : Tir
+	- Maj : Tir spécial
+	- M : Muet
+	- P : Pause
 
 ==============================================================================================================================
 	Petit changelog très tardif :
@@ -37,15 +38,6 @@ Play it <a href=http://tagpower.github.io/spaceinvaders/>here</a> !
 					   - Petit nerf des tirs ennemis
 					   - Nouveaux niveaux bonus
 
-		- 16/03/2016 : - Powerup bouclier ajouté (WIP)
-					   - Powerup kill updaté
-					   
-		- 26/03/2016 : - Update bouclier
-					   - Début des travaux sur les niveaux de difficulté
-					   - Bouton restart
-
-		- 27/03/2016 : - Difficulté
-					   - Niveau 16
-					   - Nouveau sprite pour le bonus ship
+		LOL LA FLEM, LISEZ PLUTÔT LES COMMITS
 	
 ==============================================================================================================================
