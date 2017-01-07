@@ -592,9 +592,10 @@ Black.prototype.fire = function () {
 White = function (state, x, y, key) {
    Enemy.call(this, state, x, y, key, 200, 100, 14, ENEMY_DEFAULT_FIRE_PROBA*1, 150, 10, [26, 27], 6);
    this.fireTimer = this.game.time.create(false);
-   this.fireDelay = 3000;
-   this.fireTimer.loop(this.fireDelay, this.fire, this);
-   this.fireTimer.start();
+   this.minDelay = 900;
+   this.maxDelay = 3000;
+   this.fireDelay = 0;
+   this.setupDelay();
    this.power = 10;
    var self = this;
    this.events.onKilled.add(function() { 
@@ -614,6 +615,7 @@ White.prototype.fire = function () { //TODO
    var self = this;
 
    var timer = this.game.time.create(true);
+   
 
    timer.repeat(this.fireDelay/10, 5+difficulty,
          function() {
@@ -629,6 +631,15 @@ White.prototype.fire = function () { //TODO
                   -self.bulletSpeed, 0, 0, 'enemyshots', 13, true);
          }, self); 
    timer.start();
+
+   this.fireTimer.stop();
+   this.setupDelay();
+};
+
+White.prototype.setupDelay = function() {
+   this.fireDelay = this.game.math.between(this.minDelay, this.maxDelay);
+   this.fireTimer.add(this.fireDelay, this.fire, this);
+   this.fireTimer.start();
 };
 
 //WIP
