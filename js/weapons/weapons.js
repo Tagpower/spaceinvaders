@@ -369,3 +369,40 @@ Weapon7B.prototype.specialDeath = function (obj) {
    console.log("death");
    this.state.createExplosion(obj.x, obj.y, 50);
 };
+
+
+WeaponKill = function (state) {
+   Weapon.call(this, state, 400, 2250, 10);
+};
+
+WeaponKill.prototype = Object.create(Weapon.prototype);
+WeaponKill.prototype.constructor = Weapon7B;
+
+WeaponKill.prototype.fireSpecial = function () {
+   var self = this;
+
+   var timer = this.game.time.create(true);
+   var alpha = -45;
+   timer.repeat(100, 19,
+    function(speed) {
+      if (!self.state.mute) {
+         self.state.firespecial_sd.play();
+      }
+      try {
+         self.special.getFirstDead().fire(self.state.player.x, self.state.player.y-20, alpha, 500, 0, 0);
+      } catch(err) {
+         var bullet = new Bullet(self.game, 'enemyshots', 2, 100);
+         bullet.events.onKilled.add(self.specialDeath, self);
+         self.special.add(bullet, true);
+         self.special.getFirstExists(false).fire(self.state.player.x, self.state.player.y-20, alpha, 500, 0, 0);
+         
+      }
+      self.special.setAll('tracking', true);
+      alpha += 5;
+   }, this.game);
+   timer.start();
+};
+
+WeaponKill.prototype.specialDeath = function (obj) {
+   this.state.createExplosion(obj.x, obj.y, 50);
+};

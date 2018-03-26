@@ -1,9 +1,9 @@
 ﻿=====TODO LIST=====
+- ENDURANCE MODE
 - Boss 2, un gros fantôme qui pop des fantômes
 - Plus d'armes ?
 - Trouver/composer une musique originale
 - player ==> classe 
-- L'ennemi blanc
 - Les pièces sont facilement confondues avec des tirs
 
 =====BUGS=====
@@ -14,4 +14,3 @@
 ---MINEURS---
 - Les collisions tirs/vaisseau sont toujours un peu cassées
 - Les explosions sont parfois invisibles
-- fix powerups: kill (ajuster minY et maxY)

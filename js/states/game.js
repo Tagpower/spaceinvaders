@@ -16,27 +16,15 @@ invaders.prototype = {
       difficulty = config.difficulty;
       currentDifficulty = config.difficulty;
 
-      $('body, footer, .nav-wrapper, .footer-copyright').removeClass('blue');
-      $('body, footer, .nav-wrapper, .footer-copyright').removeClass('green');
-      $('body, footer, .nav-wrapper, .footer-copyright').removeClass('yellow');
-      $('body, footer, .nav-wrapper, .footer-copyright').removeClass('red');
-      $('body, footer, .nav-wrapper, .footer-copyright').removeClass('black');
-      $('body, footer, .nav-wrapper, .footer-copyright').removeClass('toto');
+      // $('body, footer, .nav-wrapper, .footer-copyright').removeClass('blue');
+      // $('body, footer, .nav-wrapper, .footer-copyright').removeClass('green');
+      // $('body, footer, .nav-wrapper, .footer-copyright').removeClass('yellow');
+      // $('body, footer, .nav-wrapper, .footer-copyright').removeClass('red');
+      // $('body, footer, .nav-wrapper, .footer-copyright').removeClass('black');
+      // $('body, footer, .nav-wrapper, .footer-copyright').removeClass('toto');
 
-      switch (difficulty) {
-         case EASY:
-            $('body, footer, .nav-wrapper, .footer-copyright').toggleClass('green');
-            break;
-         case NORMAL:
-            $('body, footer, .nav-wrapper, .footer-copyright').toggleClass('yellow');
-            break;
-         case HARD:
-            $('body, footer, .nav-wrapper, .footer-copyright').toggleClass('orange');
-            break;
-         case OHGOD:
-            //$('body').toggleClass('toto');
+      if (difficulty == OHGOD) {
             $('body, footer, .nav-wrapper, .footer-copyright').toggleClass('red');
-            break;
       }
 
       self.current_level = config.current_level;
@@ -129,6 +117,7 @@ invaders.prototype = {
       self.weapons.push(self.game.add.existing(new Weapon5B(self)));
       self.weapons.push(self.game.add.existing(new Weapon6B(self)));
       self.weapons.push(self.game.add.existing(new Weapon7B(self)));
+      self.weapons.push(self.game.add.existing(new WeaponKill(self))); //TODO faire gaffe à ce qu'on l'ait pas en prenant un Power+
 
       //Create the player's ship
       console.log("\tCreating player...");

@@ -57,7 +57,7 @@ var PowerupColl = {
       powerup.state.text_ship.text = "Bouclier !";
    },
 
-   kill: function(powerup) {
+   killold: function(powerup) { //Old kill bonus
       powerup.state.score += 750;
       powerup.state.text_ship.text = "KILL 'EM ALL !";
 
@@ -75,6 +75,13 @@ var PowerupColl = {
          powerup.state.createExplosion(rX, rY, 100);
       }, powerup.state, minX, maxX, minY, maxY);
       timer.start();
+   },
+
+   kill: function(powerup) {
+      powerup.state.score += 750;
+      powerup.state.text_ship.text = "KILL 'EM ALL !";
+
+      powerup.state.weapons[7].fireSpecial();
    },
 
    clear: function(powerup) {

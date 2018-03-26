@@ -38,7 +38,7 @@ preload.prototype = {
       var loadingBar = this.game.add.sprite(game.world.centerX, 400, "loading");
       this.load.setPreloadSprite(loadingBar, 0);
 
-      var text_loading = self.game.add.text(self.game.world.centerX, 350, '', {font: '16px Minecraftia', fill: '#ffffff', align: 'center'});
+      var text_loading = self.game.add.text(self.game.world.centerX, 350, '', {font: '16px Trebuchet MS', fill: '#ffffff', align: 'center'});
       text_loading.smoothed = false;
       text_loading.anchor.setTo(0.5);
 
@@ -55,7 +55,24 @@ preload.prototype = {
                              "Obtention d'un Master",
                              "Ne jouez pas à ça en amphi les enfants",
                              "Écriture d'un algo génétique",
-                             "Apprentissage du Javascript"];
+                             "Apprentissage du Javascript",
+                             "Résolution d'un conflit Git"];
+
+    var loading_strings_en = ["Recruiting ghosts",
+                             "Finishing sprites",
+                             "It's the music that takes long",
+                             "Just two seconds",
+                             "Self-repairing the code",
+                             "Cleaning the ship",
+                             "Deleting rude comments",
+                             "A little drink while you wait ?",
+                             "Lurking on reddit",
+                             "OMG A PLAYER QUICK HURRY UP LOADING !",
+                             "Obtaining a Masters",
+                             "Don't play this in class kids",
+                             "Writing a genetic algorithm",
+                             "Learning Javascript",
+                             "Solving a Git conflict"];
 
       text_loading.text = loading_strings[this.game.rnd.integerInRange(0, loading_strings.length-1)] + '...';
 

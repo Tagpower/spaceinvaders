@@ -590,10 +590,10 @@ Black.prototype.fire = function () {
 
 //TODO
 White = function (state, x, y, key) {
-   Enemy.call(this, state, x, y, key, 200, 100, 14, ENEMY_DEFAULT_FIRE_PROBA*1, 150, 10, [26, 27], 6);
+   Enemy.call(this, state, x, y, key, 200, 100, 14, ENEMY_DEFAULT_FIRE_PROBA*0.4, 150, 10, [26, 27], 6);
    this.fireTimer = this.game.time.create(false);
-   this.minDelay = 900;
-   this.maxDelay = 3000;
+   this.minDelay = 2500;
+   this.maxDelay = 5000;
    this.fireDelay = 0;
    this.setupDelay();
    this.power = 10;
@@ -617,7 +617,7 @@ White.prototype.fire = function () { //TODO
    var timer = this.game.time.create(true);
    
 
-   timer.repeat(this.fireDelay/10, 5+difficulty,
+   timer.repeat(200, 5+difficulty,
          function() {
             var x = self.x;
             var y = self.y;
@@ -627,7 +627,7 @@ White.prototype.fire = function () { //TODO
                self.state.enemyfire_sd.play();
             }
             self.makeBullet(self.shots, x, y, 
-                     self.game.math.radToDeg(Math.atan2((y - self.state.player.y), (x - self.state.player.x)))-270,
+                     self.game.math.radToDeg(Math.atan2((y - self.state.player.y), (x - self.state.player.x)))-270+self.game.math.between(-5,5),
                   -self.bulletSpeed, 0, 0, 'enemyshots', 13, true);
          }, self); 
    timer.start();
