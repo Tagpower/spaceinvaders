@@ -16,7 +16,6 @@ Commandes :
 	- M : Muet
 	- P : Pause
 
-==============================================================================================================================
 	Petit changelog très tardif :
 		- 04/08/2015 : Création du jeu
 		- 05/08/2015 : Premier prototype fonctionnel (Oui, j'avais vraiment que ça à faire, j'étais en vacances pour rappel)
@@ -38,6 +37,5 @@ Commandes :
 					   - Petit nerf des tirs ennemis
 					   - Nouveaux niveaux bonus
 
-		LOL LA FLEM, LISEZ PLUTÔT LES COMMITS
+		OUAIS BON LA FLEMME, LISEZ PLUTÔT LES COMMITS
 	
-==============================================================================================================================
