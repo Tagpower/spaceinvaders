@@ -16,13 +16,6 @@ invaders.prototype = {
       difficulty = config.difficulty;
       currentDifficulty = config.difficulty;
 
-      // $('body, footer, .nav-wrapper, .footer-copyright').removeClass('blue');
-      // $('body, footer, .nav-wrapper, .footer-copyright').removeClass('green');
-      // $('body, footer, .nav-wrapper, .footer-copyright').removeClass('yellow');
-      // $('body, footer, .nav-wrapper, .footer-copyright').removeClass('red');
-      // $('body, footer, .nav-wrapper, .footer-copyright').removeClass('black');
-      // $('body, footer, .nav-wrapper, .footer-copyright').removeClass('toto');
-
       if (difficulty == OHGOD) {
             $('body, footer, .nav-wrapper, .footer-copyright').toggleClass('red');
       }
@@ -99,6 +92,14 @@ invaders.prototype = {
       self.shield.anchor.setTo(0.5, 0.5);
       self.shield.smoothed = false;
 
+      //Ship hitbox for enemy shots
+      self.shipHitbox = self.game.add.sprite(0,0);
+      self.game.physics.arcade.enable(self.shipHitbox);
+      self.shipHitbox.anchor.setTo(0.5, 0.5);
+      self.shipHitbox.body.setSize(12, 24, 10, 1);
+      self.shipHitbox.body.immovable = true;
+
+      //Score counting up
       self.scorePool = 0;
       self.game.scorePoolTimer = self.game.time.events;
       self.game.scorePoolTimer.loop(10, function() {
@@ -126,6 +127,7 @@ invaders.prototype = {
       self.game.camera.follow(self.player); 
 
       self.player.addChild(self.shield);
+      self.player.addChild(self.shipHitbox);
 
       //All inputs
       self.cursors = self.game.input.keyboard.createCursorKeys();
@@ -275,7 +277,9 @@ invaders.prototype = {
 
          //Check collisions for everything
          self.game.physics.arcade.collide(self.weapon, self.enemies, self.hitEnemy, null, self);
-         self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, function() {return self.shield_time == 0 && !self.lostAlife;}, self);
+         //self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, function() {return self.shield_time == 0 && !self.lostAlife;}, self);
+         self.game.physics.arcade.collide(self.shipHitbox, self.enemies, self.playerHit, function() {return self.shield_time == 0 && !self.lostAlife;}, self);
+         //self.game.debug.body(self.shipHitbox);
 
          self.text_score.text = 'Niveau ' + (self.current_level+1) + '    Score: ' + ('000000000' + Math.round(self.score)).slice(-10);
 
@@ -764,9 +768,9 @@ invaders.prototype = {
    // When the player is hit by enemy fire or an enemy 
    playerHit: function(player, shot) {
       var self = this;
+      player = player.parent;
       shot.kill();
       if (!self.lostAlife && !player.touched && !self.shield_time) {   
-         console.log("TOUCHÉ !!!");
          self.playerhit_sd.play();
          self.lostAlife = true;
          player.touched = true;
@@ -807,7 +811,6 @@ invaders.prototype = {
                self.timer = self.game.time.create(true);
                self.timer.add(1500, function(){
                   player.body.collideWorldBounds = true;
-                  //player.y = 550;
                   console.log("replace player");
                   self.game.add.tween(player.body).to( { y: 600 }, 500, Phaser.Easing.Quadratic.In, true);
                   self.lostAlife = false;

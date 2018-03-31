@@ -12,5 +12,4 @@
 - Quand on chope un niveau bonus juste après avoir terminé un niveau, le niveau bonus apparaît en même temps que le niveau suivant
 
 ---MINEURS---
-- Les collisions tirs/vaisseau sont toujours un peu cassées
 - Les explosions sont parfois invisibles

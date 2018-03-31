@@ -49,7 +49,7 @@ Enemy.prototype.collide = function(player, shot) {
 }
 
 Enemy.prototype.setupCollision = function() {
-   this.game.physics.arcade.collide(this.shots, this.state.player, this.collide, function(){return (!this.state.lostAlife && this.state.shield_time == 0);}, this);
+   this.game.physics.arcade.collide(this.shots, this.state.shipHitbox, this.collide, function(){return (!this.state.lostAlife && this.state.shield_time == 0);}, this);
 }
 
 Enemy.prototype.update = function() {
