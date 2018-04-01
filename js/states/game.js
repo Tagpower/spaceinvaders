@@ -96,7 +96,7 @@ invaders.prototype = {
       self.shipHitbox = self.game.add.sprite(0,0);
       self.game.physics.arcade.enable(self.shipHitbox);
       self.shipHitbox.anchor.setTo(0.5, 0.5);
-      self.shipHitbox.body.setSize(12, 24, 10, 1);
+      self.shipHitbox.body.setSize(12, 24, 9, 1);
       self.shipHitbox.body.immovable = true;
 
       //Score counting up
@@ -279,7 +279,7 @@ invaders.prototype = {
          self.game.physics.arcade.collide(self.weapon, self.enemies, self.hitEnemy, null, self);
          //self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, function() {return self.shield_time == 0 && !self.lostAlife;}, self);
          self.game.physics.arcade.collide(self.shipHitbox, self.enemies, self.playerHit, function() {return self.shield_time == 0 && !self.lostAlife;}, self);
-         //self.game.debug.body(self.shipHitbox);
+         self.game.debug.body(self.shipHitbox);
 
          self.text_score.text = 'Niveau ' + (self.current_level+1) + '    Score: ' + ('000000000' + Math.round(self.score)).slice(-10);
 
