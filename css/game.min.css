@@ -1,1 +1,10 @@
-#contentor canvas{margin:20px auto 0}p{text-align:center}body,footer,.nav-wrapper,.footer-copyright{webkit-transition:all 4s;transition:all 4s}.toto{background-image:url("../assets/impossibru.jpg")}
+#contentor canvas{margin:20px auto 0}
+		p{text-align:center}
+		body,footer,.nav-wrapper,.footer-copyright{webkit-transition:all 4s;transition:all 4s}.toto{background-image:url("../assets/impossibru.jpg")}
+
+@font-face {
+  font-family: 'Minecraftia';
+  font-style: normal;
+  src: 
+       url(../assets/Minecraftia-Regular.ttf) format('truetype');
+}

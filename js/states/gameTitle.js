@@ -36,12 +36,20 @@ gameTitle.prototype = {
       text_pauvre.smoothed = false;
       text_pauvre.anchor.setTo(0.5);
       text_pauvre.scale.setTo(0);
+      text_pauvre.inputEnabled = true;
       self.timer = self.game.time.create(true);
       self.timer.add(1000, function(){
          text_pauvre.scale.setTo(10, 10);
          var tween_pauvre = game.add.tween(text_pauvre.scale).to( { x: 1, y: 1 }, 1000, Phaser.Easing.Bounce.Out, true);
       });
       self.timer.start();
+      text_pauvre.events.onInputOver.add(function() {
+         var tween_pauvre_rot1 = game.add.tween(text_pauvre).to( {angle:330}, 250, Phaser.Easing.Quadratic.Out, true);
+      }, this);
+      // text_pauvre.events.onInputOut.add(function() {
+      //    var tween_pauvre_rot2 = game.add.tween(text_pauvre).to( {angle:-30}, 250, Phaser.Easing.Quadratic.Out, true);
+      // }, this);
+
 
       var text_info = self.game.add.text(360, 383, '', {font: '14px Minecraftia', fill: '#00aaff'});
       text_info.smoothed = false;
