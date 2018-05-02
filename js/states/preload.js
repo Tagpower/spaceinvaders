@@ -35,12 +35,22 @@ preload.prototype.constructor = preload;
 preload.prototype = {
    preload: function() {
 
+      let font = new FontFaceObserver('Minecraftia');
+      font.load().then(function() {
+        var text_loading = self.game.add.text(self.game.world.centerX, 350, '', {font: '16px Minecraftia', fill: '#ffffff', align: 'center'});
+        text_loading.smoothed = false;
+        text_loading.anchor.setTo(0.5);
+
+        text_loading.text = loading_strings[this.game.rnd.integerInRange(0, loading_strings.length-1)] + '...';
+
+        var tween_fade = game.add.tween(text_loading).to( { alpha: 0.2}, 500, Phaser.Easing.Linear.In, true, 0 , -1);
+        tween_fade.yoyo(true, 0);
+      });
+
       var loadingBar = this.game.add.sprite(game.world.centerX, 400, "loading");
       this.load.setPreloadSprite(loadingBar, 0);
 
-      var text_loading = self.game.add.text(self.game.world.centerX, 350, '', {font: '16px Trebuchet MS', fill: '#ffffff', align: 'center'});
-      text_loading.smoothed = false;
-      text_loading.anchor.setTo(0.5);
+
 
       var loading_strings = ["Recrutement de fantômes",
                              "Finissage des sprites",
@@ -56,7 +66,8 @@ preload.prototype = {
                              "Ne jouez pas à ça en amphi les enfants",
                              "Écriture d'un algo génétique",
                              "Apprentissage du Javascript",
-                             "Résolution d'un conflit Git"];
+                             "Résolution d'un conflit Git",
+                             "Déploiement de dernière minute"];
 
     var loading_strings_en = ["Recruiting ghosts",
                              "Finishing sprites",
@@ -72,12 +83,8 @@ preload.prototype = {
                              "Don't play this in class kids",
                              "Writing a genetic algorithm",
                              "Learning Javascript",
-                             "Solving a Git conflict"];
-
-      text_loading.text = loading_strings[this.game.rnd.integerInRange(0, loading_strings.length-1)] + '...';
-
-      var tween_fade = game.add.tween(text_loading).to( { alpha: 0.2}, 500, Phaser.Easing.Linear.In, true, 0 , -1);
-      tween_fade.yoyo(true, 0);
+                             "Solving a Git conflict",
+                             "Last minute deployment"];
 
       //Images
       this.game.load.image('shot', 'assets/shot.png');
