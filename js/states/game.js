@@ -99,7 +99,7 @@ invaders.prototype = {
       //self.shipHitbox.body.setSize(12, 24, 0, 0);
       self.shipHitbox.body.setSize(12, 24, -6, -15);
       self.shipHitbox.body.immovable = true;
-      self.debugHitbox = false;
+      self.debugInfos = false;
 
       //Score counting up
       self.scorePool = 0;
@@ -143,13 +143,14 @@ invaders.prototype = {
       //mute_btn.onUp.add(muteGame, self)
       self.pause_btn.onDown.add(self.pauseGame, self);
       self.hitboxDebug_btn.onDown.add(function() {
-         self.debugHitbox = !self.debugHitbox;
+         self.debugInfos = !self.debugInfos;
          self.game.debug.context.clearRect(0, 0, self.game.width, self.game.height)
       }, self);
 
       //Ingame Text
       var style_white = {font: '32px Minecraftia', fill:'#ffffff'};
       var style_blue  = {font: '16px Minecraftia', fill:'#00aaff'};
+      var style_blue_right  = {font: '12px Minecraftia', fill:'#00aaff', align:'right'};
       var style_blue_small  = {font: '12px Minecraftia', fill:'#00aaff'};
       var style_green  = {font: '16px Minecraftia', fill:'#44ff44'};
       var style_yellow  = {font: '16px Minecraftia', fill:'#ffee00'};
@@ -204,7 +205,8 @@ invaders.prototype = {
       self.text_coin.anchor.setTo(0.5);
       self.text_coin.alpha = 0;
 
-
+      self.text_debug = self.game.add.text(400, 5, '', style_blue_small);
+      self.text_debug.fixedToCamera = true;
 
       if (difficulty < OHGOD) {
          self.music = self.game.add.audio('ambient');
@@ -267,7 +269,7 @@ invaders.prototype = {
 
    render: function() {
       var self = this;
-      if (self.debugHitbox) {
+      if (self.debugInfos) {
          self.game.debug.body(self.shipHitbox);
       }
    },
@@ -294,7 +296,6 @@ invaders.prototype = {
          //self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, function() {return self.shield_time == 0 && !self.lostAlife;}, self);
          self.game.physics.arcade.collide(self.shipHitbox, self.enemies, self.playerHit, function() {return self.shield_time == 0 && !self.lostAlife;}, self);
 
-
          self.text_score.text = 'Niveau ' + (self.current_level+1) + '    Score: ' + ('000000000' + Math.round(self.score)).slice(-10);
 
          //self.text_stats.text = '        ' + self.lives + '        ' + self.power + '        '+ self.cooldown_reduction + '        ' + self.special_available;
@@ -310,6 +311,11 @@ invaders.prototype = {
          self.text_specs.text = self.special_available;
          self.text_specs.fill = (self.special_available > 0 ? '#00aaff' : '#aaaaaa');
 
+         if (self.debugInfos) {
+            self.text_debug.text = `SPEED\t${self.speed}\nSPEEDUP\t${self.speedup}\nACCEL\t${self.accel}`;
+         } else {
+            self.text_debug.text = "";
+         }
          //background.tilePosition.y += current_level/5 + 1;
          self.background.tilePosition.y += 1 + (14*self.in_bonus_level); //FIXME
 
@@ -394,7 +400,6 @@ invaders.prototype = {
 
          } else {
             //When the player dies
-            //console.log("DEAD ?");
             self.player.body.velocity.x = 0;
             self.player.animations.play('dead');
             //enemies.setAll('body.velocity.x', 0);

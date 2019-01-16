@@ -4,12 +4,13 @@
 - Plus d'armes ?
 - Trouver/composer une musique originale
 - player ==> classe 
-- Les pièces sont facilement confondues avec des tirs
 
 =====BUGS=====
 
 ---MAJEURS---
 - Quand on chope un niveau bonus juste après avoir terminé un niveau, le niveau bonus apparaît en même temps que le niveau suivant
+- Niveau bonus pendant un boss = crash
 
 ---MINEURS---
+- Les pièces sont facilement confondues avec des tirs
 - Les explosions sont parfois invisibles
