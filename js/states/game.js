@@ -96,8 +96,9 @@ invaders.prototype = {
       self.shipHitbox = self.game.add.sprite(0,0);
       self.game.physics.arcade.enable(self.shipHitbox);
       self.shipHitbox.anchor.setTo(0.5, 0.5);
-      self.shipHitbox.body.setSize(12, 24, 10, 1);
+      self.shipHitbox.body.setSize(12, 24, 10, 0);
       self.shipHitbox.body.immovable = true;
+      self.debugHitbox = false;
 
       //Score counting up
       self.scorePool = 0;
@@ -136,9 +137,14 @@ invaders.prototype = {
       self.mute_btn = self.game.input.keyboard.addKey(Phaser.Keyboard.M);
       self.pause_btn = self.game.input.keyboard.addKey(Phaser.Keyboard.P);
       self.restart_btn = self.game.input.keyboard.addKey(Phaser.Keyboard.R);
+      self.hitboxDebug_btn = self.game.input.keyboard.addKey(Phaser.Keyboard.B);
 
       //mute_btn.onUp.add(muteGame, self)
       self.pause_btn.onDown.add(self.pauseGame, self);
+      self.hitboxDebug_btn.onDown.add(function() {
+         self.debugHitbox = !self.debugHitbox;
+         self.game.debug.context.clearRect(0, 0, self.game.width, self.game.height)
+      }, self);
 
       //Ingame Text
       var style_white = {font: '32px Minecraftia', fill:'#ffffff'};
@@ -258,6 +264,13 @@ invaders.prototype = {
       self.READY = true;
    },
 
+   render: function() {
+      var self = this;
+      if (self.debugHitbox) {
+         self.game.debug.body(self.shipHitbox);
+      }
+   },
+
    // }}}
    // {{{ UPDATE
    update: function() {
@@ -279,7 +292,7 @@ invaders.prototype = {
          self.game.physics.arcade.collide(self.weapon, self.enemies, self.hitEnemy, null, self);
          //self.game.physics.arcade.collide(self.player, self.enemies, self.playerHit, function() {return self.shield_time == 0 && !self.lostAlife;}, self);
          self.game.physics.arcade.collide(self.shipHitbox, self.enemies, self.playerHit, function() {return self.shield_time == 0 && !self.lostAlife;}, self);
-         //self.game.debug.body(self.shipHitbox);
+
 
          self.text_score.text = 'Niveau ' + (self.current_level+1) + '    Score: ' + ('000000000' + Math.round(self.score)).slice(-10);
 
