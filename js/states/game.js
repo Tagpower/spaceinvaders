@@ -96,7 +96,8 @@ invaders.prototype = {
       self.shipHitbox = self.game.add.sprite(0,0);
       self.game.physics.arcade.enable(self.shipHitbox);
       self.shipHitbox.anchor.setTo(0.5, 0.5);
-      self.shipHitbox.body.setSize(12, 24, 10, 0);
+      //self.shipHitbox.body.setSize(12, 24, 0, 0);
+      self.shipHitbox.body.setSize(12, 24, -6, -15);
       self.shipHitbox.body.immovable = true;
       self.debugHitbox = false;
 
