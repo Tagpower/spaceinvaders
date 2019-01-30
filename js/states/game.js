@@ -337,11 +337,9 @@ invaders.prototype = {
             if (self.cursors.up.isDown && difficulty < OHGOD) {
                self.player.body.velocity.y = -PLAYER_SPEED;
                self.player.body.velocity.x = 0; 
-               //player.animations.play('left');
             } else if (self.cursors.down.isDown  && difficulty < OHGOD) {
                self.player.body.velocity.y = PLAYER_SPEED;
                self.player.body.velocity.x = 0; 
-               //player.animations.play('right');
             }
 
             if (self.cursors.left.isDown) {
